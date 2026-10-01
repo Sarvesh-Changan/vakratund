@@ -1,0 +1,2 @@
+import type { ReactNode } from "react";
+export function ErrorState({ title = "Something went wrong", description = "Please try again.", action }: { title?: string; description?: string; action?: ReactNode }) { return <div role="alert" className="rounded-card border border-danger/50 bg-danger/5 p-8 text-center"><p className="font-semibold text-danger">{title}</p><p className="mx-auto mt-2 max-w-md text-sm text-ink-muted">{description}</p>{action ? <div className="mt-4">{action}</div> : null}</div>; }

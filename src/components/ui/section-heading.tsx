@@ -1,0 +1,3 @@
+import type { ReactNode } from "react";
+import { cn } from "@/lib/utils";
+export function SectionHeading({ eyebrow, title, description, action, align = "left" }: { eyebrow?: string; title: string; description?: string; action?: ReactNode; align?: "left" | "center" }) { return <div className={cn("flex flex-col gap-4", align === "center" && "items-center text-center")}><div className="max-w-2xl"><p className="text-sm font-semibold uppercase tracking-[0.14em] text-brand-deep">{eyebrow}</p><h2 className="mt-2 text-3xl font-semibold text-ink md:text-4xl">{title}</h2>{description ? <p className="mt-3 max-w-prose text-ink-muted">{description}</p> : null}</div>{action}</div>; }
