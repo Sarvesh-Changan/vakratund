@@ -109,3 +109,63 @@ Order of operations (always): **rate limit (public) → authenticate → authori
 - [ ] Responsive at 360 / 768 / 1280; keyboard & screen-reader sanity
 - [ ] No console errors/warnings; no unused code
 - [ ] Docs/ADR updated; `TODO(client)` items listed
+
+## Appendix A — CMS module recipe
+
+Use this recipe for every database-backed admin content module (for example,
+Services, Projects, FAQs, and Blog). Keep the layers separate so the same
+validation and business rules are used by every entry point.
+
+### A.1 Files and responsibilities
+
+1. `src/lib/validation/<module>.ts` contains strict Zod schemas for create,
+   update, delete, reorder, and publish actions. Trim and cap strings, reject
+   HTML in plain-text fields, validate enums and relationships, and derive the
+   input types from the schemas.
+2. `src/server/services/<module>.ts` contains the application service. It
+   generates a slug when one is omitted, checks editable slugs for uniqueness,
+   executes Prisma writes in a transaction when there are multiple writes,
+   maps records to safe view models, and never trusts client-only flags.
+3. `src/app/(admin)/admin/(protected)/<module>/actions.ts` exposes typed Server
+   Actions: `create`, `update`, `delete`, `reorder`, and `togglePublish`.
+4. The route folder contains a server-rendered list page, `new/page.tsx`, an
+   `[id]/edit/page.tsx`, and `loading.tsx`/`error.tsx`. Interactive form fields
+   belong in a small client component. Lists must have loading, error, empty,
+   and permission-denied states.
+5. Public read models live in
+   `src/server/queries/<module>.ts`. They use `unstable_cache` (or the current
+   Next.js cache API), select only public fields, and filter to `PUBLISHED`.
+
+### A.2 Server Action order
+
+Every mutation follows this order and returns the shared `ActionResult<T>`
+contract:
+
+`authenticate → authorize → validate → execute → log → revalidate → return`
+
+`requirePermission` may perform the first two steps together, but it must be
+called before parsing or touching the database. The service writes one
+append-only `ActivityLog` entry for the mutation, with a sanitized diff and no
+PII or secrets. On success, revalidate the module collection tag, the affected
+entity tag, and the relevant admin path. For this project the tags are
+`services`, `service:{slug}`, `projects`, `project:{slug}`, `blog`,
+`post:{slug}`, `settings`, `faqs`, `testimonials`, `pages`, and `estimator`.
+
+Expected validation, authorization, conflict, and not-found failures are
+returned as stable error codes and field errors. Unexpected errors are logged
+server-side and returned as a generic message. Never return Prisma errors,
+stacks, or secrets to the browser.
+
+### A.3 UI and test checklist
+
+Admin forms use visible labels, keyboard-accessible controls, a sticky save
+bar, inline errors, dirty-state protection, and confirmation for deletion.
+Repeatable fields have add/remove controls. Markdown editors show a sanitized
+live preview; they do not accept raw HTML. Media fields use `MediaPicker` and
+store a validated `MediaAsset` ID. SEO fields show title/description limits
+and a search-result preview. Ordering is available through drag-and-drop or
+accessible up/down controls.
+
+For each module, add tests for schema boundaries, slug generation and
+uniqueness, role enforcement (at least `EDITOR` allowed and `SALES` denied),
+the service's important business rules, and cache-tagged published reads.

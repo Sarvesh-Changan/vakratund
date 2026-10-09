@@ -10,14 +10,14 @@
 | ORM | Prisma | Typed queries, migrations |
 | Auth | Better Auth (email + password, DB sessions, Prisma adapter) | Secure sessions, simple RBAC extension. *Verify against current docs; if unsuitable, record an ADR and use Auth.js.* |
 | Media | Cloudinary (signed uploads, `next/image` loader or `next-cloudinary`) | Transformations, CDN, video |
-| Email | Resend (React Email templates) | Simple, reliable transactional email |
+| Email | Nodemailer over SMTP (React Email templates) | Gmail app-password delivery; serverless-friendly transport |
 | Validation | Zod (shared schemas) | One source of truth for client/server |
 | Forms | React Hook Form + `@hookform/resolvers` | Reusable form primitives |
 | Motion | `motion` (Framer Motion successor) used sparingly | Meaningful animation, reduced-motion aware |
 | Charts | Recharts (admin only, dynamically imported) | Dashboard analytics |
 | Rate limiting | Upstash Redis (`@upstash/ratelimit`) with in-memory fallback in dev | Edge-friendly |
 | Tests | Vitest (unit), Playwright (e2e) | Fast + realistic |
-| Hosting | Vercel (app) + Neon (db) + Cloudinary + Resend | Zero-ops |
+| Hosting | Vercel (app) + Neon (db) + Cloudinary + Gmail SMTP | Zero-ops |
 
 Dependency policy: prefer platform features; every new dependency needs a one-line justification.
 
@@ -30,7 +30,7 @@ flowchart LR
   N -->|Prisma + pooled conn| DB[(Neon Postgres)]
   N -->|signed upload params| C[Cloudinary]
   A -->|direct upload with signature| C
-  N -->|transactional email| R[Resend]
+  N -->|transactional email over SMTP| R[Gmail SMTP]
   N -->|rate limit| U[(Upstash Redis)]
   V -.->|WhatsApp / tel: links| W[WhatsApp / Phone]
 ```
@@ -152,7 +152,7 @@ Admin requests signature (`/api/upload/sign`, role-checked, folder allowlist) â†
 | `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL` | server | session signing |
 | `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET` | server | secret never exposed |
 | `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME` | public | for image URLs |
-| `RESEND_API_KEY`, `EMAIL_FROM`, `LEAD_NOTIFY_TO` | server | |
+| `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, `SMTP_PASS`, `EMAIL_FROM`, `LEAD_NOTIFY_TO` | server | Gmail app-password SMTP; required in production |
 | `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` | server | rate limit |
 | `TURNSTILE_SECRET_KEY`, `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | optional | bot protection |
 | `NEXT_PUBLIC_GA_ID` | public | optional |

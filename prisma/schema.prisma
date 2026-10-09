@@ -1,0 +1,637 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+  importFileExtension = "ts"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  SUPER_ADMIN
+  ADMIN
+  EDITOR
+  SALES
+}
+
+enum PublishStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum ProjectStatus {
+  COMPLETED
+  ONGOING
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  CONVERTED
+  CLOSED
+}
+
+enum LeadType {
+  QUOTE
+  CONTACT
+  PROJECT_ENQUIRY
+  BROCHURE
+  INSPECTION
+}
+
+enum EmailLogStatus {
+  SENT
+  FAILED
+  SKIPPED
+}
+
+enum ContactEventType {
+  CALL
+  WHATSAPP
+}
+
+enum PricingMode {
+  ESTIMATE
+  INSPECTION_ONLY
+}
+
+enum AreaUnit {
+  SQFT
+  RFT
+  UNIT
+  LUMPSUM
+}
+
+enum FieldType {
+  SELECT
+  RADIO
+  NUMBER
+  BOOLEAN
+  MULTISELECT
+}
+
+enum EffectType {
+  NONE
+  SET_BASE_RATE
+  ADD_PER_UNIT
+  ADD_FLAT
+  MULTIPLY_PERCENT
+}
+
+enum MediaKind {
+  IMAGE
+  VIDEO
+  DOCUMENT
+}
+
+model User {
+  id            String   @id @default(cuid())
+  name          String
+  email         String   @unique
+  emailVerified Boolean  @default(false)
+  image         String?
+  role          Role     @default(EDITOR)
+  isActive      Boolean  @default(true)
+  mustChangePassword Boolean @default(false)
+  lastLoginAt   DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  sessions      Session[]
+  accounts      Account[]
+  activityLogs  ActivityLog[]
+  assignedLeads Lead[]       @relation("LeadAssignee")
+  leadNotes     LeadNote[]
+  blogPosts     BlogPost[]   @relation("PostAuthor")
+
+  @@index([role, isActive])
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([identifier, value])
+}
+
+model ActivityLog {
+  id         String   @id @default(cuid())
+  userId     String?
+  action     String
+  entityType String
+  entityId   String?
+  summary    String?
+  diff       Json?
+  ipHash     String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([createdAt])
+  @@index([entityType, entityId])
+  @@index([userId, createdAt])
+}
+
+model MediaAsset {
+  id           String         @id @default(cuid())
+  kind         MediaKind      @default(IMAGE)
+  publicId     String         @unique
+  url          String
+  format       String?
+  width        Int?
+  height       Int?
+  bytes        Int?
+  alt          String
+  caption      String?
+  folder       String?
+  uploadedBy   String?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  projectMedia ProjectMedia[]
+
+  @@index([folder, createdAt])
+}
+
+model Service {
+  id           String           @id @default(cuid())
+  slug         String           @unique
+  title        String
+  shortDesc    String
+  description  String
+  scopeItems   String[]
+  iconKey      String?
+  coverId      String?
+  status       PublishStatus    @default(PUBLISHED)
+  isFeatured   Boolean          @default(false)
+  sortOrder    Int              @default(0)
+  seoTitle     String?
+  seoDesc      String?
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+  projects     Project[]
+  faqs         Faq[]
+  estimator    EstimatorService?
+
+  @@index([status, sortOrder])
+  @@index([coverId])
+}
+
+model Project {
+  id            String          @id @default(cuid())
+  slug          String          @unique
+  title         String
+  summary       String
+  description   String?
+  serviceId     String?
+  clientName    String?
+  showClientName Boolean        @default(false)
+  locationText  String?
+  areaSqft      Int?
+  floorsText    String?
+  scopeText     String?
+  year          Int?
+  status        ProjectStatus   @default(COMPLETED)
+  progressPct   Int?
+  isFeatured    Boolean         @default(false)
+  publishStatus PublishStatus   @default(DRAFT)
+  sortOrder     Int             @default(0)
+  seoTitle      String?
+  seoDesc       String?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  service       Service?        @relation(fields: [serviceId], references: [id], onDelete: SetNull)
+  media         ProjectMedia[]
+  testimonials  Testimonial[]
+
+  @@index([publishStatus, isFeatured, sortOrder])
+  @@index([serviceId])
+  @@index([status, year])
+}
+
+model ProjectMedia {
+  id         String     @id @default(cuid())
+  projectId  String
+  mediaId    String
+  isCover    Boolean    @default(false)
+  isBefore   Boolean    @default(false)
+  isAfter    Boolean    @default(false)
+  sortOrder  Int        @default(0)
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  project    Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  media      MediaAsset @relation(fields: [mediaId], references: [id], onDelete: Restrict)
+
+  @@unique([projectId, mediaId])
+  @@index([projectId, sortOrder])
+  @@index([mediaId])
+}
+
+model GalleryItem {
+  id         String   @id @default(cuid())
+  mediaId    String
+  category   String
+  title      String?
+  sortOrder  Int      @default(0)
+  isVisible  Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([category, sortOrder])
+  @@index([isVisible, category, sortOrder])
+  @@index([mediaId])
+}
+
+model Testimonial {
+  id         String        @id @default(cuid())
+  name       String
+  roleOrOrg  String?
+  quote      String
+  rating     Int?
+  projectId  String?
+  status     PublishStatus @default(DRAFT)
+  sortOrder  Int           @default(0)
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+  project    Project?      @relation(fields: [projectId], references: [id], onDelete: SetNull)
+
+  @@index([status, sortOrder])
+  @@index([projectId])
+}
+
+model Faq {
+  id         String        @id @default(cuid())
+  question   String
+  answer     String
+  serviceId  String?
+  status     PublishStatus @default(PUBLISHED)
+  sortOrder  Int           @default(0)
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+  service    Service?      @relation(fields: [serviceId], references: [id], onDelete: SetNull)
+
+  @@index([serviceId, status, sortOrder])
+}
+
+model TeamMember {
+  id            String   @id @default(cuid())
+  name          String
+  qualification String?
+  designation   String
+  experienceYrs Int?
+  bio           String?
+  photoId       String?
+  sortOrder     Int      @default(0)
+  isVisible     Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([isVisible, sortOrder])
+  @@index([photoId])
+}
+
+model BlogCategory {
+  id        String     @id @default(cuid())
+  slug      String     @unique
+  name      String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  posts     BlogPost[]
+}
+
+model BlogPost {
+  id           String        @id @default(cuid())
+  slug         String        @unique
+  title        String
+  excerpt      String
+  content      String
+  coverId      String?
+  categoryId   String?
+  authorId     String?
+  status       PublishStatus @default(DRAFT)
+  publishedAt  DateTime?
+  readingMins  Int?
+  seoTitle     String?
+  seoDesc      String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  category     BlogCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  author       User?         @relation("PostAuthor", fields: [authorId], references: [id], onDelete: SetNull)
+
+  @@index([status, publishedAt])
+  @@index([categoryId])
+  @@index([authorId])
+  @@index([coverId])
+}
+
+model PageSection {
+  id        String   @id @default(cuid())
+  pageKey   String
+  sectionKey String
+  content   Json
+  sortOrder Int      @default(0)
+  isVisible Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([pageKey, sectionKey])
+  @@index([pageKey, isVisible, sortOrder])
+}
+
+model PageSeo {
+  id          String   @id @default(cuid())
+  path        String   @unique
+  title       String?
+  description String?
+  ogImageId   String?
+  canonical   String?
+  noIndex     Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([noIndex])
+  @@index([ogImageId])
+}
+
+model SiteSetting {
+  id             String   @id @default("singleton")
+  businessName   String
+  tagline        String?
+  phones         String[]
+  email          String?
+  whatsappNumber String?
+  whatsappMessage String?
+  address        String?
+  mapEmbedUrl    String?
+  businessHours  Json?
+  socials        Json?
+  credentials    Json?
+  brochureMediaId String?
+  notifyEmails   String[]
+  foundedYear    Int      @default(2003)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([brochureMediaId])
+}
+
+model Lead {
+  id           String     @id @default(cuid())
+  publicId     String     @unique
+  type         LeadType
+  status       LeadStatus @default(NEW)
+  name         String
+  phone        String
+  email        String?
+  location     String?
+  message      String?
+  consent      Boolean    @default(false)
+  consentAt    DateTime?
+  sourcePage   String?
+  referrer     String?
+  utmSource    String?
+  utmMedium    String?
+  utmCampaign  String?
+  utmTerm      String?
+  utmContent   String?
+  deviceType   String?
+  ipHash       String?
+  isDuplicate  Boolean    @default(false)
+  assignedToId String?
+  followUpAt   DateTime?
+  deletedAt    DateTime?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  assignedTo   User?      @relation("LeadAssignee", fields: [assignedToId], references: [id], onDelete: SetNull)
+  notes        LeadNote[]
+  history      LeadStatusHistory[]
+  quote        Quote?
+  emailLogs    EmailLog[]
+
+  @@index([status, createdAt])
+  @@index([type, createdAt])
+  @@index([phone])
+  @@index([assignedToId, status])
+  @@index([deletedAt])
+}
+
+model LeadNote {
+  id        String   @id @default(cuid())
+  leadId    String
+  authorId  String?
+  body      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  lead      Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  author    User?    @relation(fields: [authorId], references: [id], onDelete: SetNull)
+
+  @@index([leadId, createdAt])
+  @@index([authorId])
+}
+
+model LeadStatusHistory {
+  id         String     @id @default(cuid())
+  leadId     String
+  fromStatus LeadStatus?
+  toStatus   LeadStatus
+  changedBy  String?
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  lead       Lead       @relation(fields: [leadId], references: [id], onDelete: Cascade)
+
+  @@index([leadId, createdAt])
+  @@index([changedBy])
+}
+
+model ContactEvent {
+  id         String           @id @default(cuid())
+  type       ContactEventType
+  pagePath   String
+  context    String?
+  ipHash     String?
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+
+  @@index([type, createdAt])
+  @@index([pagePath, createdAt])
+}
+
+model EstimatorService {
+  id             String             @id @default(cuid())
+  serviceId      String?            @unique
+  slug           String             @unique
+  name           String
+  description    String?
+  pricingMode    PricingMode        @default(ESTIMATE)
+  unit           AreaUnit           @default(SQFT)
+  baseRate       Decimal            @db.Decimal(12, 2)
+  minCharge      Decimal            @default(0) @db.Decimal(12, 2)
+  minArea        Int                @default(100)
+  maxArea        Int                @default(100000)
+  spreadPercent  Decimal            @default(10) @db.Decimal(5, 2)
+  roundTo        Int                @default(100)
+  disclaimer     String?
+  version        Int                @default(1)
+  isActive       Boolean            @default(true)
+  sortOrder      Int                @default(0)
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+  service        Service?           @relation(fields: [serviceId], references: [id], onDelete: SetNull)
+  fields         EstimatorField[]
+  rules          PricingRule[]
+  quotes         Quote[]
+
+  @@index([isActive, sortOrder])
+}
+
+model EstimatorField {
+  id                 String           @id @default(cuid())
+  estimatorServiceId String
+  key                String
+  label              String
+  helpText           String?
+  type               FieldType
+  required           Boolean          @default(true)
+  sortOrder          Int              @default(0)
+  min                Int?
+  max                Int?
+  step               Int?
+  defaultValue       String?
+  showIf             Json?
+  effectType         EffectType       @default(NONE)
+  effectValue        Decimal?         @db.Decimal(12, 2)
+  isActive            Boolean          @default(true)
+  createdAt           DateTime         @default(now())
+  updatedAt           DateTime         @updatedAt
+  estimatorService   EstimatorService @relation(fields: [estimatorServiceId], references: [id], onDelete: Cascade)
+  options            FieldOption[]
+
+  @@unique([estimatorServiceId, key])
+  @@index([estimatorServiceId, sortOrder])
+  @@index([estimatorServiceId, isActive])
+}
+
+model FieldOption {
+  id          String         @id @default(cuid())
+  fieldId     String
+  value       String
+  label       String
+  description String?
+  effectType  EffectType     @default(NONE)
+  effectValue Decimal?       @db.Decimal(12, 2)
+  sortOrder   Int            @default(0)
+  isActive    Boolean        @default(true)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  field       EstimatorField @relation(fields: [fieldId], references: [id], onDelete: Cascade)
+
+  @@unique([fieldId, value])
+  @@index([fieldId, sortOrder])
+  @@index([fieldId, isActive])
+}
+
+model LocationZone {
+  id            String   @id @default(cuid())
+  name          String
+  keywords      String[]
+  multiplierPct Decimal  @default(0) @db.Decimal(5, 2)
+  isActive      Boolean  @default(true)
+  sortOrder     Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  quotes        Quote[]
+
+  @@index([isActive, sortOrder])
+}
+
+model PricingRule {
+  id                 String           @id @default(cuid())
+  estimatorServiceId String
+  name               String
+  order              Int              @default(0)
+  condition          Json
+  effectType         EffectType
+  effectValue        Decimal          @db.Decimal(12, 2)
+  isActive            Boolean          @default(true)
+  createdAt           DateTime         @default(now())
+  updatedAt           DateTime         @updatedAt
+  estimatorService   EstimatorService @relation(fields: [estimatorServiceId], references: [id], onDelete: Cascade)
+
+  @@index([estimatorServiceId, order])
+  @@index([estimatorServiceId, isActive])
+}
+
+model Quote {
+  id                 String             @id @default(cuid())
+  leadId             String             @unique
+  estimatorServiceId String
+  locationZoneId     String?
+  areaValue          Int
+  answers            Json
+  breakdown          Json
+  configSnapshot     Json
+  configVersion      Int
+  configHash         String
+  lowAmount          Int
+  highAmount         Int
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+  lead               Lead               @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  estimatorService   EstimatorService   @relation(fields: [estimatorServiceId], references: [id], onDelete: Restrict)
+  locationZone       LocationZone?      @relation(fields: [locationZoneId], references: [id], onDelete: SetNull)
+
+  @@index([estimatorServiceId, createdAt])
+  @@index([locationZoneId])
+}
+
+model EmailLog {
+  id        String         @id @default(cuid())
+  type      String
+  status    EmailLogStatus
+  leadId    String?
+  errorCode String?
+  createdAt DateTime       @default(now())
+  lead      Lead?          @relation(fields: [leadId], references: [id], onDelete: SetNull)
+
+  @@index([leadId, createdAt])
+  @@index([status, createdAt])
+}

@@ -1,0 +1,20 @@
+import Link from "next/link";
+
+import { PageHeader, ProjectListActions } from "@/components/admin";
+import { Badge, Button, EmptyState, Input, Select } from "@/components/ui";
+import { requirePermission } from "@/lib/auth/session";
+import { listProjects } from "@/server/services/projects";
+
+type SearchParams = Promise<Record<string, string | string[] | undefined>>;
+function first(value: string | string[] | undefined): string | undefined { return Array.isArray(value) ? value[0] : value; }
+
+export default async function ProjectsPage({ searchParams }: { searchParams: SearchParams }) {
+  await requirePermission("content:write");
+  const params = await searchParams;
+  const q = first(params.q);
+  const publishStatus = first(params.publishStatus);
+  const status = first(params.status);
+  const projects = await listProjects({ q, publishStatus: publishStatus === "DRAFT" || publishStatus === "PUBLISHED" || publishStatus === "ARCHIVED" ? publishStatus : undefined, status: status === "COMPLETED" || status === "ONGOING" ? status : undefined });
+  return <div className="space-y-6"><PageHeader title="Projects" eyebrow="Content workspace" description="Manage portfolio facts, client-name privacy, ordered media, publication, featured projects, and SEO." action={<Link href="/admin/projects/new"><Button>Add project</Button></Link>} /><form method="get" action="/admin/projects" className="flex flex-col gap-3 rounded-card border bg-surface p-4 md:flex-row"><label className="flex-1 text-sm font-semibold">Search<Input name="q" defaultValue={q} placeholder="Search title, slug, or location" className="mt-1 w-full font-normal" /></label><label className="text-sm font-semibold">Publish status<Select name="publishStatus" defaultValue={publishStatus ?? ""} className="mt-1 min-w-40"><option value="">All</option><option value="DRAFT">Draft</option><option value="PUBLISHED">Published</option><option value="ARCHIVED">Archived</option></Select></label><label className="text-sm font-semibold">Project status<Select name="status" defaultValue={status ?? ""} className="mt-1 min-w-40"><option value="">All</option><option value="COMPLETED">Completed</option><option value="ONGOING">Ongoing</option></Select></label><Button type="submit" variant="secondary" className="self-end">Filter</Button></form>{projects.length === 0 ? <EmptyState title="No projects found" description={q || publishStatus || status ? "Try a different filter or add a new project." : "Create the first project to start building the public portfolio."} action={<Link href="/admin/projects/new"><Button>Add project</Button></Link>} /> : <div className="overflow-x-auto rounded-card border bg-surface"><table className="w-full min-w-[72rem] text-left text-sm"><thead className="border-b bg-surface-alt text-ink-muted"><tr><th scope="col" className="px-4 py-3">Project</th><th scope="col" className="px-4 py-3">Service</th><th scope="col" className="px-4 py-3">Status</th><th scope="col" className="px-4 py-3">Media</th><th scope="col" className="px-4 py-3">Order</th><th scope="col" className="px-4 py-3">Actions</th></tr></thead><tbody className="divide-y">{projects.map((project, index) => <tr key={project.id} className="hover:bg-surface-alt/60"><td className="px-4 py-4"><p className="font-semibold">{project.title}</p><p className="text-xs text-ink-muted">/{project.slug}{project.showClientName ? " · client name visible" : " · client name private"}</p></td><td className="px-4 py-4">{project.service?.title ?? "—"}</td><td className="px-4 py-4"><div className="flex flex-wrap gap-2"><Badge variant={project.publishStatus === "PUBLISHED" ? "success" : project.publishStatus === "ARCHIVED" ? "danger" : "warning"}>{project.publishStatus}</Badge><Badge>{project.status}{project.status === "ONGOING" && project.progressPct !== null ? ` · ${project.progressPct}%` : ""}</Badge></div></td><td className="px-4 py-4">{project.media.length}</td><td className="px-4 py-4">{project.sortOrder}</td><td className="px-4 py-4"><ProjectListActions project={project} canMoveUp={index > 0} canMoveDown={index < projects.length - 1} /></td></tr>)}</tbody></table></div>}</div>;
+}
+

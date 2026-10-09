@@ -351,6 +351,7 @@ model Lead {
   notes        LeadNote[]
   history      LeadStatusHistory[]
   quote        Quote?
+  emailLogs    EmailLog[]
 
   @@index([status, createdAt])
   @@index([type, createdAt])
@@ -379,6 +380,20 @@ model LeadStatusHistory {
   createdAt  DateTime   @default(now())
   lead       Lead       @relation(fields: [leadId], references: [id], onDelete: Cascade)
   @@index([leadId, createdAt])
+}
+
+enum EmailLogStatus { SENT FAILED SKIPPED }
+
+model EmailLog {
+  id        String         @id @default(cuid())
+  type      String
+  status    EmailLogStatus
+  leadId    String?
+  errorCode String?
+  createdAt DateTime       @default(now())
+  lead      Lead?          @relation(fields: [leadId], references: [id], onDelete: SetNull)
+  @@index([leadId, createdAt])
+  @@index([status, createdAt])
 }
 
 model ContactEvent {

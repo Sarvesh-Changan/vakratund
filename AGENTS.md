@@ -24,7 +24,7 @@ If something is missing or ambiguous, **ask or write an ADR in `docs/adr/`**; do
 
 ## Stack (do not substitute without an ADR)
 Next.js (latest stable, App Router) · TypeScript strict · Tailwind CSS · PostgreSQL on Neon ·
-Prisma ORM · Better Auth (email+password, DB sessions) · Cloudinary · Resend · Zod ·
+Prisma ORM · Better Auth (email+password, DB sessions) · Cloudinary · Nodemailer SMTP · Zod ·
 React Hook Form · Vitest · Playwright · Vercel.
 
 ## Commands (keep these working at all times)
@@ -62,3 +62,13 @@ npm run build        # production build
 - Make small, reviewable commits using Conventional Commits (`feat:`, `fix:`, `chore:`...).
 - At the end of each phase, list: files changed, commands to run, how to verify, known gaps.
 - Mark anything that needs **client-supplied data** as `TODO(client):` and list them.
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

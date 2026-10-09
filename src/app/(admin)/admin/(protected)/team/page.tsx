@@ -1,0 +1,14 @@
+import Link from "next/link";
+
+import { PageHeader, TeamListActions } from "@/components/admin";
+import { Badge, Button, EmptyState, Input } from "@/components/ui";
+import { requirePermission } from "@/lib/auth/session";
+import { listTeamMembers } from "@/server/services/team";
+
+type SearchParams = Promise<Record<string, string | string[] | undefined>>;
+function first(value: string | string[] | undefined): string | undefined { return Array.isArray(value) ? value[0] : value; }
+
+export default async function TeamPage({ searchParams }: { searchParams: SearchParams }) {
+  await requirePermission("content:write"); const params = await searchParams; const q = first(params.q); const members = await listTeamMembers({ q });
+  return <div className="space-y-6"><PageHeader title="Team" eyebrow="Content workspace" description="Manage team details, approved photos, public visibility, and ordering." action={<Link href="/admin/team/new"><Button>Add team member</Button></Link>} /><form method="get" action="/admin/team" className="flex gap-3 rounded-card border bg-surface p-4"><label className="flex-1 text-sm font-semibold">Search<Input name="q" defaultValue={q} placeholder="Search name, qualification, or designation" className="mt-1 w-full font-normal" /></label><Button type="submit" variant="secondary" className="self-end">Search</Button></form>{members.length === 0 ? <EmptyState title="No team members found" description={q ? "Try a different search or add a team member." : "Add the first team member for the About page."} action={<Link href="/admin/team/new"><Button>Add team member</Button></Link>} /> : <div className="overflow-x-auto rounded-card border bg-surface"><table className="w-full min-w-[68rem] text-left text-sm"><thead className="border-b bg-surface-alt text-ink-muted"><tr><th scope="col" className="px-4 py-3">Member</th><th scope="col" className="px-4 py-3">Qualification</th><th scope="col" className="px-4 py-3">Experience</th><th scope="col" className="px-4 py-3">Visibility</th><th scope="col" className="px-4 py-3">Actions</th></tr></thead><tbody className="divide-y">{members.map((item, index) => <tr key={item.id} className="hover:bg-surface-alt/60"><td className="px-4 py-4"><p className="font-semibold">{item.name}</p><p className="text-xs text-ink-muted">{item.designation}{item.photo ? " · photo attached" : " · no photo"}</p></td><td className="px-4 py-4">{item.qualification ?? "—"}</td><td className="px-4 py-4">{item.experienceYrs === null ? "—" : `${item.experienceYrs} years`}</td><td className="px-4 py-4"><Badge variant={item.isVisible ? "success" : "warning"}>{item.isVisible ? "VISIBLE" : "HIDDEN"}</Badge></td><td className="px-4 py-4"><TeamListActions item={item} canMoveUp={index > 0} canMoveDown={index < members.length - 1} /></td></tr>)}</tbody></table></div>}</div>;
+}

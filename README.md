@@ -1,20 +1,29 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+This is the M/s. Vakratund Construction website: a database-driven Next.js site with an estimator, public lead forms, CMS-managed content, and a protected admin pipeline. Email notifications use Nodemailer over Gmail SMTP.
 
 ## Getting Started
 
-First, run the development server:
+Install dependencies and configure the environment:
 
 ```bash
+npm ci
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+Copy `.env.example` to `.env.local`. Keep secrets out of source control. For local email delivery, configure the SMTP variables with a Gmail app password; incomplete SMTP configuration safely skips email in development.
+
+Useful checks:
+
+```bash
+npm run typecheck
+npm run lint
+npm run test
+npm run build
+npm run email:test
+```
+
+See [AGENTS.md](./AGENTS.md), [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md), [docs/RUNBOOK.md](./docs/RUNBOOK.md), and [docs/SECURITY.md](./docs/SECURITY.md) for project conventions, operations, and security requirements.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 

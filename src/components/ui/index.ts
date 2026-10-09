@@ -11,6 +11,7 @@ export * from "./error-state";
 export * from "./form-field";
 export * from "./input";
 export * from "./motion";
+export * from "./count-up";
 export * from "./pagination";
 export * from "./radio";
 export * from "./section-heading";

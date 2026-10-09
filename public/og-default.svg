@@ -1,0 +1,12 @@
+<!-- TODO(client): replace with the approved brand/social sharing image. -->
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Vakratund Construction</title>
+  <desc id="desc">Civil engineering, project management and turnkey development since 2003.</desc>
+  <rect width="1200" height="630" fill="#14110f"/>
+  <circle cx="1010" cy="90" r="270" fill="#f59a0c" opacity=".12"/>
+  <rect x="84" y="98" width="72" height="72" rx="36" fill="#f59a0c"/>
+  <text x="120" y="149" text-anchor="middle" fill="#1a1208" font-family="Arial, sans-serif" font-size="42" font-weight="700">V</text>
+  <text x="84" y="282" fill="#f5efe4" font-family="Arial, sans-serif" font-size="58" font-weight="700">Vakratund Construction</text>
+  <text x="84" y="348" fill="#f59a0c" font-family="Arial, sans-serif" font-size="28" font-weight="700">Civil Engineering · PMC · Turnkey Development</text>
+  <text x="84" y="420" fill="#b8ad9e" font-family="Arial, sans-serif" font-size="24">Building trust since 2003 · Thane &amp; Mumbai</text>
+</svg>

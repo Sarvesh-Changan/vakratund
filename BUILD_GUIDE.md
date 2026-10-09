@@ -24,7 +24,7 @@ vakratund-web/                 <- your repo root
 | GitHub | repo, CI | Phase 0 |
 | Neon | PostgreSQL | Phase 4 |
 | Cloudinary | media | Phase 7 |
-| Resend | email | Phase 17 |
+| Gmail SMTP | email | Phase 17 |
 | Upstash (optional but recommended) | rate limiting | Phase 19 |
 | Cloudflare Turnstile (optional) | bot protection | Phase 19 |
 | Vercel | hosting | Phase 22 |
@@ -385,14 +385,14 @@ Done when: leads from all forms appear in admin with correct source tracking and
 ---
 
 ## Phase 16 — Email, WhatsApp & call integrations
-**You do first:** create Resend account, verify your sending domain (or use the test domain), add `RESEND_API_KEY`, `EMAIL_FROM`, `LEAD_NOTIFY_TO` to `.env.local`.
+**You do first:** enable 2-Step Verification on the Gmail account, create an app password, and add the SMTP variables to `.env.local`.
 
 **Prompt**
 ```text
 PHASE 16 — Email and contact integrations.
-1. Email service src/lib/email using Resend + React Email templates: (a) admin new-lead notification (type, name, phone, location, message, quote range, link to admin), (b) visitor confirmation (summary, what happens next, contact numbers), (c) password reset, (d) brochure delivery.
+1. Email service src/lib/email using Nodemailer over SMTP + React Email templates: (a) admin new-lead notification (type, name, phone, location, message, quote range, link to admin), (b) visitor confirmation (summary, what happens next, contact numbers), (c) password reset, (d) brochure delivery.
 2. Recipients from SiteSetting.notifyEmails with env fallback. Strip CR/LF from header values; escape content.
-3. Sending happens AFTER the DB transaction; failures are logged (no PII) and never fail the user's submission. Add an EmailLog table (status, type, leadId, error code) and a retry mechanism (simple "resend" button in admin lead detail).
+3. Sending happens AFTER the DB transaction; failures are logged (no PII) and never fail the user's submission. Add an EmailLog table (status, type, leadId, error code) and a retry button in admin lead detail.
 4. WhatsApp: helper to build wa.me links from settings (+ per-project/page prefilled text). Click-to-call tel: links everywhere phone numbers appear. Ensure ContactEvent logging is wired (from Phase 8).
 5. Optional: Google Analytics 4 events (generate_lead, click_call, click_whatsapp, estimate_completed) behind consent and NEXT_PUBLIC_GA_ID.
 6. Unit tests for template rendering and recipient resolution; mock the provider.
@@ -478,7 +478,7 @@ PHASE 21 — Production readiness.
 2. Add deployment scripts/docs: `prisma migrate deploy` strategy (CI or Vercel build command using DIRECT_URL), idempotent production seed (insert-only defaults; never overwrite client edits), first SUPER_ADMIN creation procedure.
 3. Add Vercel config (vercel.json only if necessary), image domains, caching headers for static assets, and redirects for legacy URLs.
 4. Add health/monitoring: /api/health (basic) and /api/health?deep=1 (SUPER_ADMIN only); optional Sentry integration behind env flag with PII scrubbing; Vercel Analytics/Speed Insights toggles.
-5. Create docs/DEPLOYMENT.md: step-by-step for Neon production branch, Vercel project, env vars (Production vs Preview), domain + DNS, SSL, Resend domain verification, Cloudinary settings, rollback.
+5. Create docs/DEPLOYMENT.md: step-by-step for Neon production branch, Vercel project, env vars (Production vs Preview), domain + DNS, SSL, Gmail SMTP app password, Cloudinary settings, rollback.
 6. Final cleanup: remove dev-only pages from production (/design-system), remove unused deps/files, ensure no console.log of sensitive data.
 Done when: a production build passes and docs/DEPLOYMENT.md can be followed by someone new.
 ```
@@ -493,7 +493,7 @@ Done when: a production build passes and docs/DEPLOYMENT.md can be followed by s
 3. Run production migration: `DIRECT_URL=<prod direct> npx prisma migrate deploy` (from your machine or CI).
 4. Run production seed once; log in with the seeded SUPER_ADMIN and change the password immediately.
 5. Add domain in Vercel, update DNS at registrar, wait for SSL.
-6. Verify Resend domain, Cloudinary upload preset/CORS, Turnstile site key (if used).
+6. Verify Gmail SMTP app-password delivery, Cloudinary upload preset/CORS, Turnstile site key (if used).
 
 **Prompt (assist only)**
 ```text
@@ -573,7 +573,7 @@ Refactor <area> to <goal>. Constraints: no behavior change, keep public APIs, ad
 NEXT_PUBLIC_SITE_URL
 DATABASE_URL            # Neon pooled
 DIRECT_URL              # Neon direct (migrations)
-BETTER_AUTH_SECRET      # generate: openssl rand -base64 32
+BETTER_AUTH_SECRET      # generate: node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
 BETTER_AUTH_URL
 SEED_ADMIN_EMAIL        # first-run only
 SEED_ADMIN_PASSWORD     # first-run only; change immediately
@@ -581,7 +581,11 @@ CLOUDINARY_CLOUD_NAME
 CLOUDINARY_API_KEY
 CLOUDINARY_API_SECRET
 NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
-RESEND_API_KEY
+SMTP_HOST
+SMTP_PORT
+SMTP_SECURE
+SMTP_USER
+SMTP_PASS
 EMAIL_FROM
 LEAD_NOTIFY_TO
 UPSTASH_REDIS_REST_URL
@@ -589,7 +593,7 @@ UPSTASH_REDIS_REST_TOKEN
 TURNSTILE_SECRET_KEY            # optional
 NEXT_PUBLIC_TURNSTILE_SITE_KEY  # optional
 NEXT_PUBLIC_GA_ID               # optional
-IP_HASH_SECRET                  # random string for hashing IPs
+IP_HASH_SECRET                  # generate: node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
 TEST_DATABASE_URL               # tests only
 ```
 
@@ -603,7 +607,7 @@ TEST_DATABASE_URL               # tests only
 | Server Action 403 in production | Origin mismatch behind proxy | Configure allowed origins per Next.js docs |
 | CSP blocks inline JSON-LD | Missing nonce | Pass nonce to JSON-LD script component |
 | ISR not updating after edit | Tag not revalidated | Ensure Server Action calls `revalidateTag` for the right tags |
-| Emails not delivered | Domain unverified/spam | Verify SPF/DKIM in Resend; check logs/EmailLog |
+| Emails not delivered | SMTP authentication, spam filtering, or Gmail limits | Check EmailLog, confirm the app password, EMAIL_FROM, SMTP host/port, and Gmail account alerts |
 | Agent installs random packages | Prompt too open | Re-state "no new deps without justification"; use Correction Prompt |
 
 ## Appendix D — Suggested phase timeline (solo + AI agent)

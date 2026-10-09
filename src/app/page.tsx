@@ -1,10 +1,18 @@
-export default function Home() {
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-8 text-center">
-      <h1 className="text-4xl font-bold tracking-tight">M/s. Vakratund Construction</h1>
-      <p className="mt-4 text-lg text-muted-foreground">
-        Quality is our first priority &bull; Civil Engineering &amp; Turnkey Development (Est. 2003)
-      </p>
-    </main>
-  );
+import type { Metadata } from "next";
+import { HomePage } from "@/components/site/home-page";
+import { SiteShell } from "@/components/site/site-shell";
+import { buildMetadata } from "@/lib/seo/metadata";
+import { getHomePageData } from "@/server/queries/home";
+import { getPublicSeo } from "@/server/queries/seo";
+
+export const revalidate = 3600;
+
+export async function generateMetadata(): Promise<Metadata> {
+  const [data, pageSeo] = await Promise.all([getHomePageData(), getPublicSeo("/").catch(() => null)]);
+  return buildMetadata({ path: "/", fallbackTitle: "Civil Engineering, PMC & Turnkey Development", fallbackDescription: `${data.settings.businessName} provides civil engineering, project management, structural repair and turnkey construction services across Thane and Mumbai.`, pageSeo, siteName: data.settings.businessName });
+}
+
+export default async function Home() {
+  const data = await getHomePageData();
+  return <SiteShell settings={data.settings}><HomePage data={data} /></SiteShell>;
 }

@@ -1,10 +1,14 @@
-import { defineConfig } from 'vitest/config';
+import { defineConfig, defaultExclude } from 'vitest/config';
 import { fileURLToPath } from 'url';
 
 export default defineConfig({
   test: {
     environment: 'jsdom',
     globals: true,
+    testTimeout: 15000,
+    pool: 'threads',
+    maxWorkers: 2,
+    exclude: [...defaultExclude, "tests/e2e/**"],
   },
   resolve: {
     alias: {

@@ -1,0 +1,11 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+};
+
+export const dynamic = "force-dynamic";
+
+export default function AdminLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  return <main className="min-h-screen bg-bg text-ink">{children}</main>;
+}
