@@ -5,6 +5,7 @@ export * from "./form-section";
 export * from "./module-placeholder";
 export * from "./module-states";
 export * from "./media-picker";
+export * from "./section-uploader";
 export * from "./page-header";
 export * from "./save-bar";
 export * from "./status-badge";

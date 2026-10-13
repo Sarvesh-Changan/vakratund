@@ -16,7 +16,7 @@ import { getPublishedTestimonials } from "@/server/queries/testimonials";
 
 describe("public content queries", () => {
   it("reads published testimonials with the testimonials cache tag", async () => {
-    testimonialFindMany.mockResolvedValue([{ id: "t1", name: "Client", roleOrOrg: null, quote: "Good", rating: null, project: null, sortOrder: 0 }]);
+    testimonialFindMany.mockResolvedValue([{ id: "t1", name: "Client", roleOrOrg: null, quote: "Good", rating: null, photo: null, project: null, sortOrder: 0 }]);
     const result = await getPublishedTestimonials();
     expect(result).toHaveLength(1);
     expect(testimonialFindMany).toHaveBeenCalledWith(expect.objectContaining({ where: { status: "PUBLISHED" } }));

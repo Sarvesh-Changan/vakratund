@@ -18,7 +18,7 @@ vi.mock("@/server/services/testimonials", () => ({
 
 import { createTestimonial } from "@/app/(admin)/admin/(protected)/testimonials/actions";
 
-const validInput = { name: "A. Client", roleOrOrg: "Secretary", quote: "Excellent work.", rating: 5, projectId: null, status: "DRAFT", sortOrder: 0 };
+const validInput = { name: "A. Client", roleOrOrg: "Secretary", quote: "Excellent work.", rating: 5, projectId: null, photoId: null, status: "DRAFT", sortOrder: 0 };
 
 describe("testimonial action authorization", () => {
   beforeEach(() => { vi.clearAllMocks(); createRecord.mockResolvedValue({ id: "testimonial-1" }); });

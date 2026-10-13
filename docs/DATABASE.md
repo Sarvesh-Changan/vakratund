@@ -118,12 +118,15 @@ model MediaAsset {
   alt         String                  // required for images (a11y)
   caption     String?
   folder      String?
+  etag        String?                 // Cloudinary response etag
   uploadedBy  String?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
-  projectMedia ProjectMedia[]
+  projectMedia       ProjectMedia[]
+  testimonialPhotos  Testimonial[] @relation("TestimonialPhoto")
   @@index([folder, createdAt])
+  @@index([etag])
 }
 
 // ───────────── Content ─────────────
@@ -195,15 +198,45 @@ model ProjectMedia {
   @@index([projectId, sortOrder])
 }
 
+enum GalleryDesignType { INTERIOR EXTERIOR }
+enum GalleryMediaType  { IMAGE VIDEO }
+
+model GalleryCategory {
+  id        String        @id @default(cuid())
+  name      String        @unique
+  slug      String        @unique
+  sortOrder Int           @default(0)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  items     GalleryItem[]
+  @@index([sortOrder, name])
+}
+
 model GalleryItem {
-  id         String   @id @default(cuid())
-  mediaId    String
-  category   String                      // e.g. "waterproofing"
-  title      String?
-  sortOrder  Int      @default(0)
-  isVisible  Boolean  @default(true)
-  createdAt  DateTime @default(now())
-  @@index([category, sortOrder])
+  id              String            @id @default(cuid())
+  title           String
+  categoryId      String
+  designType      GalleryDesignType
+  mediaType       GalleryMediaType
+  publicId        String            @unique
+  url             String
+  format          String
+  bytes           Int
+  etag            String
+  width           Int?
+  height          Int?
+  duration        Float?
+  isCategoryCover Boolean           @default(false)
+  isFeatured      Boolean           @default(false)
+  isPublished     Boolean           @default(true)
+  sortOrder       Int               @default(0)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  category        GalleryCategory   @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  @@index([categoryId, sortOrder])
+  @@index([isPublished, isFeatured])
+  @@index([etag])
+  @@index([designType])
 }
 
 model Testimonial {
@@ -213,12 +246,15 @@ model Testimonial {
   quote      String
   rating     Int?                        // 1-5
   projectId  String?
+  photoId    String?
   status     PublishStatus @default(DRAFT)
   sortOrder  Int           @default(0)
   createdAt  DateTime      @default(now())
   updatedAt  DateTime      @updatedAt
   project    Project?      @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  photo      MediaAsset?   @relation("TestimonialPhoto", fields: [photoId], references: [id], onDelete: SetNull)
   @@index([status, sortOrder])
+  @@index([photoId])
 }
 
 model Faq {

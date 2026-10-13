@@ -60,6 +60,7 @@ export const ModelName = {
   Service: 'Service',
   Project: 'Project',
   ProjectMedia: 'ProjectMedia',
+  GalleryCategory: 'GalleryCategory',
   GalleryItem: 'GalleryItem',
   Testimonial: 'Testimonial',
   Faq: 'Faq',
@@ -188,6 +189,7 @@ export const MediaAssetScalarFieldEnum = {
   alt: 'alt',
   caption: 'caption',
   folder: 'folder',
+  etag: 'etag',
   uploadedBy: 'uploadedBy',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -260,13 +262,36 @@ export const ProjectMediaScalarFieldEnum = {
 export type ProjectMediaScalarFieldEnum = (typeof ProjectMediaScalarFieldEnum)[keyof typeof ProjectMediaScalarFieldEnum]
 
 
+export const GalleryCategoryScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slug: 'slug',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type GalleryCategoryScalarFieldEnum = (typeof GalleryCategoryScalarFieldEnum)[keyof typeof GalleryCategoryScalarFieldEnum]
+
+
 export const GalleryItemScalarFieldEnum = {
   id: 'id',
-  mediaId: 'mediaId',
-  category: 'category',
   title: 'title',
+  categoryId: 'categoryId',
+  designType: 'designType',
+  mediaType: 'mediaType',
+  publicId: 'publicId',
+  url: 'url',
+  format: 'format',
+  bytes: 'bytes',
+  etag: 'etag',
+  width: 'width',
+  height: 'height',
+  duration: 'duration',
+  isCategoryCover: 'isCategoryCover',
+  isFeatured: 'isFeatured',
+  isPublished: 'isPublished',
   sortOrder: 'sortOrder',
-  isVisible: 'isVisible',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -281,6 +306,7 @@ export const TestimonialScalarFieldEnum = {
   quote: 'quote',
   rating: 'rating',
   projectId: 'projectId',
+  photoId: 'photoId',
   status: 'status',
   sortOrder: 'sortOrder',
   createdAt: 'createdAt',

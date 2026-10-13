@@ -12,7 +12,7 @@ describe("content module validation", () => {
   });
 
   it("allows an optional testimonial rating only from one through five", () => {
-    const base = { name: "A. Client", roleOrOrg: "Secretary", quote: "Excellent work.", projectId: null, status: "PUBLISHED" as const, sortOrder: 0 };
+    const base = { name: "A. Client", roleOrOrg: "Secretary", quote: "Excellent work.", projectId: null, photoId: null, status: "PUBLISHED" as const, sortOrder: 0 };
     expect(createTestimonialSchema.safeParse({ ...base, rating: null }).success).toBe(true);
     expect(createTestimonialSchema.safeParse({ ...base, rating: 5 }).success).toBe(true);
     expect(createTestimonialSchema.safeParse({ ...base, rating: 0 }).success).toBe(false);

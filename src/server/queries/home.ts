@@ -8,6 +8,7 @@ import { prisma } from "@/lib/db/client";
 import { pageSectionSchemas } from "@/lib/validation/pages";
 import { getPublicPageSections } from "@/server/queries/pages";
 import { getPublishedFaqs } from "@/server/queries/faqs";
+import { getFeaturedGallery } from "@/server/queries/gallery";
 import { getPublishedProjects } from "@/server/queries/projects";
 import { getPublicSettings } from "@/server/queries/settings";
 import { getPublishedServices, type PublishedService } from "@/server/queries/services";
@@ -30,6 +31,7 @@ export type HomePageData = {
   cta: HomeCta | null;
   services: Awaited<ReturnType<typeof getPublishedServices>>;
   featuredProjects: Awaited<ReturnType<typeof getPublishedProjects>>;
+  featuredGallery: Awaited<ReturnType<typeof getFeaturedGallery>>;
   structuralService: PublishedService | null;
   testimonials: Awaited<ReturnType<typeof getPublishedTestimonials>>;
   faqs: Awaited<ReturnType<typeof getPublishedFaqs>>;
@@ -90,16 +92,17 @@ function fallbackCta(): HomeCta {
 
 function fallbackHomePageData(): HomePageData {
   const settings = resolveSiteSettings(null);
-  return { settings, hero: fallbackHero(settings), heroImage: null, stats: null, process: null, cta: fallbackCta(), services: [], featuredProjects: [], structuralService: null, testimonials: [], faqs: [], team: [] };
+  return { settings, hero: fallbackHero(settings), heroImage: null, stats: null, process: null, cta: fallbackCta(), services: [], featuredProjects: [], featuredGallery: [], structuralService: null, testimonials: [], faqs: [], team: [] };
 }
 
 async function readHomePageData(): Promise<HomePageData> {
   try {
-    const [settingsRow, sections, services, featuredProjects, testimonials, faqs, team] = await Promise.all([
+    const [settingsRow, sections, services, featuredProjects, featuredGallery, testimonials, faqs, team] = await Promise.all([
       getPublicSettings(),
       getPublicPageSections("home"),
       getPublishedServices(),
       getPublishedProjects({ isFeatured: true }),
+      getFeaturedGallery(),
       getPublishedTestimonials(),
       getPublishedFaqs(),
       getVisibleTeamMembers(),
@@ -112,11 +115,11 @@ async function readHomePageData(): Promise<HomePageData> {
     const ctaSection = sections.find((section) => section.sectionKey === "cta");
     const heroImage = hero.backgroundImageId ? await prisma.mediaAsset.findFirst({ where: { id: hero.backgroundImageId, kind: "IMAGE" }, select: { url: true, alt: true, width: true, height: true } }) : null;
 
-    return { settings, hero, heroImage, stats: statsSection ? normalizeStats(statsSection.content) : null, process: processSection ? normalizeHomeProcess(processSection.content) : null, cta: ctaSection ? normalizeHomeCta(ctaSection.content) ?? fallbackCta() : fallbackCta(), services, featuredProjects, structuralService: services.find((service) => service.slug === "structural-repairs-rehabilitation") ?? null, testimonials, faqs, team };
+    return { settings, hero, heroImage, stats: statsSection ? normalizeStats(statsSection.content) : null, process: processSection ? normalizeHomeProcess(processSection.content) : null, cta: ctaSection ? normalizeHomeCta(ctaSection.content) ?? fallbackCta() : fallbackCta(), services, featuredProjects, featuredGallery, structuralService: services.find((service) => service.slug === "structural-repairs-rehabilitation") ?? null, testimonials, faqs, team };
   } catch (error) {
     if (process.env.NEXT_PHASE === "phase-production-build") return fallbackHomePageData();
     throw error;
   }
 }
 
-export const getHomePageData = unstable_cache(readHomePageData, ["home-page"], { tags: ["settings", "pages", "services", "projects", "testimonials", "faqs", "team"], revalidate: 3600 });
+export const getHomePageData = unstable_cache(readHomePageData, ["home-page"], { tags: ["settings", "pages", "services", "projects", "gallery", "testimonials", "faqs", "team"], revalidate: 3600 });

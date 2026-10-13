@@ -3,66 +3,126 @@
 import { revalidatePath, revalidateTag } from "next/cache";
 
 import { requirePermission } from "@/lib/auth/session";
-import { bulkAddGalleryItemsSchema, createGalleryItemSchema, deleteGalleryItemSchema, reorderGalleryItemsSchema, updateGalleryItemSchema } from "@/lib/validation/gallery";
-import { bulkAddGalleryItems, createGalleryItem, deleteGalleryItem, GalleryItemNotFoundError, GalleryMediaNotFoundError, listGalleryItems, reorderGalleryItems, updateGalleryItem } from "@/server/services/gallery";
+import { checkGallerySyncLimit } from "@/lib/rate-limit/gallery-sync";
+import { createGalleryCategorySchema, createGalleryItemSchema, deleteGalleryCategorySchema, deleteGalleryItemSchema, galleryDuplicateSchema, reorderGalleryCategorySchema, reorderGalleryItemSchema, syncGalleryMetadataSchema, toggleGalleryItemSchema, updateGalleryCategorySchema, updateGalleryItemSchema } from "@/lib/validation/gallery";
+import { createGalleryCategory as createCategoryRecord, createGalleryItem as createItemRecord, deleteGalleryCategory as deleteCategoryRecord, deleteGalleryItem as deleteItemRecord, findGalleryDuplicate, GalleryAssetInvalidError, GalleryAssetNotFoundError, GalleryCategoryNameConflictError, GalleryCategoryNotFoundError, GalleryCategorySlugConflictError, GalleryDuplicateEtagError, GalleryItemNotFoundError, listGalleryCategories, listGalleryItems, reorderGalleryCategory as reorderCategoryRecord, reorderGalleryItem as reorderItemRecord, syncMissingGalleryMetadata, toggleGalleryItem as toggleItemRecord, updateGalleryCategory as updateCategoryRecord, updateGalleryItem as updateItemRecord } from "@/server/services/gallery";
 
 export type GalleryActionResult<T> =
   | { ok: true; data: T }
-  | { ok: false; error: { code: string; message: string; fieldErrors?: Record<string, string[]> } };
+  | { ok: false; error: { code: string; message: string; fieldErrors?: Record<string, string[]>; duplicate?: { id: string; title: string; categoryName: string }; cleanupFailures?: number; retryAfterSeconds?: number } };
 
 function validationError(error: { flatten: () => { fieldErrors: Record<string, string[]> } }): GalleryActionResult<never> {
   return { ok: false, error: { code: "VALIDATION_ERROR", message: "Please correct the highlighted fields.", fieldErrors: error.flatten().fieldErrors } };
 }
 
 function failure(error: unknown): GalleryActionResult<never> {
-  if (error instanceof GalleryMediaNotFoundError) return { ok: false, error: { code: "MEDIA_NOT_FOUND", message: error.message, fieldErrors: { mediaId: [error.message], mediaIds: [error.message] } } };
-  if (error instanceof GalleryItemNotFoundError) return { ok: false, error: { code: "NOT_FOUND", message: "The gallery item no longer exists." } };
+  if (error instanceof GalleryCategoryNameConflictError) return { ok: false, error: { code: "CATEGORY_NAME_EXISTS", message: error.message, fieldErrors: { name: [error.message] } } };
+  if (error instanceof GalleryCategorySlugConflictError) return { ok: false, error: { code: "CATEGORY_SLUG_EXISTS", message: error.message, fieldErrors: { slug: [error.message] } } };
+  if (error instanceof GalleryCategoryNotFoundError) return { ok: false, error: { code: "CATEGORY_NOT_FOUND", message: "The gallery category no longer exists." } };
+  if (error instanceof GalleryItemNotFoundError) return { ok: false, error: { code: "ITEM_NOT_FOUND", message: "The gallery item no longer exists." } };
+  if (error instanceof GalleryAssetNotFoundError || error instanceof GalleryAssetInvalidError) return { ok: false, error: { code: "ASSET_INVALID", message: error.message, fieldErrors: { assetId: [error.message] } } };
+  if (error instanceof GalleryDuplicateEtagError) return { ok: false, error: { code: "DUPLICATE_ETAG", message: error.message, duplicate: error.duplicate } };
+  console.error("Gallery mutation failed", { error: error instanceof Error ? error.message : "unknown error" });
   return { ok: false, error: { code: "MUTATION_FAILED", message: "The gallery could not be saved. Please try again." } };
 }
 
-function revalidateGallery(): void {
+function revalidateGallery(slugs: readonly (string | null | undefined)[] = []): void {
   revalidateTag("gallery", "max");
+  for (const slug of new Set(slugs.filter((value): value is string => Boolean(value)))) revalidateTag(`gallery:category:${slug}`, "max");
   revalidatePath("/admin/gallery");
   revalidatePath("/gallery");
 }
 
-export async function createGallery(input: unknown): Promise<GalleryActionResult<Awaited<ReturnType<typeof createGalleryItem>>>> {
-  const session = await requirePermission("media:write");
+export async function createGalleryCategory(input: unknown): Promise<GalleryActionResult<Awaited<ReturnType<typeof createCategoryRecord>>>> {
+  const session = await requirePermission("content:write");
+  const parsed = createGalleryCategorySchema.safeParse(input);
+  if (!parsed.success) return validationError(parsed.error);
+  try { const result = await createCategoryRecord(parsed.data, session.user.id); revalidateGallery([result.slug]); return { ok: true, data: result }; } catch (error) { return failure(error); }
+}
+
+export async function updateGalleryCategory(input: unknown): Promise<GalleryActionResult<Awaited<ReturnType<typeof updateCategoryRecord>>>> {
+  const session = await requirePermission("content:write");
+  const parsed = updateGalleryCategorySchema.safeParse(input);
+  if (!parsed.success) return validationError(parsed.error);
+  try {
+    const previous = await listGalleryCategories().then((rows) => rows.find((row) => row.id === parsed.data.id)?.slug);
+    const result = await updateCategoryRecord(parsed.data, session.user.id);
+    revalidateGallery([previous, result.slug]);
+    return { ok: true, data: result };
+  } catch (error) { return failure(error); }
+}
+
+export async function deleteGalleryCategory(input: unknown): Promise<GalleryActionResult<Awaited<ReturnType<typeof deleteCategoryRecord>>>> {
+  const session = await requirePermission("content:write");
+  const parsed = deleteGalleryCategorySchema.safeParse(input);
+  if (!parsed.success) return validationError(parsed.error);
+  try {
+    const previous = await listGalleryCategories().then((rows) => rows.find((row) => row.id === parsed.data.id)?.slug);
+    const result = await deleteCategoryRecord(parsed.data.id, session.user.id);
+    revalidateGallery([previous]);
+    return { ok: true, data: result };
+  } catch (error) { return failure(error); }
+}
+
+export async function reorderGalleryCategory(input: unknown): Promise<GalleryActionResult<Awaited<ReturnType<typeof reorderCategoryRecord>>>> {
+  const session = await requirePermission("content:write");
+  const parsed = reorderGalleryCategorySchema.safeParse(input);
+  if (!parsed.success) return validationError(parsed.error);
+  try { const result = await reorderCategoryRecord(parsed.data, session.user.id); revalidateGallery(result.map((row) => row.slug)); return { ok: true, data: result }; } catch (error) { return failure(error); }
+}
+
+export async function createGalleryItem(input: unknown): Promise<GalleryActionResult<Awaited<ReturnType<typeof createItemRecord>>>> {
+  const session = await requirePermission("content:write");
   const parsed = createGalleryItemSchema.safeParse(input);
   if (!parsed.success) return validationError(parsed.error);
-  try { const result = await createGalleryItem(parsed.data, session.user.id); revalidateGallery(); return { ok: true, data: result }; } catch (error) { return failure(error); }
+  try { const result = await createItemRecord(parsed.data, session.user.id); revalidateGallery([result.category.slug]); return { ok: true, data: result }; } catch (error) { return failure(error); }
 }
 
-export async function updateGallery(input: unknown): Promise<GalleryActionResult<Awaited<ReturnType<typeof updateGalleryItem>>>> {
-  const session = await requirePermission("media:write");
+export async function updateGalleryItem(input: unknown): Promise<GalleryActionResult<Awaited<ReturnType<typeof updateItemRecord>>>> {
+  const session = await requirePermission("content:write");
   const parsed = updateGalleryItemSchema.safeParse(input);
   if (!parsed.success) return validationError(parsed.error);
-  try { const result = await updateGalleryItem(parsed.data, session.user.id); revalidateGallery(); return { ok: true, data: result }; } catch (error) { return failure(error); }
+  try { const result = await updateItemRecord(parsed.data, session.user.id); revalidateGallery([result.category.slug]); return { ok: true, data: result }; } catch (error) { return failure(error); }
 }
 
-export async function deleteGallery(input: unknown): Promise<GalleryActionResult<Awaited<ReturnType<typeof deleteGalleryItem>>>> {
-  const session = await requirePermission("media:write");
+export async function deleteGalleryItem(input: unknown): Promise<GalleryActionResult<Awaited<ReturnType<typeof deleteItemRecord>>>> {
+  const session = await requirePermission("content:write");
   const parsed = deleteGalleryItemSchema.safeParse(input);
   if (!parsed.success) return validationError(parsed.error);
-  try { const result = await deleteGalleryItem(parsed.data.id, session.user.id); revalidateGallery(); return { ok: true, data: result }; } catch (error) { return failure(error); }
+  try { const result = await deleteItemRecord(parsed.data.id, session.user.id); revalidateGallery([result.categorySlug]); return { ok: true, data: result }; } catch (error) { return failure(error); }
 }
 
-export async function reorderGallery(input: unknown): Promise<GalleryActionResult<Awaited<ReturnType<typeof reorderGalleryItems>>>> {
-  const session = await requirePermission("media:write");
-  const parsed = reorderGalleryItemsSchema.safeParse(input);
+export async function toggleGalleryItem(input: unknown): Promise<GalleryActionResult<Awaited<ReturnType<typeof toggleItemRecord>>>> {
+  const session = await requirePermission("content:write");
+  const parsed = toggleGalleryItemSchema.safeParse(input);
   if (!parsed.success) return validationError(parsed.error);
-  try { const result = await reorderGalleryItems(parsed.data, session.user.id); revalidateGallery(); return { ok: true, data: result }; } catch (error) { return failure(error); }
+  try { const result = await toggleItemRecord(parsed.data, session.user.id); revalidateGallery([result.category.slug]); return { ok: true, data: result }; } catch (error) { return failure(error); }
 }
 
-export async function bulkAddGallery(input: unknown): Promise<GalleryActionResult<Awaited<ReturnType<typeof bulkAddGalleryItems>>>> {
-  const session = await requirePermission("media:write");
-  const parsed = bulkAddGalleryItemsSchema.safeParse(input);
+export async function reorderGalleryItem(input: unknown): Promise<GalleryActionResult<Awaited<ReturnType<typeof reorderItemRecord>>>> {
+  const session = await requirePermission("content:write");
+  const parsed = reorderGalleryItemSchema.safeParse(input);
   if (!parsed.success) return validationError(parsed.error);
-  try { const result = await bulkAddGalleryItems(parsed.data, session.user.id); revalidateGallery(); return { ok: true, data: result }; } catch (error) { return failure(error); }
+  try { const result = await reorderItemRecord(parsed.data, session.user.id); revalidateGallery(result.map((row) => row.category.slug)); return { ok: true, data: result }; } catch (error) { return failure(error); }
 }
 
-export async function refreshGallery(): Promise<GalleryActionResult<Awaited<ReturnType<typeof listGalleryItems>>>> {
-  await requirePermission("media:write");
-  return { ok: true, data: await listGalleryItems() };
+export async function checkGalleryDuplicate(input: unknown): Promise<GalleryActionResult<Awaited<ReturnType<typeof findGalleryDuplicate>>>> {
+  await requirePermission("content:write");
+  const parsed = galleryDuplicateSchema.safeParse(input);
+  if (!parsed.success) return validationError(parsed.error);
+  try { return { ok: true, data: await findGalleryDuplicate(parsed.data.etag, parsed.data.excludeId) }; } catch (error) { return failure(error); }
 }
 
+export async function syncGalleryMetadata(input: unknown = {}): Promise<GalleryActionResult<Awaited<ReturnType<typeof syncMissingGalleryMetadata>>>> {
+  const session = await requirePermission("content:write");
+  const parsed = syncGalleryMetadataSchema.safeParse(input);
+  if (!parsed.success) return validationError(parsed.error);
+  const rate = checkGallerySyncLimit(session.user.id);
+  if (!rate.allowed) return { ok: false, error: { code: "RATE_LIMITED", message: "Metadata sync is limited to three runs per hour.", retryAfterSeconds: rate.retryAfterSeconds } };
+  try { const result = await syncMissingGalleryMetadata(session.user.id); revalidateGallery(); return { ok: true, data: result }; } catch (error) { return failure(error); }
+}
+
+export async function refreshGalleryLists(): Promise<GalleryActionResult<{ categories: Awaited<ReturnType<typeof listGalleryCategories>>; items: Awaited<ReturnType<typeof listGalleryItems>> }>> {
+  await requirePermission("content:write");
+  try { const [categories, items] = await Promise.all([listGalleryCategories(), listGalleryItems()]); return { ok: true, data: { categories, items } }; } catch (error) { return failure(error); }
+}

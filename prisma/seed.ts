@@ -994,6 +994,27 @@ async function main() {
     });
   }
 
+  setSeedStage("gallery categories");
+  const galleryCategories = [
+    { name: "Waterproofing", slug: "waterproofing" },
+    { name: "Structural Repairs", slug: "structural-repairs" },
+    { name: "Painting", slug: "painting" },
+    { name: "Interiors", slug: "interiors" },
+    { name: "Fabrication & Porta House", slug: "fabrication-porta-house" },
+    { name: "Building Construction", slug: "building-construction" },
+  ];
+  for (const [sortOrder, category] of galleryCategories.entries()) {
+    const existing = await prisma.galleryCategory.findFirst({
+      where: { name: { equals: category.name, mode: "insensitive" } },
+      select: { id: true },
+    });
+    if (!existing) {
+      await prisma.galleryCategory.create({
+        data: { ...category, sortOrder },
+      });
+    }
+  }
+
   setSeedStage("location zones");
   for (const location of locations) {
     await prisma.locationZone.upsert({

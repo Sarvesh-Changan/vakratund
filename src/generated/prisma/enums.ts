@@ -122,3 +122,19 @@ export const MediaKind = {
 } as const
 
 export type MediaKind = (typeof MediaKind)[keyof typeof MediaKind]
+
+
+export const GalleryDesignType = {
+  INTERIOR: 'INTERIOR',
+  EXTERIOR: 'EXTERIOR'
+} as const
+
+export type GalleryDesignType = (typeof GalleryDesignType)[keyof typeof GalleryDesignType]
+
+
+export const GalleryMediaType = {
+  IMAGE: 'IMAGE',
+  VIDEO: 'VIDEO'
+} as const
+
+export type GalleryMediaType = (typeof GalleryMediaType)[keyof typeof GalleryMediaType]

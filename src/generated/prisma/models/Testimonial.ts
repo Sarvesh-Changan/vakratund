@@ -43,6 +43,7 @@ export type TestimonialMinAggregateOutputType = {
   quote: string | null
   rating: number | null
   projectId: string | null
+  photoId: string | null
   status: $Enums.PublishStatus | null
   sortOrder: number | null
   createdAt: Date | null
@@ -56,6 +57,7 @@ export type TestimonialMaxAggregateOutputType = {
   quote: string | null
   rating: number | null
   projectId: string | null
+  photoId: string | null
   status: $Enums.PublishStatus | null
   sortOrder: number | null
   createdAt: Date | null
@@ -69,6 +71,7 @@ export type TestimonialCountAggregateOutputType = {
   quote: number
   rating: number
   projectId: number
+  photoId: number
   status: number
   sortOrder: number
   createdAt: number
@@ -94,6 +97,7 @@ export type TestimonialMinAggregateInputType = {
   quote?: true
   rating?: true
   projectId?: true
+  photoId?: true
   status?: true
   sortOrder?: true
   createdAt?: true
@@ -107,6 +111,7 @@ export type TestimonialMaxAggregateInputType = {
   quote?: true
   rating?: true
   projectId?: true
+  photoId?: true
   status?: true
   sortOrder?: true
   createdAt?: true
@@ -120,6 +125,7 @@ export type TestimonialCountAggregateInputType = {
   quote?: true
   rating?: true
   projectId?: true
+  photoId?: true
   status?: true
   sortOrder?: true
   createdAt?: true
@@ -220,6 +226,7 @@ export type TestimonialGroupByOutputType = {
   quote: string
   rating: number | null
   projectId: string | null
+  photoId: string | null
   status: $Enums.PublishStatus
   sortOrder: number
   createdAt: Date
@@ -256,11 +263,13 @@ export type TestimonialWhereInput = {
   quote?: Prisma.StringFilter<"Testimonial"> | string
   rating?: Prisma.IntNullableFilter<"Testimonial"> | number | null
   projectId?: Prisma.StringNullableFilter<"Testimonial"> | string | null
+  photoId?: Prisma.StringNullableFilter<"Testimonial"> | string | null
   status?: Prisma.EnumPublishStatusFilter<"Testimonial"> | $Enums.PublishStatus
   sortOrder?: Prisma.IntFilter<"Testimonial"> | number
   createdAt?: Prisma.DateTimeFilter<"Testimonial"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Testimonial"> | Date | string
   project?: Prisma.XOR<Prisma.ProjectNullableScalarRelationFilter, Prisma.ProjectWhereInput> | null
+  photo?: Prisma.XOR<Prisma.MediaAssetNullableScalarRelationFilter, Prisma.MediaAssetWhereInput> | null
 }
 
 export type TestimonialOrderByWithRelationInput = {
@@ -270,11 +279,13 @@ export type TestimonialOrderByWithRelationInput = {
   quote?: Prisma.SortOrder
   rating?: Prisma.SortOrderInput | Prisma.SortOrder
   projectId?: Prisma.SortOrderInput | Prisma.SortOrder
+  photoId?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   project?: Prisma.ProjectOrderByWithRelationInput
+  photo?: Prisma.MediaAssetOrderByWithRelationInput
 }
 
 export type TestimonialWhereUniqueInput = Prisma.AtLeast<{
@@ -287,11 +298,13 @@ export type TestimonialWhereUniqueInput = Prisma.AtLeast<{
   quote?: Prisma.StringFilter<"Testimonial"> | string
   rating?: Prisma.IntNullableFilter<"Testimonial"> | number | null
   projectId?: Prisma.StringNullableFilter<"Testimonial"> | string | null
+  photoId?: Prisma.StringNullableFilter<"Testimonial"> | string | null
   status?: Prisma.EnumPublishStatusFilter<"Testimonial"> | $Enums.PublishStatus
   sortOrder?: Prisma.IntFilter<"Testimonial"> | number
   createdAt?: Prisma.DateTimeFilter<"Testimonial"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Testimonial"> | Date | string
   project?: Prisma.XOR<Prisma.ProjectNullableScalarRelationFilter, Prisma.ProjectWhereInput> | null
+  photo?: Prisma.XOR<Prisma.MediaAssetNullableScalarRelationFilter, Prisma.MediaAssetWhereInput> | null
 }, "id">
 
 export type TestimonialOrderByWithAggregationInput = {
@@ -301,6 +314,7 @@ export type TestimonialOrderByWithAggregationInput = {
   quote?: Prisma.SortOrder
   rating?: Prisma.SortOrderInput | Prisma.SortOrder
   projectId?: Prisma.SortOrderInput | Prisma.SortOrder
+  photoId?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -322,6 +336,7 @@ export type TestimonialScalarWhereWithAggregatesInput = {
   quote?: Prisma.StringWithAggregatesFilter<"Testimonial"> | string
   rating?: Prisma.IntNullableWithAggregatesFilter<"Testimonial"> | number | null
   projectId?: Prisma.StringNullableWithAggregatesFilter<"Testimonial"> | string | null
+  photoId?: Prisma.StringNullableWithAggregatesFilter<"Testimonial"> | string | null
   status?: Prisma.EnumPublishStatusWithAggregatesFilter<"Testimonial"> | $Enums.PublishStatus
   sortOrder?: Prisma.IntWithAggregatesFilter<"Testimonial"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Testimonial"> | Date | string
@@ -339,6 +354,7 @@ export type TestimonialCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   project?: Prisma.ProjectCreateNestedOneWithoutTestimonialsInput
+  photo?: Prisma.MediaAssetCreateNestedOneWithoutTestimonialPhotosInput
 }
 
 export type TestimonialUncheckedCreateInput = {
@@ -348,6 +364,7 @@ export type TestimonialUncheckedCreateInput = {
   quote: string
   rating?: number | null
   projectId?: string | null
+  photoId?: string | null
   status?: $Enums.PublishStatus
   sortOrder?: number
   createdAt?: Date | string
@@ -365,6 +382,7 @@ export type TestimonialUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   project?: Prisma.ProjectUpdateOneWithoutTestimonialsNestedInput
+  photo?: Prisma.MediaAssetUpdateOneWithoutTestimonialPhotosNestedInput
 }
 
 export type TestimonialUncheckedUpdateInput = {
@@ -374,6 +392,7 @@ export type TestimonialUncheckedUpdateInput = {
   quote?: Prisma.StringFieldUpdateOperationsInput | string
   rating?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPublishStatusFieldUpdateOperationsInput | $Enums.PublishStatus
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -387,6 +406,7 @@ export type TestimonialCreateManyInput = {
   quote: string
   rating?: number | null
   projectId?: string | null
+  photoId?: string | null
   status?: $Enums.PublishStatus
   sortOrder?: number
   createdAt?: Date | string
@@ -412,6 +432,7 @@ export type TestimonialUncheckedUpdateManyInput = {
   quote?: Prisma.StringFieldUpdateOperationsInput | string
   rating?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPublishStatusFieldUpdateOperationsInput | $Enums.PublishStatus
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -435,6 +456,7 @@ export type TestimonialCountOrderByAggregateInput = {
   quote?: Prisma.SortOrder
   rating?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
+  photoId?: Prisma.SortOrder
   status?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -453,6 +475,7 @@ export type TestimonialMaxOrderByAggregateInput = {
   quote?: Prisma.SortOrder
   rating?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
+  photoId?: Prisma.SortOrder
   status?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -466,6 +489,7 @@ export type TestimonialMinOrderByAggregateInput = {
   quote?: Prisma.SortOrder
   rating?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
+  photoId?: Prisma.SortOrder
   status?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -475,6 +499,48 @@ export type TestimonialMinOrderByAggregateInput = {
 export type TestimonialSumOrderByAggregateInput = {
   rating?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
+}
+
+export type TestimonialCreateNestedManyWithoutPhotoInput = {
+  create?: Prisma.XOR<Prisma.TestimonialCreateWithoutPhotoInput, Prisma.TestimonialUncheckedCreateWithoutPhotoInput> | Prisma.TestimonialCreateWithoutPhotoInput[] | Prisma.TestimonialUncheckedCreateWithoutPhotoInput[]
+  connectOrCreate?: Prisma.TestimonialCreateOrConnectWithoutPhotoInput | Prisma.TestimonialCreateOrConnectWithoutPhotoInput[]
+  createMany?: Prisma.TestimonialCreateManyPhotoInputEnvelope
+  connect?: Prisma.TestimonialWhereUniqueInput | Prisma.TestimonialWhereUniqueInput[]
+}
+
+export type TestimonialUncheckedCreateNestedManyWithoutPhotoInput = {
+  create?: Prisma.XOR<Prisma.TestimonialCreateWithoutPhotoInput, Prisma.TestimonialUncheckedCreateWithoutPhotoInput> | Prisma.TestimonialCreateWithoutPhotoInput[] | Prisma.TestimonialUncheckedCreateWithoutPhotoInput[]
+  connectOrCreate?: Prisma.TestimonialCreateOrConnectWithoutPhotoInput | Prisma.TestimonialCreateOrConnectWithoutPhotoInput[]
+  createMany?: Prisma.TestimonialCreateManyPhotoInputEnvelope
+  connect?: Prisma.TestimonialWhereUniqueInput | Prisma.TestimonialWhereUniqueInput[]
+}
+
+export type TestimonialUpdateManyWithoutPhotoNestedInput = {
+  create?: Prisma.XOR<Prisma.TestimonialCreateWithoutPhotoInput, Prisma.TestimonialUncheckedCreateWithoutPhotoInput> | Prisma.TestimonialCreateWithoutPhotoInput[] | Prisma.TestimonialUncheckedCreateWithoutPhotoInput[]
+  connectOrCreate?: Prisma.TestimonialCreateOrConnectWithoutPhotoInput | Prisma.TestimonialCreateOrConnectWithoutPhotoInput[]
+  upsert?: Prisma.TestimonialUpsertWithWhereUniqueWithoutPhotoInput | Prisma.TestimonialUpsertWithWhereUniqueWithoutPhotoInput[]
+  createMany?: Prisma.TestimonialCreateManyPhotoInputEnvelope
+  set?: Prisma.TestimonialWhereUniqueInput | Prisma.TestimonialWhereUniqueInput[]
+  disconnect?: Prisma.TestimonialWhereUniqueInput | Prisma.TestimonialWhereUniqueInput[]
+  delete?: Prisma.TestimonialWhereUniqueInput | Prisma.TestimonialWhereUniqueInput[]
+  connect?: Prisma.TestimonialWhereUniqueInput | Prisma.TestimonialWhereUniqueInput[]
+  update?: Prisma.TestimonialUpdateWithWhereUniqueWithoutPhotoInput | Prisma.TestimonialUpdateWithWhereUniqueWithoutPhotoInput[]
+  updateMany?: Prisma.TestimonialUpdateManyWithWhereWithoutPhotoInput | Prisma.TestimonialUpdateManyWithWhereWithoutPhotoInput[]
+  deleteMany?: Prisma.TestimonialScalarWhereInput | Prisma.TestimonialScalarWhereInput[]
+}
+
+export type TestimonialUncheckedUpdateManyWithoutPhotoNestedInput = {
+  create?: Prisma.XOR<Prisma.TestimonialCreateWithoutPhotoInput, Prisma.TestimonialUncheckedCreateWithoutPhotoInput> | Prisma.TestimonialCreateWithoutPhotoInput[] | Prisma.TestimonialUncheckedCreateWithoutPhotoInput[]
+  connectOrCreate?: Prisma.TestimonialCreateOrConnectWithoutPhotoInput | Prisma.TestimonialCreateOrConnectWithoutPhotoInput[]
+  upsert?: Prisma.TestimonialUpsertWithWhereUniqueWithoutPhotoInput | Prisma.TestimonialUpsertWithWhereUniqueWithoutPhotoInput[]
+  createMany?: Prisma.TestimonialCreateManyPhotoInputEnvelope
+  set?: Prisma.TestimonialWhereUniqueInput | Prisma.TestimonialWhereUniqueInput[]
+  disconnect?: Prisma.TestimonialWhereUniqueInput | Prisma.TestimonialWhereUniqueInput[]
+  delete?: Prisma.TestimonialWhereUniqueInput | Prisma.TestimonialWhereUniqueInput[]
+  connect?: Prisma.TestimonialWhereUniqueInput | Prisma.TestimonialWhereUniqueInput[]
+  update?: Prisma.TestimonialUpdateWithWhereUniqueWithoutPhotoInput | Prisma.TestimonialUpdateWithWhereUniqueWithoutPhotoInput[]
+  updateMany?: Prisma.TestimonialUpdateManyWithWhereWithoutPhotoInput | Prisma.TestimonialUpdateManyWithWhereWithoutPhotoInput[]
+  deleteMany?: Prisma.TestimonialScalarWhereInput | Prisma.TestimonialScalarWhereInput[]
 }
 
 export type TestimonialCreateNestedManyWithoutProjectInput = {
@@ -519,6 +585,75 @@ export type TestimonialUncheckedUpdateManyWithoutProjectNestedInput = {
   deleteMany?: Prisma.TestimonialScalarWhereInput | Prisma.TestimonialScalarWhereInput[]
 }
 
+export type TestimonialCreateWithoutPhotoInput = {
+  id?: string
+  name: string
+  roleOrOrg?: string | null
+  quote: string
+  rating?: number | null
+  status?: $Enums.PublishStatus
+  sortOrder?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  project?: Prisma.ProjectCreateNestedOneWithoutTestimonialsInput
+}
+
+export type TestimonialUncheckedCreateWithoutPhotoInput = {
+  id?: string
+  name: string
+  roleOrOrg?: string | null
+  quote: string
+  rating?: number | null
+  projectId?: string | null
+  status?: $Enums.PublishStatus
+  sortOrder?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type TestimonialCreateOrConnectWithoutPhotoInput = {
+  where: Prisma.TestimonialWhereUniqueInput
+  create: Prisma.XOR<Prisma.TestimonialCreateWithoutPhotoInput, Prisma.TestimonialUncheckedCreateWithoutPhotoInput>
+}
+
+export type TestimonialCreateManyPhotoInputEnvelope = {
+  data: Prisma.TestimonialCreateManyPhotoInput | Prisma.TestimonialCreateManyPhotoInput[]
+  skipDuplicates?: boolean
+}
+
+export type TestimonialUpsertWithWhereUniqueWithoutPhotoInput = {
+  where: Prisma.TestimonialWhereUniqueInput
+  update: Prisma.XOR<Prisma.TestimonialUpdateWithoutPhotoInput, Prisma.TestimonialUncheckedUpdateWithoutPhotoInput>
+  create: Prisma.XOR<Prisma.TestimonialCreateWithoutPhotoInput, Prisma.TestimonialUncheckedCreateWithoutPhotoInput>
+}
+
+export type TestimonialUpdateWithWhereUniqueWithoutPhotoInput = {
+  where: Prisma.TestimonialWhereUniqueInput
+  data: Prisma.XOR<Prisma.TestimonialUpdateWithoutPhotoInput, Prisma.TestimonialUncheckedUpdateWithoutPhotoInput>
+}
+
+export type TestimonialUpdateManyWithWhereWithoutPhotoInput = {
+  where: Prisma.TestimonialScalarWhereInput
+  data: Prisma.XOR<Prisma.TestimonialUpdateManyMutationInput, Prisma.TestimonialUncheckedUpdateManyWithoutPhotoInput>
+}
+
+export type TestimonialScalarWhereInput = {
+  AND?: Prisma.TestimonialScalarWhereInput | Prisma.TestimonialScalarWhereInput[]
+  OR?: Prisma.TestimonialScalarWhereInput[]
+  NOT?: Prisma.TestimonialScalarWhereInput | Prisma.TestimonialScalarWhereInput[]
+  id?: Prisma.StringFilter<"Testimonial"> | string
+  name?: Prisma.StringFilter<"Testimonial"> | string
+  roleOrOrg?: Prisma.StringNullableFilter<"Testimonial"> | string | null
+  quote?: Prisma.StringFilter<"Testimonial"> | string
+  rating?: Prisma.IntNullableFilter<"Testimonial"> | number | null
+  projectId?: Prisma.StringNullableFilter<"Testimonial"> | string | null
+  photoId?: Prisma.StringNullableFilter<"Testimonial"> | string | null
+  status?: Prisma.EnumPublishStatusFilter<"Testimonial"> | $Enums.PublishStatus
+  sortOrder?: Prisma.IntFilter<"Testimonial"> | number
+  createdAt?: Prisma.DateTimeFilter<"Testimonial"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Testimonial"> | Date | string
+}
+
 export type TestimonialCreateWithoutProjectInput = {
   id?: string
   name: string
@@ -529,6 +664,7 @@ export type TestimonialCreateWithoutProjectInput = {
   sortOrder?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  photo?: Prisma.MediaAssetCreateNestedOneWithoutTestimonialPhotosInput
 }
 
 export type TestimonialUncheckedCreateWithoutProjectInput = {
@@ -537,6 +673,7 @@ export type TestimonialUncheckedCreateWithoutProjectInput = {
   roleOrOrg?: string | null
   quote: string
   rating?: number | null
+  photoId?: string | null
   status?: $Enums.PublishStatus
   sortOrder?: number
   createdAt?: Date | string
@@ -569,20 +706,56 @@ export type TestimonialUpdateManyWithWhereWithoutProjectInput = {
   data: Prisma.XOR<Prisma.TestimonialUpdateManyMutationInput, Prisma.TestimonialUncheckedUpdateManyWithoutProjectInput>
 }
 
-export type TestimonialScalarWhereInput = {
-  AND?: Prisma.TestimonialScalarWhereInput | Prisma.TestimonialScalarWhereInput[]
-  OR?: Prisma.TestimonialScalarWhereInput[]
-  NOT?: Prisma.TestimonialScalarWhereInput | Prisma.TestimonialScalarWhereInput[]
-  id?: Prisma.StringFilter<"Testimonial"> | string
-  name?: Prisma.StringFilter<"Testimonial"> | string
-  roleOrOrg?: Prisma.StringNullableFilter<"Testimonial"> | string | null
-  quote?: Prisma.StringFilter<"Testimonial"> | string
-  rating?: Prisma.IntNullableFilter<"Testimonial"> | number | null
-  projectId?: Prisma.StringNullableFilter<"Testimonial"> | string | null
-  status?: Prisma.EnumPublishStatusFilter<"Testimonial"> | $Enums.PublishStatus
-  sortOrder?: Prisma.IntFilter<"Testimonial"> | number
-  createdAt?: Prisma.DateTimeFilter<"Testimonial"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"Testimonial"> | Date | string
+export type TestimonialCreateManyPhotoInput = {
+  id?: string
+  name: string
+  roleOrOrg?: string | null
+  quote: string
+  rating?: number | null
+  projectId?: string | null
+  status?: $Enums.PublishStatus
+  sortOrder?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type TestimonialUpdateWithoutPhotoInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  roleOrOrg?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  quote?: Prisma.StringFieldUpdateOperationsInput | string
+  rating?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumPublishStatusFieldUpdateOperationsInput | $Enums.PublishStatus
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  project?: Prisma.ProjectUpdateOneWithoutTestimonialsNestedInput
+}
+
+export type TestimonialUncheckedUpdateWithoutPhotoInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  roleOrOrg?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  quote?: Prisma.StringFieldUpdateOperationsInput | string
+  rating?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumPublishStatusFieldUpdateOperationsInput | $Enums.PublishStatus
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type TestimonialUncheckedUpdateManyWithoutPhotoInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  roleOrOrg?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  quote?: Prisma.StringFieldUpdateOperationsInput | string
+  rating?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumPublishStatusFieldUpdateOperationsInput | $Enums.PublishStatus
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type TestimonialCreateManyProjectInput = {
@@ -591,6 +764,7 @@ export type TestimonialCreateManyProjectInput = {
   roleOrOrg?: string | null
   quote: string
   rating?: number | null
+  photoId?: string | null
   status?: $Enums.PublishStatus
   sortOrder?: number
   createdAt?: Date | string
@@ -607,6 +781,7 @@ export type TestimonialUpdateWithoutProjectInput = {
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  photo?: Prisma.MediaAssetUpdateOneWithoutTestimonialPhotosNestedInput
 }
 
 export type TestimonialUncheckedUpdateWithoutProjectInput = {
@@ -615,6 +790,7 @@ export type TestimonialUncheckedUpdateWithoutProjectInput = {
   roleOrOrg?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quote?: Prisma.StringFieldUpdateOperationsInput | string
   rating?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  photoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPublishStatusFieldUpdateOperationsInput | $Enums.PublishStatus
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -627,6 +803,7 @@ export type TestimonialUncheckedUpdateManyWithoutProjectInput = {
   roleOrOrg?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   quote?: Prisma.StringFieldUpdateOperationsInput | string
   rating?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  photoId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPublishStatusFieldUpdateOperationsInput | $Enums.PublishStatus
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -642,11 +819,13 @@ export type TestimonialSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   quote?: boolean
   rating?: boolean
   projectId?: boolean
+  photoId?: boolean
   status?: boolean
   sortOrder?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   project?: boolean | Prisma.Testimonial$projectArgs<ExtArgs>
+  photo?: boolean | Prisma.Testimonial$photoArgs<ExtArgs>
 }, ExtArgs["result"]["testimonial"]>
 
 export type TestimonialSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -656,11 +835,13 @@ export type TestimonialSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   quote?: boolean
   rating?: boolean
   projectId?: boolean
+  photoId?: boolean
   status?: boolean
   sortOrder?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   project?: boolean | Prisma.Testimonial$projectArgs<ExtArgs>
+  photo?: boolean | Prisma.Testimonial$photoArgs<ExtArgs>
 }, ExtArgs["result"]["testimonial"]>
 
 export type TestimonialSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -670,11 +851,13 @@ export type TestimonialSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   quote?: boolean
   rating?: boolean
   projectId?: boolean
+  photoId?: boolean
   status?: boolean
   sortOrder?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   project?: boolean | Prisma.Testimonial$projectArgs<ExtArgs>
+  photo?: boolean | Prisma.Testimonial$photoArgs<ExtArgs>
 }, ExtArgs["result"]["testimonial"]>
 
 export type TestimonialSelectScalar = {
@@ -684,27 +867,32 @@ export type TestimonialSelectScalar = {
   quote?: boolean
   rating?: boolean
   projectId?: boolean
+  photoId?: boolean
   status?: boolean
   sortOrder?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type TestimonialOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "roleOrOrg" | "quote" | "rating" | "projectId" | "status" | "sortOrder" | "createdAt" | "updatedAt", ExtArgs["result"]["testimonial"]>
+export type TestimonialOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "roleOrOrg" | "quote" | "rating" | "projectId" | "photoId" | "status" | "sortOrder" | "createdAt" | "updatedAt", ExtArgs["result"]["testimonial"]>
 export type TestimonialInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   project?: boolean | Prisma.Testimonial$projectArgs<ExtArgs>
+  photo?: boolean | Prisma.Testimonial$photoArgs<ExtArgs>
 }
 export type TestimonialIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   project?: boolean | Prisma.Testimonial$projectArgs<ExtArgs>
+  photo?: boolean | Prisma.Testimonial$photoArgs<ExtArgs>
 }
 export type TestimonialIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   project?: boolean | Prisma.Testimonial$projectArgs<ExtArgs>
+  photo?: boolean | Prisma.Testimonial$photoArgs<ExtArgs>
 }
 
 export type $TestimonialPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Testimonial"
   objects: {
     project: Prisma.$ProjectPayload<ExtArgs> | null
+    photo: Prisma.$MediaAssetPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -713,6 +901,7 @@ export type $TestimonialPayload<ExtArgs extends runtime.Types.Extensions.Interna
     quote: string
     rating: number | null
     projectId: string | null
+    photoId: string | null
     status: $Enums.PublishStatus
     sortOrder: number
     createdAt: Date
@@ -1112,6 +1301,7 @@ readonly fields: TestimonialFieldRefs;
 export interface Prisma__TestimonialClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   project<T extends Prisma.Testimonial$projectArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Testimonial$projectArgs<ExtArgs>>): Prisma.Prisma__ProjectClient<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  photo<T extends Prisma.Testimonial$photoArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Testimonial$photoArgs<ExtArgs>>): Prisma.Prisma__MediaAssetClient<runtime.Types.Result.GetResult<Prisma.$MediaAssetPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1147,6 +1337,7 @@ export interface TestimonialFieldRefs {
   readonly quote: Prisma.FieldRef<"Testimonial", 'String'>
   readonly rating: Prisma.FieldRef<"Testimonial", 'Int'>
   readonly projectId: Prisma.FieldRef<"Testimonial", 'String'>
+  readonly photoId: Prisma.FieldRef<"Testimonial", 'String'>
   readonly status: Prisma.FieldRef<"Testimonial", 'PublishStatus'>
   readonly sortOrder: Prisma.FieldRef<"Testimonial", 'Int'>
   readonly createdAt: Prisma.FieldRef<"Testimonial", 'DateTime'>
@@ -1568,6 +1759,25 @@ export type Testimonial$projectArgs<ExtArgs extends runtime.Types.Extensions.Int
    */
   include?: Prisma.ProjectInclude<ExtArgs> | null
   where?: Prisma.ProjectWhereInput
+}
+
+/**
+ * Testimonial.photo
+ */
+export type Testimonial$photoArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the MediaAsset
+   */
+  select?: Prisma.MediaAssetSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the MediaAsset
+   */
+  omit?: Prisma.MediaAssetOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MediaAssetInclude<ExtArgs> | null
+  where?: Prisma.MediaAssetWhereInput
 }
 
 /**

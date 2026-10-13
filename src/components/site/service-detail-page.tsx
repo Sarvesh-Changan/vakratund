@@ -2,6 +2,7 @@ import { ArrowRight, Check, ExternalLink } from "lucide-react";
 import Link from "next/link";
 
 import { CloudImage } from "@/components/cloud-image";
+import { CloudVideoPoster } from "@/components/cloud-video-poster";
 import { FaqPageJsonLd, BreadcrumbJsonLd, ServiceJsonLd } from "@/components/seo/json-ld";
 import { Accordion, AccordionItem, Badge, Breadcrumbs, Card, Container, SectionHeading } from "@/components/ui";
 import { MarkdownRenderer } from "@/lib/markdown/renderer";
@@ -80,7 +81,7 @@ export function ServiceDetailPage({ detail, settings }: { detail: PublishedServi
 
             {relatedProjects.length > 0 ? <section><SectionHeading eyebrow="Selected work" title="Related projects" /><div className="mt-8 grid gap-6 md:grid-cols-2">{relatedProjects.map((project) => <ProjectCard key={project.id} project={project} />)}</div></section> : null}
 
-            {gallery.some((item) => item.media.kind === "IMAGE") ? <section><SectionHeading eyebrow="Gallery" title="Work in focus" /><div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{gallery.filter((item) => item.media.kind === "IMAGE").map((item) => <figure key={item.id} className="overflow-hidden rounded-card border bg-surface"><div className="relative aspect-[4/3] bg-surface-alt"><CloudImage src={item.media.url} alt={item.media.alt} fill sizes="(min-width: 1024px) 30vw, (min-width: 640px) 50vw, 100vw" className="object-cover" /></div>{item.title ? <figcaption className="p-3 text-sm text-ink-muted">{item.title}</figcaption> : null}</figure>)}</div></section> : null}
+            {gallery.length > 0 ? <section><SectionHeading eyebrow="Gallery" title="Work in focus" /><div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{gallery.map((item) => <figure key={item.id} className="overflow-hidden rounded-card border bg-surface"><div className="relative aspect-[4/3] bg-surface-alt">{item.mediaType === "VIDEO" ? <CloudVideoPoster src={item.url} alt={`Video poster: ${item.title}`} fill sizes="(min-width: 1024px) 30vw, (min-width: 640px) 50vw, 100vw" className="object-cover" /> : <CloudImage src={item.url} alt={item.title} fill sizes="(min-width: 1024px) 30vw, (min-width: 640px) 50vw, 100vw" className="object-cover" />}</div><figcaption className="p-3 text-sm text-ink-muted">{item.title}</figcaption></figure>)}</div></section> : null}
 
             {faqs.length > 0 ? <section><SectionHeading eyebrow="FAQs" title="Questions about this service" /><div className="mt-8"><Accordion>{faqs.map((faq, index) => <AccordionItem key={faq.id} title={faq.question} defaultOpen={index === 0}><MarkdownRenderer content={faq.answer} className="prose prose-sm max-w-none leading-7 prose-a:text-brand-deep" /></AccordionItem>)}</Accordion></div></section> : null}
           </div>

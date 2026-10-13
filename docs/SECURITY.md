@@ -80,8 +80,8 @@ Rules:
 - IPs are **hashed with a server secret** before storage (never store raw IPs).
 
 ## 7. File uploads (Cloudinary)
-- Only authenticated, authorized users may request a signature; folder allowlist (`vakratund/projects`, `/gallery`, `/blog`, `/team`, `/docs`).
-- Signed upload params include `folder`, `timestamp`, `allowed_formats`; short expiry.
+- Only authenticated, authorized users may request a signature; clients send a section enum and the server maps it to the folder allowlist (`vakratund/projects`, `vakratund/testimonials`, `vakratund/team`, `vakratund/blog`, `vakratund/gallery`, `vakratund/docs`). Free-form folders are rejected.
+- Signed upload params include `folder`, `timestamp`, `allowed_formats`, and any other upload fields sent to Cloudinary; the browser reuses the exact signed values and the endpoint resource type matches the media kind.
 - Allowed: `jpg, jpeg, png, webp, avif` (images), `mp4, webm` (video, size-capped), `pdf` (documents, admin only). Max 10 MB image / 50 MB video / 15 MB PDF.
 - API secret only on the server; never exposed to the client.
 - Store only metadata in DB; require alt text; strip EXIF GPS where possible (Cloudinary `fl_strip_profile` or on upload preset).

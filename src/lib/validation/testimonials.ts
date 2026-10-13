@@ -11,6 +11,7 @@ const testimonialFields = {
   quote: plainText(2_000),
   rating: z.number().int().min(1).max(5).nullable(),
   projectId: z.string().cuid().nullable(),
+  photoId: z.string().cuid().nullable(),
   status: z.enum([PublishStatus.DRAFT, PublishStatus.PUBLISHED, PublishStatus.ARCHIVED]),
   sortOrder: z.number().int().min(0).max(100_000),
 } satisfies z.ZodRawShape;

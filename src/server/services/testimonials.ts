@@ -1,6 +1,6 @@
 import "server-only";
 
-import type { Prisma, PublishStatus } from "@/generated/prisma/client";
+import type { MediaKind, Prisma, PublishStatus } from "@/generated/prisma/client";
 import { prisma } from "@/lib/db/client";
 import type { CreateTestimonialInput, ReorderTestimonialsInput, TogglePublishTestimonialInput, UpdateTestimonialInput } from "@/lib/validation/testimonials";
 import { logActivity } from "@/server/services/activity";
@@ -13,6 +13,8 @@ export type TestimonialView = {
   rating: number | null;
   projectId: string | null;
   project: { id: string; title: string; slug: string } | null;
+  photoId: string | null;
+  photo: { id: string; kind: MediaKind; url: string; alt: string; width: number | null; height: number | null } | null;
   status: PublishStatus;
   sortOrder: number;
   createdAt: string;
@@ -28,6 +30,12 @@ export class TestimonialNotFoundError extends Error {
 export class TestimonialProjectNotFoundError extends Error {
   constructor() { super("The selected project no longer exists."); this.name = "TestimonialProjectNotFoundError"; }
 }
+export class TestimonialPhotoNotFoundError extends Error {
+  constructor() { super("The selected testimonial photo no longer exists."); this.name = "TestimonialPhotoNotFoundError"; }
+}
+export class TestimonialPhotoMustBeImageError extends Error {
+  constructor() { super("Testimonial photos must be image media."); this.name = "TestimonialPhotoMustBeImageError"; }
+}
 
 const testimonialSelect = {
   id: true,
@@ -37,6 +45,8 @@ const testimonialSelect = {
   rating: true,
   projectId: true,
   project: { select: { id: true, title: true, slug: true } },
+  photoId: true,
+  photo: { select: { id: true, kind: true, url: true, alt: true, width: true, height: true } },
   status: true,
   sortOrder: true,
   createdAt: true,
@@ -55,8 +65,15 @@ async function validateProject(projectId: string | null): Promise<void> {
   if (!project) throw new TestimonialProjectNotFoundError();
 }
 
+async function validatePhoto(photoId: string | null): Promise<void> {
+  if (!photoId) return;
+  const photo = await prisma.mediaAsset.findUnique({ where: { id: photoId }, select: { id: true, kind: true } });
+  if (!photo) throw new TestimonialPhotoNotFoundError();
+  if (photo.kind !== "IMAGE") throw new TestimonialPhotoMustBeImageError();
+}
+
 function inputData(input: CreateTestimonialInput | UpdateTestimonialInput): Prisma.TestimonialUncheckedCreateInput {
-  return { name: input.name, roleOrOrg: nullableString(input.roleOrOrg), quote: input.quote, rating: input.rating, projectId: input.projectId, status: input.status, sortOrder: input.sortOrder };
+  return { name: input.name, roleOrOrg: nullableString(input.roleOrOrg), quote: input.quote, rating: input.rating, projectId: input.projectId, photoId: input.photoId, status: input.status, sortOrder: input.sortOrder };
 }
 
 export async function listTestimonials(filters: { q?: string; status?: PublishStatus } = {}): Promise<TestimonialView[]> {
@@ -76,6 +93,7 @@ export async function getTestimonial(id: string): Promise<TestimonialView | null
 
 export async function createTestimonial(input: CreateTestimonialInput, userId: string): Promise<TestimonialView> {
   await validateProject(input.projectId);
+  await validatePhoto(input.photoId);
   const row = await prisma.testimonial.create({ data: inputData(input), select: testimonialSelect });
   await logActivity({ userId, action: "testimonial.create", entityType: "Testimonial", entityId: row.id, summary: `Created testimonial from ${row.name}`, diff: { status: row.status, rating: row.rating, projectId: row.projectId } });
   return toView(row);
@@ -85,6 +103,7 @@ export async function updateTestimonial(input: UpdateTestimonialInput, userId: s
   const current = await prisma.testimonial.findUnique({ where: { id: input.id }, select: { id: true } });
   if (!current) throw new TestimonialNotFoundError();
   await validateProject(input.projectId);
+  await validatePhoto(input.photoId);
   const row = await prisma.testimonial.update({ where: { id: input.id }, data: inputData(input), select: testimonialSelect });
   await logActivity({ userId, action: "testimonial.update", entityType: "Testimonial", entityId: row.id, summary: `Updated testimonial from ${row.name}`, diff: { status: row.status, rating: row.rating, projectId: row.projectId } });
   return toView(row);

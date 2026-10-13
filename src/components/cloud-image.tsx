@@ -1,3 +1,5 @@
+"use client";
+
 import Image, { type ImageLoaderProps, type ImageProps } from "next/image";
 
 type CloudImageProps = Omit<ImageProps, "loader" | "src"> & {

@@ -1,0 +1,135 @@
+"use client";
+
+import { useMemo, useState, type Dispatch, type SetStateAction } from "react";
+
+import { checkGalleryDuplicate, createGalleryItem, deleteGalleryItem, reorderGalleryItem, syncGalleryMetadata, toggleGalleryItem, updateGalleryItem } from "@/app/(admin)/admin/(protected)/gallery/actions";
+import { removeMediaAsset } from "@/app/(admin)/admin/(protected)/media/actions";
+import { GalleryImageCard } from "@/components/admin/gallery-image-card";
+import { SectionUploader } from "@/components/admin/section-uploader";
+import { Button, Input, Select } from "@/components/ui";
+import type { MediaAssetView } from "@/server/services/media";
+import type { GalleryCategoryView, GalleryItemView } from "@/server/services/gallery";
+
+type DuplicateCandidate = { asset: MediaAssetView; fileName: string; duration?: number; duplicate: { id: string; title: string; categoryName: string } };
+type GalleryFlag = "isCategoryCover" | "isFeatured" | "isPublished";
+
+export function GalleryImagesManager({ categories, items, onReload, onItemsChange }: { categories: GalleryCategoryView[]; items: GalleryItemView[]; onReload: () => Promise<void>; onItemsChange: Dispatch<SetStateAction<GalleryItemView[]>> }) {
+  const [categoryId, setCategoryId] = useState(categories[0]?.id ?? "");
+  const [designType, setDesignType] = useState<"INTERIOR" | "EXTERIOR">("INTERIOR");
+  const [defaultTitle, setDefaultTitle] = useState("");
+  const [filterCategory, setFilterCategory] = useState("all");
+  const [filterDesign, setFilterDesign] = useState("all");
+  const [filterMedia, setFilterMedia] = useState("all");
+  const [filterPublished, setFilterPublished] = useState("all");
+  const [view, setView] = useState<"grid" | "list">("grid");
+  const [busyId, setBusyId] = useState<string | null>(null);
+  const [pendingDuplicates, setPendingDuplicates] = useState<DuplicateCandidate[]>([]);
+  const [message, setMessage] = useState("");
+
+  const filtered = useMemo(() => items.filter((item) =>
+    (filterCategory === "all" || item.categoryId === filterCategory)
+    && (filterDesign === "all" || item.designType === filterDesign)
+    && (filterMedia === "all" || item.mediaType === filterMedia)
+    && (filterPublished === "all" || item.isPublished === (filterPublished === "true"))),
+  [items, filterCategory, filterDesign, filterMedia, filterPublished]);
+
+  async function onUploaded(asset: MediaAssetView, details?: { fileName: string; duration?: number }): Promise<void> {
+    if (!categoryId) { setMessage("Create or select a category before uploading gallery media."); return; }
+    const duplicateResult = await checkGalleryDuplicate({ etag: asset.etag ?? "" });
+    if (!duplicateResult.ok) { setMessage(duplicateResult.error.message); return; }
+    const fileName = details?.fileName ?? asset.publicId.split("/").pop() ?? "Gallery item";
+    if (duplicateResult.data) {
+      setPendingDuplicates((current) => [...current, { asset, fileName, ...(details?.duration !== undefined ? { duration: details.duration } : {}), duplicate: duplicateResult.data }]);
+      return;
+    }
+    await saveUploadedAsset(asset, fileName, details?.duration, false);
+  }
+
+  function candidateTitle(fileName: string): string {
+    return defaultTitle.trim() || fileName.replace(/\.[^.]+$/, "").replace(/[_-]+/g, " ").trim() || "Gallery item";
+  }
+
+  async function saveUploadedAsset(asset: MediaAssetView, fileName: string, duration: number | undefined, keepDuplicate: boolean): Promise<boolean> {
+    const sortOrder = items.filter((item) => item.categoryId === categoryId).reduce((max, item) => Math.max(max, item.sortOrder), -1) + 1;
+    const result = await createGalleryItem({ assetId: asset.id, title: candidateTitle(fileName), categoryId, designType, isCategoryCover: false, isFeatured: false, isPublished: true, sortOrder, ...(duration !== undefined ? { duration } : {}), keepDuplicate });
+    if (!result.ok) {
+      const duplicate = result.error.duplicate;
+      if (result.error.code === "DUPLICATE_ETAG" && duplicate) setPendingDuplicates((current) => [...current, { asset, fileName, ...(duration !== undefined ? { duration } : {}), duplicate }]);
+      else setMessage(result.error.message);
+      return false;
+    }
+    onItemsChange((current) => [...current, result.data]);
+    setMessage(`Added “${result.data.title}” to ${result.data.category.name}.`);
+    return true;
+  }
+
+  async function keepDuplicate(candidate: DuplicateCandidate): Promise<void> {
+    setBusyId(candidate.asset.id);
+    const saved = await saveUploadedAsset(candidate.asset, candidate.fileName, candidate.duration, true);
+    if (saved) setPendingDuplicates((current) => current.filter((item) => item.asset.id !== candidate.asset.id));
+    setBusyId(null);
+  }
+
+  async function skipDuplicate(candidate: DuplicateCandidate): Promise<void> {
+    setBusyId(candidate.asset.id);
+    const result = await removeMediaAsset({ id: candidate.asset.id });
+    setBusyId(null);
+    if (!result.ok) { setMessage(result.error.message); return; }
+    if (result.data.blocked) { setMessage("This upload is still referenced and could not be removed. Remove its references first."); return; }
+    setPendingDuplicates((current) => current.filter((item) => item.asset.id !== candidate.asset.id));
+    setMessage(`Skipped duplicate of “${candidate.duplicate.title}”; the newly uploaded Cloudinary asset was deleted.`);
+  }
+
+  async function toggle(item: GalleryItemView, flag: GalleryFlag, value: boolean): Promise<void> {
+    const previous = items;
+    const optimistic = items.map((entry) => entry.id === item.id ? { ...entry, [flag]: value } : flag === "isCategoryCover" && value && entry.categoryId === item.categoryId ? { ...entry, isCategoryCover: false } : entry);
+    onItemsChange(optimistic);
+    setBusyId(item.id);
+    const result = await toggleGalleryItem({ id: item.id, flag, value });
+    setBusyId(null);
+    if (!result.ok) { onItemsChange(previous); setMessage(result.error.message); return; }
+    onItemsChange(optimistic.map((entry) => entry.id === item.id ? result.data : entry));
+  }
+
+  async function save(item: GalleryItemView, changes: Pick<GalleryItemView, "title" | "categoryId" | "designType" | "sortOrder">): Promise<void> {
+    setBusyId(item.id);
+    const result = await updateGalleryItem({ id: item.id, ...changes, isCategoryCover: item.isCategoryCover, isFeatured: item.isFeatured, isPublished: item.isPublished });
+    setBusyId(null);
+    if (!result.ok) { setMessage(result.error.message); return; }
+    onItemsChange((current) => current.map((entry) => entry.id === item.id ? result.data : entry));
+    setMessage("Gallery item saved.");
+  }
+
+  async function move(item: GalleryItemView, direction: "up" | "down"): Promise<void> {
+    setBusyId(item.id);
+    const result = await reorderGalleryItem({ id: item.id, direction });
+    setBusyId(null);
+    if (!result.ok) { setMessage(result.error.message); return; }
+    const replacements = new Map(result.data.map((row) => [row.id, row]));
+    onItemsChange((current) => current.map((row) => replacements.get(row.id) ?? row));
+  }
+
+  async function remove(item: GalleryItemView): Promise<void> {
+    setBusyId(item.id);
+    const result = await deleteGalleryItem({ id: item.id });
+    setBusyId(null);
+    if (!result.ok) { setMessage(result.error.message); return; }
+    onItemsChange((current) => current.filter((row) => row.id !== item.id));
+    setMessage(result.data.cleanupFailures > 0 ? "Gallery item deleted, but Cloudinary cleanup failed. Check server logs; the metadata remains in Media Library for retry." : "Gallery item deleted.");
+  }
+
+  async function syncMetadata(): Promise<void> {
+    setBusyId("sync");
+    const result = await syncGalleryMetadata({});
+    setBusyId(null);
+    if (!result.ok) { setMessage(result.error.message); return; }
+    setMessage(`Metadata sync checked ${result.data.checked}; updated ${result.data.updated}; failed ${result.data.failed}.`);
+    await onReload();
+  }
+
+  const accept = ".jpg,.jpeg,.png,.webp,.avif,.mp4,.webm";
+  return <div className="space-y-5"><section className="space-y-4 rounded-card border bg-surface p-4"><div><h2 className="font-heading text-lg font-semibold">Upload gallery media</h2><p className="mt-1 text-sm text-ink-muted">Select a category and design type for this batch. Each file uses its image or video upload policy. An empty title uses the file name.</p></div><div className="grid gap-3 md:grid-cols-3"><label className="text-sm font-semibold">Category<Select value={categoryId} onChange={(event) => setCategoryId(event.target.value)} className="mt-1"><option value="">Choose category</option>{categories.map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}</Select></label><label className="text-sm font-semibold">Design type<Select value={designType} onChange={(event) => setDesignType(event.target.value as typeof designType)} className="mt-1"><option value="INTERIOR">Interior</option><option value="EXTERIOR">Exterior</option></Select></label><label className="text-sm font-semibold">Default title (optional)<Input value={defaultTitle} onChange={(event) => setDefaultTitle(event.target.value)} maxLength={160} className="mt-1" placeholder="Otherwise use each file name" /></label></div><SectionUploader section="gallery" multiple accept={accept} defaultAlt={defaultTitle} onUploaded={onUploaded} title="Choose images and videos" /></section>
+    {pendingDuplicates.length > 0 ? <section className="space-y-3 rounded-card border border-warning bg-warning/10 p-4" aria-labelledby="duplicate-gallery-heading"><div><h2 id="duplicate-gallery-heading" className="font-semibold">Possible duplicate uploads</h2><p className="mt-1 text-sm text-ink-muted">Matching Cloudinary etags identify the existing item. Skip removes the newly uploaded asset; Keep both adds it as a separate gallery item.</p></div>{pendingDuplicates.map((candidate) => <article key={candidate.asset.id} className="flex flex-wrap items-center justify-between gap-3 rounded-control border bg-surface p-3"><p className="min-w-0 flex-1 text-sm"><span className="font-semibold">{candidate.fileName}</span> matches <span className="font-semibold">{candidate.duplicate.title}</span> in {candidate.duplicate.categoryName}.</p><div className="flex gap-2"><Button type="button" size="sm" variant="secondary" disabled={busyId === candidate.asset.id} onClick={() => void keepDuplicate(candidate)}>Keep both</Button><Button type="button" size="sm" variant="ghost" className="text-danger" disabled={busyId === candidate.asset.id} onClick={() => void skipDuplicate(candidate)}>Skip and delete upload</Button></div></article>)}</section> : null}
+    <section className="space-y-4 rounded-card border bg-surface p-4"><div className="flex flex-wrap items-center justify-between gap-3"><h2 className="font-heading text-lg font-semibold">Gallery images and videos</h2><Button type="button" variant="secondary" loading={busyId === "sync"} onClick={() => void syncMetadata()}>Sync metadata</Button></div><div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4"><label className="text-sm font-semibold">Category<Select value={filterCategory} onChange={(event) => setFilterCategory(event.target.value)} className="mt-1"><option value="all">All categories</option>{categories.map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}</Select></label><label className="text-sm font-semibold">Design type<Select value={filterDesign} onChange={(event) => setFilterDesign(event.target.value)} className="mt-1"><option value="all">Interior and exterior</option><option value="INTERIOR">Interior</option><option value="EXTERIOR">Exterior</option></Select></label><label className="text-sm font-semibold">Media type<Select value={filterMedia} onChange={(event) => setFilterMedia(event.target.value)} className="mt-1"><option value="all">Images and videos</option><option value="IMAGE">Images</option><option value="VIDEO">Videos</option></Select></label><label className="text-sm font-semibold">Published<Select value={filterPublished} onChange={(event) => setFilterPublished(event.target.value)} className="mt-1"><option value="all">All</option><option value="true">Published</option><option value="false">Unpublished</option></Select></label></div><div className="flex gap-2"><Button type="button" size="sm" variant={view === "grid" ? "secondary" : "ghost"} onClick={() => setView("grid")}>Grid</Button><Button type="button" size="sm" variant={view === "list" ? "secondary" : "ghost"} onClick={() => setView("list")}>List</Button></div>{message ? <p role="status" className="rounded-control border border-brand-deep/40 bg-brand/10 p-3 text-sm">{message}</p> : null}{filtered.length === 0 ? <div className="rounded-card border border-dashed p-8 text-center"><p className="font-semibold">No gallery items match these filters</p><p className="mt-2 text-sm text-ink-muted">Upload media above or choose different filters.</p></div> : <div className={view === "grid" ? "grid gap-4 sm:grid-cols-2 xl:grid-cols-3" : "space-y-3"}>{filtered.map((item) => { const sameCategory = items.filter((row) => row.categoryId === item.categoryId).sort((a, b) => a.sortOrder - b.sortOrder); const index = sameCategory.findIndex((row) => row.id === item.id); return <GalleryImageCard key={item.id} item={item} categories={categories} index={index} total={sameCategory.length} busy={busyId === item.id} onSave={save} onToggle={toggle} onMove={move} onDelete={remove} />; })}</div>}</section>
+  </div>;
+}

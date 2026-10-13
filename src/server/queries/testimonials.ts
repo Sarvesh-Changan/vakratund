@@ -11,6 +11,7 @@ export type PublishedTestimonial = {
   roleOrOrg: string | null;
   quote: string;
   rating: number | null;
+  photo: { id: string; url: string; alt: string; width: number | null; height: number | null } | null;
   project: { id: string; title: string; slug: string } | null;
   sortOrder: number;
 };
@@ -21,6 +22,7 @@ const testimonialSelect = {
   roleOrOrg: true,
   quote: true,
   rating: true,
+  photo: { select: { id: true, url: true, alt: true, width: true, height: true } },
   project: { select: { id: true, title: true, slug: true } },
   sortOrder: true,
 } satisfies Prisma.TestimonialSelect;

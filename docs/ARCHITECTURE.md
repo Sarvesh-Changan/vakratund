@@ -115,7 +115,7 @@ Rules:
 Admin Server Action → authorize(role) → validate → service writes → `ActivityLog` → `revalidateTag(...)` → UI updates.
 
 ### 6.3 Media upload
-Admin requests signature (`/api/upload/sign`, role-checked, folder allowlist) → browser uploads directly to Cloudinary → Server Action stores `MediaAsset` (publicId, dims, format, bytes, alt). Alt text mandatory.
+Admin requests a section-scoped signature (`/api/upload/sign`, authenticated and permission-checked). The server maps the section to a fixed Cloudinary folder and media policy, signs every upload field except `file`, `api_key`, `cloud_name`, and `resource_type`, and returns the matching Cloudinary resource type. The browser validates type/size, uploads directly to Cloudinary, surfaces the provider error safely, and calls a Server Action that revalidates the Cloudinary response (section prefix, configured cloud URL, kind, format, size, dimensions, alt text, and etag) before storing `MediaAsset` metadata. Module forms own their upload area and persist only validated asset IDs; media deletion remains blocked while referenced.
 
 ## 7. Estimator architecture
 - `src/server/estimator/types.ts` — `EstimatorConfig`, `Answers`, `EstimateResult`.

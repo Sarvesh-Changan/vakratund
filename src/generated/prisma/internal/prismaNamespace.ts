@@ -406,6 +406,7 @@ export const ModelName = {
   Service: 'Service',
   Project: 'Project',
   ProjectMedia: 'ProjectMedia',
+  GalleryCategory: 'GalleryCategory',
   GalleryItem: 'GalleryItem',
   Testimonial: 'Testimonial',
   Faq: 'Faq',
@@ -441,7 +442,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "account" | "verification" | "activityLog" | "mediaAsset" | "service" | "project" | "projectMedia" | "galleryItem" | "testimonial" | "faq" | "teamMember" | "blogCategory" | "blogPost" | "pageSection" | "pageSeo" | "siteSetting" | "lead" | "leadNote" | "leadStatusHistory" | "contactEvent" | "estimatorService" | "estimatorField" | "fieldOption" | "locationZone" | "pricingRule" | "quote" | "emailLog"
+    modelProps: "user" | "session" | "account" | "verification" | "activityLog" | "mediaAsset" | "service" | "project" | "projectMedia" | "galleryCategory" | "galleryItem" | "testimonial" | "faq" | "teamMember" | "blogCategory" | "blogPost" | "pageSection" | "pageSeo" | "siteSetting" | "lead" | "leadNote" | "leadStatusHistory" | "contactEvent" | "estimatorService" | "estimatorField" | "fieldOption" | "locationZone" | "pricingRule" | "quote" | "emailLog"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1108,6 +1109,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.ProjectMediaCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.ProjectMediaCountAggregateOutputType> | number
+        }
+      }
+    }
+    GalleryCategory: {
+      payload: Prisma.$GalleryCategoryPayload<ExtArgs>
+      fields: Prisma.GalleryCategoryFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.GalleryCategoryFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GalleryCategoryPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.GalleryCategoryFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GalleryCategoryPayload>
+        }
+        findFirst: {
+          args: Prisma.GalleryCategoryFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GalleryCategoryPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.GalleryCategoryFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GalleryCategoryPayload>
+        }
+        findMany: {
+          args: Prisma.GalleryCategoryFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GalleryCategoryPayload>[]
+        }
+        create: {
+          args: Prisma.GalleryCategoryCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GalleryCategoryPayload>
+        }
+        createMany: {
+          args: Prisma.GalleryCategoryCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.GalleryCategoryCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GalleryCategoryPayload>[]
+        }
+        delete: {
+          args: Prisma.GalleryCategoryDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GalleryCategoryPayload>
+        }
+        update: {
+          args: Prisma.GalleryCategoryUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GalleryCategoryPayload>
+        }
+        deleteMany: {
+          args: Prisma.GalleryCategoryDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.GalleryCategoryUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.GalleryCategoryUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GalleryCategoryPayload>[]
+        }
+        upsert: {
+          args: Prisma.GalleryCategoryUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GalleryCategoryPayload>
+        }
+        aggregate: {
+          args: Prisma.GalleryCategoryAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateGalleryCategory>
+        }
+        groupBy: {
+          args: Prisma.GalleryCategoryGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GalleryCategoryGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.GalleryCategoryCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GalleryCategoryCountAggregateOutputType> | number
         }
       }
     }
@@ -2720,6 +2795,7 @@ export const MediaAssetScalarFieldEnum = {
   alt: 'alt',
   caption: 'caption',
   folder: 'folder',
+  etag: 'etag',
   uploadedBy: 'uploadedBy',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -2792,13 +2868,36 @@ export const ProjectMediaScalarFieldEnum = {
 export type ProjectMediaScalarFieldEnum = (typeof ProjectMediaScalarFieldEnum)[keyof typeof ProjectMediaScalarFieldEnum]
 
 
+export const GalleryCategoryScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slug: 'slug',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type GalleryCategoryScalarFieldEnum = (typeof GalleryCategoryScalarFieldEnum)[keyof typeof GalleryCategoryScalarFieldEnum]
+
+
 export const GalleryItemScalarFieldEnum = {
   id: 'id',
-  mediaId: 'mediaId',
-  category: 'category',
   title: 'title',
+  categoryId: 'categoryId',
+  designType: 'designType',
+  mediaType: 'mediaType',
+  publicId: 'publicId',
+  url: 'url',
+  format: 'format',
+  bytes: 'bytes',
+  etag: 'etag',
+  width: 'width',
+  height: 'height',
+  duration: 'duration',
+  isCategoryCover: 'isCategoryCover',
+  isFeatured: 'isFeatured',
+  isPublished: 'isPublished',
   sortOrder: 'sortOrder',
-  isVisible: 'isVisible',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -2813,6 +2912,7 @@ export const TestimonialScalarFieldEnum = {
   quote: 'quote',
   rating: 'rating',
   projectId: 'projectId',
+  photoId: 'photoId',
   status: 'status',
   sortOrder: 'sortOrder',
   createdAt: 'createdAt',
@@ -3309,6 +3409,48 @@ export type ListEnumProjectStatusFieldRefInput<$PrismaModel> = FieldRefInputType
 
 
 /**
+ * Reference to a field of type 'GalleryDesignType'
+ */
+export type EnumGalleryDesignTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GalleryDesignType'>
+    
+
+
+/**
+ * Reference to a field of type 'GalleryDesignType[]'
+ */
+export type ListEnumGalleryDesignTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GalleryDesignType[]'>
+    
+
+
+/**
+ * Reference to a field of type 'GalleryMediaType'
+ */
+export type EnumGalleryMediaTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GalleryMediaType'>
+    
+
+
+/**
+ * Reference to a field of type 'GalleryMediaType[]'
+ */
+export type ListEnumGalleryMediaTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GalleryMediaType[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Float'
+ */
+export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+/**
+ * Reference to a field of type 'Float[]'
+ */
+export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
+
+
+/**
  * Reference to a field of type 'LeadType'
  */
 export type EnumLeadTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LeadType'>
@@ -3431,20 +3573,6 @@ export type EnumEmailLogStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$P
  * Reference to a field of type 'EmailLogStatus[]'
  */
 export type ListEnumEmailLogStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EmailLogStatus[]'>
-    
-
-
-/**
- * Reference to a field of type 'Float'
- */
-export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
-    
-
-
-/**
- * Reference to a field of type 'Float[]'
- */
-export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
 
 /**
@@ -3607,6 +3735,7 @@ export type GlobalOmitConfig = {
   service?: Prisma.ServiceOmit
   project?: Prisma.ProjectOmit
   projectMedia?: Prisma.ProjectMediaOmit
+  galleryCategory?: Prisma.GalleryCategoryOmit
   galleryItem?: Prisma.GalleryItemOmit
   testimonial?: Prisma.TestimonialOmit
   faq?: Prisma.FaqOmit

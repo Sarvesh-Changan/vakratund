@@ -4,7 +4,7 @@ import { revalidatePath, revalidateTag } from "next/cache";
 
 import { requirePermission } from "@/lib/auth/session";
 import { createTestimonialSchema, deleteTestimonialSchema, reorderTestimonialsSchema, togglePublishTestimonialSchema, updateTestimonialSchema } from "@/lib/validation/testimonials";
-import { createTestimonial as createRecord, deleteTestimonial as deleteRecord, reorderTestimonials as reorderRecords, TestimonialNotFoundError, TestimonialProjectNotFoundError, togglePublishTestimonial as toggleRecord, updateTestimonial as updateRecord } from "@/server/services/testimonials";
+import { createTestimonial as createRecord, deleteTestimonial as deleteRecord, reorderTestimonials as reorderRecords, TestimonialNotFoundError, TestimonialPhotoMustBeImageError, TestimonialPhotoNotFoundError, TestimonialProjectNotFoundError, togglePublishTestimonial as toggleRecord, updateTestimonial as updateRecord } from "@/server/services/testimonials";
 
 export type TestimonialActionResult<T> =
   | { ok: true; data: T }
@@ -14,6 +14,7 @@ function validationError(error: { flatten: () => { fieldErrors: Record<string, s
 
 function failure(error: unknown): TestimonialActionResult<never> {
   if (error instanceof TestimonialProjectNotFoundError) return { ok: false, error: { code: "PROJECT_NOT_FOUND", message: error.message, fieldErrors: { projectId: [error.message] } } };
+  if (error instanceof TestimonialPhotoNotFoundError || error instanceof TestimonialPhotoMustBeImageError) return { ok: false, error: { code: "PHOTO_INVALID", message: error.message, fieldErrors: { photoId: [error.message] } } };
   if (error instanceof TestimonialNotFoundError) return { ok: false, error: { code: "NOT_FOUND", message: "The testimonial no longer exists." } };
   return { ok: false, error: { code: "MUTATION_FAILED", message: "The testimonial could not be saved. Please try again." } };
 }
