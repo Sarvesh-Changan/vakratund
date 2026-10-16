@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, CheckCircle2, Download, MessageCircle, Phone } from "lucide-react";
+import { ArrowRight, CheckCircle2, Download, Phone } from "lucide-react";
 import type { ResolvedSiteSettings } from "@/config/site";
 import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
 import { Breadcrumbs, Card, Container } from "@/components/ui";
@@ -7,6 +7,7 @@ import type { BreadcrumbItem } from "@/lib/seo/json-ld";
 import { AnalyticsConversion } from "./analytics-conversion";
 import { ContactLink, TrackedWhatsAppLink } from "./contact-link";
 import { phoneHref } from "./contact-utils";
+import { WhatsAppIcon } from "@/components/ui/whatsapp-icon";
 
 export function LeadThankYou({
   settings,
@@ -48,7 +49,7 @@ export function LeadThankYou({
         </Card>
         <div className="mt-8 flex flex-wrap gap-3">
           <ContactLink href={phoneHref(phone)} eventType="CALL" context="thank-you-call" className="inline-flex min-h-12 items-center gap-2 rounded-control border bg-surface px-5 font-semibold hover:bg-surface-alt"><Phone size={18} aria-hidden="true" /> Call us</ContactLink>
-          <TrackedWhatsAppLink settings={settings} whatsappContext={{ pageTitle: title, projectName, estimateReference }} context="thank-you-whatsapp" target="_blank" rel="noreferrer" className="inline-flex min-h-12 items-center gap-2 rounded-control bg-[#25D366] px-5 font-semibold text-white hover:brightness-95"><MessageCircle size={18} aria-hidden="true" /> WhatsApp us</TrackedWhatsAppLink>
+          <TrackedWhatsAppLink settings={settings} whatsappContext={{ pageTitle: title, projectName, estimateReference }} context="thank-you-whatsapp" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-12 items-center gap-2 rounded-control bg-whatsapp px-5 font-semibold text-charcoal hover:bg-whatsapp-dark"><WhatsAppIcon size={18} /> WhatsApp us</TrackedWhatsAppLink>
           <Link href="/" className="inline-flex min-h-12 items-center gap-2 rounded-control bg-brand px-5 font-bold text-brand-ink hover:bg-brand/90">Back to home <ArrowRight size={18} aria-hidden="true" /></Link>
         </div>
       </div>

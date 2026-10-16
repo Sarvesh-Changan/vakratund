@@ -1,0 +1,76 @@
+.motion-reveal,
+.motion-split,
+.motion-mask,
+.motion-parallax,
+.motion-hover-card { --motion-duration: 600ms; }
+
+.motion-reveal[data-motion-enabled="true"][data-motion-entered="false"] { opacity: 0; transform: translateY(1.25rem); }
+.motion-reveal[data-motion-enabled="true"] { transition: opacity var(--motion-duration) cubic-bezier(.22,1,.36,1) var(--motion-delay, 0ms), transform var(--motion-duration) cubic-bezier(.22,1,.36,1) var(--motion-delay, 0ms); }
+.motion-reveal[data-motion-enabled="true"][data-motion-entered="true"] { opacity: 1; transform: translateY(0); }
+
+.motion-split-part { display: inline-block; }
+.motion-split[data-split-mode="words"] .motion-split-part:not(:last-child) { margin-inline-end: .24em; }
+.motion-split[data-split-mode="lines"] .motion-split-part { display: block; }
+.motion-split[data-motion-enabled="true"][data-motion-entered="false"] .motion-split-part { opacity: 0; transform: translateY(.65em); }
+.motion-split[data-motion-enabled="true"] .motion-split-part { transition: opacity 500ms cubic-bezier(.22,1,.36,1), transform 500ms cubic-bezier(.22,1,.36,1); transition-delay: calc(var(--motion-index) * 45ms); }
+.motion-split[data-motion-enabled="true"][data-motion-entered="true"] .motion-split-part { opacity: 1; transform: translateY(0); }
+
+.motion-mask { position: relative; overflow: hidden; }
+.motion-mask-content { transition: transform 650ms cubic-bezier(.22,1,.36,1); }
+.motion-mask-curtain { position: absolute; inset: 0; background: var(--charcoal); transform: scaleX(0); transform-origin: right; transition: transform 650ms cubic-bezier(.22,1,.36,1); pointer-events: none; }
+.motion-mask[data-motion-enabled="true"][data-motion-entered="false"] .motion-mask-curtain { transform: scaleX(1); }
+.motion-mask[data-motion-enabled="true"][data-motion-entered="false"] .motion-mask-content { transform: scale(1.025); }
+.motion-mask[data-motion-enabled="true"][data-motion-entered="true"] .motion-mask-curtain { transform: scaleX(0); }
+
+.motion-marquee { overflow: hidden; }
+.motion-marquee-track { display: flex; width: max-content; animation: motion-marquee var(--motion-duration, 36s) linear infinite var(--motion-direction, normal); }
+.motion-marquee-track > * { flex: none; }
+.motion-marquee[data-motion-enabled="false"] .motion-marquee-track,
+.motion-marquee:hover .motion-marquee-track,
+.motion-marquee:focus-within .motion-marquee-track { animation-play-state: paused; }
+@keyframes motion-marquee { to { transform: translateX(-50%); } }
+
+.motion-parallax[data-motion-active="true"] { transform: translateY(var(--motion-parallax-y, 0px)); will-change: transform; }
+@supports (animation-timeline: view()) {
+  .motion-parallax[data-native-timeline="true"] { animation: motion-parallax linear both; animation-timeline: view(); animation-range: entry 0% exit 100%; }
+  @keyframes motion-parallax { from { transform: translateY(var(--motion-parallax-distance, 1rem)); } to { transform: translateY(var(--motion-parallax-distance-negative, -1rem)); } }
+}
+
+.motion-scroll-progress { position: fixed; z-index: 1000; inset: 0 0 auto; height: 3px; background: var(--brand); transform: scaleX(var(--motion-scroll-scale, 0)); transform-origin: left; pointer-events: none; }
+@supports (animation-timeline: scroll(root block)) {
+  .motion-scroll-progress[data-native-timeline="true"] { animation: motion-progress linear both; animation-timeline: scroll(root block); }
+  @keyframes motion-progress { to { transform: scaleX(1); } }
+}
+
+.scroll-linked-progress { position: relative; }
+.scroll-linked-progress-track { position: absolute; z-index: 0; top: 1.5rem; right: 12.5%; left: 12.5%; height: 2px; background: var(--line); pointer-events: none; }
+.scroll-linked-progress-fill { display: block; width: 100%; height: 100%; background: var(--brand); transform: scaleX(var(--scroll-linked-progress, 1)); transform-origin: left center; }
+@supports (animation-timeline: view()) {
+  .scroll-linked-progress[data-motion-active="true"][data-native-timeline="true"] .scroll-linked-progress-fill { animation: scroll-linked-horizontal linear both; animation-timeline: view(block); animation-range: entry 0% exit 100%; }
+  @keyframes scroll-linked-horizontal { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+}
+@media (max-width: 767px) {
+  .scroll-linked-progress-track { top: 1.5rem; right: auto; bottom: 1.5rem; left: 1.5rem; width: 2px; height: auto; }
+  .scroll-linked-progress-fill { width: 100%; height: 100%; transform: scaleY(var(--scroll-linked-progress, 1)); transform-origin: center top; }
+  @supports (animation-timeline: view()) {
+    .scroll-linked-progress[data-motion-active="true"][data-native-timeline="true"] .scroll-linked-progress-fill { animation-name: scroll-linked-vertical; }
+    @keyframes scroll-linked-vertical { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+  }
+}
+
+.motion-hover-card[data-motion-enabled="true"] { transition: transform 220ms cubic-bezier(.22,1,.36,1); }
+.motion-hover-card[data-motion-enabled="true"]:hover { transform: translateY(-4px); }
+.motion-hover-card [data-hover-image] { transition: transform 350ms cubic-bezier(.22,1,.36,1); }
+.motion-hover-card[data-motion-enabled="true"]:hover [data-hover-image] { transform: scale(1.05); }
+.motion-hover-card [data-hover-arrow] { transition: transform 220ms cubic-bezier(.22,1,.36,1); }
+.motion-hover-card[data-motion-enabled="true"]:hover [data-hover-arrow] { transform: translateX(.25rem); }
+
+@media (max-width: 767px), (pointer: coarse) {
+  .motion-parallax[data-motion-active="true"] { transform: none; will-change: auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .motion-reveal, .motion-split, .motion-mask, .motion-parallax, .motion-hover-card { opacity: 1; transform: none; transition: none; animation: none; }
+  .motion-mask-curtain { display: none; }
+  .motion-marquee-track { animation: none; transform: none; }
+  .scroll-linked-progress-fill { animation: none; transform: none; }
+}

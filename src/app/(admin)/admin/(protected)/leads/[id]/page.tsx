@@ -12,6 +12,7 @@ import {
 import { Badge } from "@/components/ui";
 import { requirePermission } from "@/lib/auth/session";
 import { buildWhatsAppHref } from "@/lib/contact/whatsapp";
+import { WhatsAppIcon } from "@/components/ui/whatsapp-icon";
 import { phoneHref } from "@/components/site/contact-utils";
 import { getAdminLead, listAssignees } from "@/server/services/admin-leads";
 
@@ -94,9 +95,10 @@ export default async function LeadDetailPage({ params }: { params: Params }) {
                   <a
                     href={buildWhatsAppHref({ whatsappNumber: lead.phone, whatsappMessage: "" }, { pageTitle: "Lead follow-up", estimateReference: lead.publicId }) ?? undefined}
                     target="_blank"
-                    rel="noreferrer"
-                    className="ml-3 text-sm text-brand-deep underline"
+                    rel="noopener noreferrer"
+                    className="ml-3 inline-flex items-center gap-1 text-sm text-whatsapp-text underline"
                   >
+                    <WhatsAppIcon size={16} />
                     WhatsApp
                   </a>
                 </dd>

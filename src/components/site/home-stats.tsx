@@ -1,15 +1,19 @@
-import type { HomeStats } from "@/server/queries/home";
+import type { HomeStats as HomeStatsContent } from "@/server/queries/home";
+import { CountUp, Reveal } from "@/components/motion";
 import { Container } from "@/components/ui/container";
-import { CountUp } from "@/components/ui/count-up";
-import { Reveal } from "@/components/ui/motion";
 
 function StatValue({ value }: { value: string }) {
-  const match = value.match(/^([\d,]+)(.*)$/);
-  if (!match?.[1]) return <span>{value}</span>;
-  return <span><CountUp value={Number(match[1].replaceAll(",", ""))} />{match[2]}</span>;
+  const match = value.match(/^(~?)([\d,]+)(.*)$/);
+  if (!match?.[2]) return null;
+  return <span><CountUp prefix={match[1]} value={Number(match[2].replaceAll(",", ""))} suffix={match[3]} /></span>;
 }
 
-export function HomeStats({ stats }: { stats: HomeStats | null }) {
-  if (!stats) return null;
-  return <section className="border-b border-line bg-surface"><Container className="grid grid-cols-2 divide-x divide-y divide-line sm:grid-cols-4 sm:divide-y-0">{stats.items.map((item) => <Reveal key={`${item.label}-${item.value}`} className="px-4 py-6 text-center first:pl-0"><p className="font-heading text-2xl font-bold text-brand-deep"><StatValue value={item.value} /></p><p className="mt-1 text-xs text-ink-muted">{item.label}</p></Reveal>)}</Container></section>;
+export function HomeStats({ stats }: { stats: HomeStatsContent | null }) {
+  const items = stats?.items.filter((item) => {
+    const match = item.value.match(/^(~?)([\d,]+)/);
+    return Boolean(match?.[2] && Number(match[2].replaceAll(",", "")) > 0);
+  }) ?? [];
+  if (items.length === 0) return null;
+
+  return <section aria-label="Project facts" className="border-b border-line bg-surface-alt"><Container className="home-proof-grid py-5 sm:py-7">{items.map((item) => <Reveal key={`${item.label}-${item.value}`} className="rounded-card border border-line bg-surface px-4 py-5 text-center shadow-soft sm:px-5"><p className="font-heading text-2xl font-bold tabular-nums text-brand-deep sm:text-3xl"><StatValue value={item.value} /></p><p className="mx-auto mt-1 max-w-48 text-xs leading-5 text-ink-muted sm:text-sm">{item.label}</p></Reveal>)}</Container></section>;
 }

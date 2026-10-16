@@ -11,8 +11,9 @@ export type GalleryActionResult<T> =
   | { ok: true; data: T }
   | { ok: false; error: { code: string; message: string; fieldErrors?: Record<string, string[]>; duplicate?: { id: string; title: string; categoryName: string }; cleanupFailures?: number; retryAfterSeconds?: number } };
 
-function validationError(error: { flatten: () => { fieldErrors: Record<string, string[]> } }): GalleryActionResult<never> {
-  return { ok: false, error: { code: "VALIDATION_ERROR", message: "Please correct the highlighted fields.", fieldErrors: error.flatten().fieldErrors } };
+function validationError(error: { flatten: () => { fieldErrors: Record<string, string[] | undefined> } }): GalleryActionResult<never> {
+  const fieldErrors = Object.fromEntries(Object.entries(error.flatten().fieldErrors).filter((entry): entry is [string, string[]] => Array.isArray(entry[1])));
+  return { ok: false, error: { code: "VALIDATION_ERROR", message: "Please correct the highlighted fields.", fieldErrors } };
 }
 
 function failure(error: unknown): GalleryActionResult<never> {

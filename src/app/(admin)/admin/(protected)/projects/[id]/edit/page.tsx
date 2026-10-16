@@ -14,6 +14,6 @@ export default async function EditProjectPage({ params }: { params: Params }) {
   const { id } = await params;
   const [project, assets, services] = await Promise.all([getProject(id), listMediaAssets(), listServices()]);
   if (!project) notFound();
-  return <div className="space-y-6"><PageHeader title={`Edit ${project.title}`} eyebrow="Projects" description="Update the project record, privacy toggle, media ordering, publication, and SEO." /><ProjectForm initial={project} assets={assets.filter((asset) => asset.kind !== "DOCUMENT")} services={services.map(({ id: serviceId, title }) => ({ id: serviceId, title }))} /></div>;
+  return <div className="space-y-6"><PageHeader title={`Edit ${project.title}`} eyebrow="Projects" /><ProjectForm initial={project} assets={assets.filter((asset) => asset.kind !== "DOCUMENT")} services={services.map(({ id: serviceId, title }) => ({ id: serviceId, title }))} /></div>;
 }
 

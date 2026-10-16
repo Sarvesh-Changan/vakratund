@@ -38,8 +38,9 @@ export function GalleryImagesManager({ categories, items, onReload, onItemsChang
     const duplicateResult = await checkGalleryDuplicate({ etag: asset.etag ?? "" });
     if (!duplicateResult.ok) { setMessage(duplicateResult.error.message); return; }
     const fileName = details?.fileName ?? asset.publicId.split("/").pop() ?? "Gallery item";
-    if (duplicateResult.data) {
-      setPendingDuplicates((current) => [...current, { asset, fileName, ...(details?.duration !== undefined ? { duration: details.duration } : {}), duplicate: duplicateResult.data }]);
+    const duplicate = duplicateResult.data;
+    if (duplicate) {
+      setPendingDuplicates((current) => [...current, { asset, fileName, ...(details?.duration !== undefined ? { duration: details.duration } : {}), duplicate }]);
       return;
     }
     await saveUploadedAsset(asset, fileName, details?.duration, false);
@@ -75,7 +76,7 @@ export function GalleryImagesManager({ categories, items, onReload, onItemsChang
     const result = await removeMediaAsset({ id: candidate.asset.id });
     setBusyId(null);
     if (!result.ok) { setMessage(result.error.message); return; }
-    if (result.data.blocked) { setMessage("This upload is still referenced and could not be removed. Remove its references first."); return; }
+    if ("blocked" in result.data) { setMessage("This upload is still referenced and could not be removed. Remove its references first."); return; }
     setPendingDuplicates((current) => current.filter((item) => item.asset.id !== candidate.asset.id));
     setMessage(`Skipped duplicate of “${candidate.duplicate.title}”; the newly uploaded Cloudinary asset was deleted.`);
   }

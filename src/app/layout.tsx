@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { DEFAULT_OG_IMAGE_PATH, getSiteUrl } from "@/lib/seo/metadata";
 import "./globals.css";
+import "@/components/motion/motion.css";
 
 const inter = localFont({
   src: "../../node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2",

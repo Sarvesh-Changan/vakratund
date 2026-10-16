@@ -516,6 +516,7 @@ export function EstimateFlow({
       />
       <div className="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-start">
         <div className="min-w-0">
+          <div key={step} className="estimator-step-transition">
           {step === 0 ? (
             <section aria-labelledby="estimate-service-title">
               <h2
@@ -915,6 +916,7 @@ export function EstimateFlow({
               )}
             </section>
           ) : null}
+          </div>
           <div className="mt-10 flex flex-wrap justify-between gap-3 border-t border-line pt-6">
             {step > 0 ? (
               <Button type="button" variant="secondary" onClick={previousStep}>

@@ -8,6 +8,17 @@ generous whitespace, purposeful motion. The brand reads as "serious engineers wh
 - Personality: reliable, precise, experienced, approachable.
 - Logo: `TODO(client)`. Until supplied, use a text wordmark (see Typography) with a small orange accent mark.
 
+## Visual direction
+
+Use an editorial, engineering-led visual language: confident oversized Sora headlines, clear section-to-section rhythm, generous whitespace, and large, real project photography. Keep layouts crisp and purposeful rather than decorative. The Sphere reference informs the scale and pacing only; Vakratund retains its own warm amber, charcoal and neutral palette, its Sora/Inter typography, and original project imagery. Do not reproduce the reference site's purple/mint colors, collage composition, graphics, copy, or brand assets.
+
+- Lead with one clear headline and one strong, approved image; let each section have a single visual focus.
+- Establish hierarchy with large headlines and compact uppercase eyebrow labels, not extra font families or ornamental effects.
+- Alternate page background (`bg`), warm contrast band (`surface-alt`) and occasional charcoal feature sections. Use white `surface` for cards and content that needs separation.
+- Keep section spacing generous but responsive; use tighter rhythm for related controls, data and admin content.
+- Prefer crisp cards with a clear image/content boundary, fine tokenized border, 16px radius and restrained shadow. Use larger 24px radius only for feature panels; avoid stacking borders and shadows on every surface.
+- Use `narrow`, `default`, `wide` and `full-bleed` container variants to give editorial text, standard content, galleries and hero imagery the right measure.
+
 ## 2. Color tokens (CSS variables in `globals.css`, mapped in Tailwind theme)
 The PDF uses an amber-orange title and a warm beige band; we keep that DNA and add a dark charcoal for premium contrast.
 
@@ -24,26 +35,41 @@ The PDF uses an amber-orange title and a warm beige band; we keep that DNA and a
 | `--brand-deep` | `#B86A00` | `#FFB84D` | brand text/links on light bg (AA) |
 | `--charcoal` | `#14110F` | `#14110F` | hero/footers |
 | `--success` `--warning` `--danger` | `#1F8A4C` `#B7791F` `#C0392B` | lighter variants | status |
+| `--whatsapp` `--whatsapp-dark` `--whatsapp-text` | `#25D366` `#128C7E` `#137A3A` | WhatsApp actions, pressed state, and readable text on white |
 
 Rules:
 - **Never** use `--brand` as text color on white (fails contrast). Use `--brand-deep` for text, `--brand` for fills with `--brand-ink` text.
 - Check every pair for WCAG AA (4.5:1 body, 3:1 large text/UI).
+- WhatsApp green is the sole brand-color exception to the no-hard-coded-hex rule. Use the `whatsapp` theme tokens; `--whatsapp-text` has at least 4.5:1 contrast on white. WhatsApp links must remain visibly labeled when an icon is present.
 - Light theme is default; dark theme supported via `prefers-color-scheme` + manual toggle (admin first, public optional).
 
 ## 3. Typography (`next/font`, self-hosted)
-- Headings: **Sora** (600/700) — tight tracking, engineered feel.
+- Headings: **Sora** (600/700) — confident weights, tight negative tracking, engineered feel.
 - Body/UI: **Inter** (400/500/600).
 - Optional numerals/stats: Sora tabular figures.
-- Scale (fluid with `clamp`): `display 40–72`, `h1 32–52`, `h2 26–38`, `h3 20–26`, `body 16–18`, `small 14`, `caption 12`.
-- Line height: headings 1.1–1.2, body 1.6. Max line length 68ch.
+- Use the fluid Tailwind utilities `text-hero`, `text-display`, `text-h1`, `text-h2`, and `text-h3`, backed by CSS `clamp()` tokens:
+
+  | Utility | Fluid size | Typical use |
+  |---|---|---|
+  | `text-hero` | `clamp(52px, 8vw + 16px, 128px)` | Home/feature hero only; scale down when the copy wraps awkwardly |
+  | `text-display` | `clamp(48px, 5vw + 16px, 96px)` | Editorial statement or major feature heading |
+  | `text-h1` | `clamp(40px, 4vw + 16px, 72px)` | Page title |
+  | `text-h2` | `clamp(32px, 2.5vw + 16px, 52px)` | Section heading |
+  | `text-h3` | `clamp(24px, 1.2vw + 16px, 32px)` | Card and subsection heading |
+  | body / small / caption | `16–18px` / `14px` / `12px` | Body, metadata and compact labels |
+
+- Headings use tighter tracking as size increases (hero about `-0.055em`, display `-0.045em`, section headings about `-0.035em`) and line-height from `0.95` to `1.15`. Body line-height is `1.6`; max line length is `68ch`.
+- Use the `.eyebrow` style for short uppercase section labels: compact, semibold, tracked, and colored with the text-safe `brand-deep` token. Do not use it for sentences or as the only accessible name of a section.
 - Minimum body size 16px on mobile.
 
 ## 4. Layout, spacing, radius, elevation
-- Container: max `1240px`, padding `16px` mobile / `24px` tablet / `32px` desktop.
-- Spacing scale: 4-pt (4, 8, 12, 16, 24, 32, 48, 64, 96, 128). Section vertical padding: `64px` mobile → `112px` desktop.
+- Containers: `narrow` (48rem / 768px, editorial copy), `default` (77.5rem / 1240px), `wide` (90rem / 1440px), and `full-bleed` (viewport width for hero/media). Padded variants use `16px` mobile / `24px` tablet / `32px` desktop.
+- Spacing scale: 4-pt (4, 8, 12, 16, 24, 32, 48, 64, 96, 128). Section utilities: `section-space-compact` (48→80px), `section-space` (64→112px), and `section-space-generous` (80→128px), fluid between breakpoints. Use compact for adjacent/detail sections, default for primary sections and generous for a hero or major editorial break.
+- Section rhythm: page background `bg-bg` → selected `bg-surface-alt` bands → occasional `bg-charcoal` feature → return to `bg-bg`. Keep this sequence varied but avoid alternating every small section mechanically.
 - Grid: 4 cols mobile, 8 tablet, 12 desktop.
-- Radius: `8` inputs/buttons, `16` cards, `24` large feature panels, `999` pills.
-- Shadows: subtle (`0 1px 2px / 0 8px 24px` at low alpha); hover lifts 2–4px.
+- Cards: `surface` background, `line` border, `16px` radius, restrained `shadow-soft`; use tokenized hover elevation only where the card is interactive. Media cards prioritize a large, consistent crop (usually 4:3) with text on a clean surface; avoid placing essential copy over busy photos.
+- Radius: `8px` inputs/buttons, `16px` cards, `24px` large feature panels, `999px` pills.
+- Shadows: subtle (`0 1px 2px / 0 8px 24px` at low alpha); interactive hover lifts 2–4px.
 - Breakpoints (Tailwind default): `sm 640`, `md 768`, `lg 1024`, `xl 1280`, `2xl 1536`. **Design mobile first.**
 
 ## 5. Components (in `src/components/ui`, built once, reused everywhere)
@@ -84,12 +110,13 @@ Editorial layout, readable measure (68ch), ToC on desktop, share links, related 
 ### Global mobile bar
 Fixed bottom bar: **Call · WhatsApp · Get Quote**; hides on scroll down, shows on scroll up; must not cover form fields (add bottom padding to page).
 
-## 7. Motion principles
-- Purpose: orient, give feedback, add polish — never block content.
-- Durations 150–300ms for UI, up to 600ms for section reveals; easing `cubic-bezier(0.22, 1, 0.36, 1)`.
-- Allowed: fade-up on scroll (once), counter-up for stats, card hover lift, image zoom on hover (≤ 1.05), header shrink, accordion height, estimator step transitions, before/after slider.
-- **Always** honor `prefers-reduced-motion` (disable transforms/parallax, keep opacity only).
-- Animate `transform` and `opacity` only; no layout-shifting animations; no autoplaying video with sound.
+## 7. Motion system
+- Shared primitives live in `src/components/motion`; they use native browser APIs and CSS (IntersectionObserver, requestAnimationFrame fallbacks, and CSS scroll timelines where supported). No animation dependency or smooth-scroll library is required.
+- `Reveal` and `RevealGroup` reveal once on entry with fade/rise; `SplitText` supports words or explicit newline-separated lines and exposes one accessible label; `MaskImage` uses a transform curtain; `CountUp` accepts prefix, suffix and easing; `Marquee`, `Parallax`, `ScrollProgress` and `HoverCard` cover the remaining patterns. Import from `@/components/motion`; legacy `@/components/ui/motion` and `count-up` exports remain compatible.
+- Effects enhance content only after hydration and preference detection. Without JavaScript, before detection, and with reduced motion enabled, content is visible and static. Keep LCP hero headings and images unwrapped or use `priority` on Reveal/MaskImage so they never wait for an animation.
+- Every entrance runs at most once. Use the shared easing `cubic-bezier(0.22, 1, 0.36, 1)`, 150–300ms for interaction feedback, and no more than 600ms for reveals. Animate transform and opacity only; reserve dimensions for counters and never move content in a way that causes layout shift.
+- Respect `prefers-reduced-motion` for every component: no reveal, count-up, parallax, or looping marquee. Parallax is disabled below 768px and for coarse pointers. It uses CSS scroll timelines when supported and a passive, frame-throttled scroll fallback otherwise.
+- Marquees pause on hover and keyboard focus. Do not use motion to convey information, autoplay video, animate large areas continuously, or delay interaction. `/design-system/motion` is a development-only visual check and includes a reduced-motion simulation switch.
 
 ## 8. Imagery
 - Real project photos only (stock only for abstract backgrounds, flagged `TODO(client)`).

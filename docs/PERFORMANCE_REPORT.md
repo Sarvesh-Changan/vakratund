@@ -1,5 +1,36 @@
 # Performance and accessibility report
 
+## Recheck — 2026-10-16
+
+This is a production-build recheck of `/`, `/services/building-construction`, `/projects/residential-commercial-building-kharkar-ali`, `/estimate`, and `/contact`. Lighthouse was not rerun in this session: the CLI is not installed locally, and fetching it through `npx` did not complete. Therefore the Lighthouse score table and before/after scores below are the prior 2026-10-09 run, not scores from this recheck. Do not treat the following browser measurements as Lighthouse scores.
+
+### Browser measurements
+
+Playwright ran the production server at 390px viewport with 4× CPU throttling, 150ms latency, and a 1.6Mbps downstream profile. Cache was disabled. These are local lab observations; they are not field INP measurements.
+
+| Route | HTTP | LCP | CLS | Encoded JS transfer* | Largest observed startup long task |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| `/` | 200 | 1.74s | 0.000 | 166,793 B | 220ms |
+| `/services/building-construction` | 200 | 1.58s | 0.007 | 166,527 B | 690ms |
+| `/projects/residential-commercial-building-kharkar-ali` | 200 | 1.46s | 0.000 | 166,527 B | 553ms |
+| `/estimate` | 200 | 1.34s | 0.000 | 267,196 B | 471ms |
+| `/contact` | 200 | 1.40s | 0.000 | 268,487 B | 520ms |
+
+*Sum of transferred JavaScript resource sizes from the browser Resource Timing API with cache disabled; includes response overhead. It is not a Lighthouse bundle audit. The two form routes transfer more JS than the PRD's 170KB content-page budget; route-specific form code is a likely contributor and should be analyzed before claiming that budget is met. Largest long tasks occurred during page startup, not as repeated scroll-handler tasks. Scroll sampling at 4× CPU observed one 54ms long task with motion enabled and 63ms/54ms tasks with reduced motion enabled; headless frame-gap samples were variable, so this is not a smoothness certification.
+
+Browser-observed LCP was below 2.5s and CLS below 0.1 for all five routes under this local profile. INP and Lighthouse Performance scores were not measured in this recheck. The prior report's recorded baseline/post-fix Lighthouse numbers remain above for historical comparison only; they used different routes and conditions and are not directly comparable to this sample.
+
+### Accessibility and responsive recheck
+
+- `@axe-core/playwright`: zero violations on all five routes at 390px after fixing charcoal eyebrow contrast, the dark project-status badge, and missing landmark names for the closing CTA and fixed contact controls.
+- Reduced-motion emulation: no animated content remained hidden; page headings and motion-wrapped content were visible. Keyboard checks verified skip-link focus, mobile menu entry, wraparound, Escape close, and focus restoration. SplitText exposes one `aria-label` and hides its visual word spans from assistive technology.
+- All five routes returned HTTP 200 at 360, 390, 768, 1024, 1280, and 1536px. No horizontal overflow was detected, and every scroll reveal entered after traversing the page. Screenshots and viewport results are in `docs/visual-qa/`.
+- SplitText word spacing was corrected, and line-mode spans now render as separate lines. Route CSS keeps reduced-motion animation and scroll behavior disabled.
+
+### Recheck follow-up
+
+Run Lighthouse 12.8.2 against these exact five routes from a clean CI or production environment, record Performance/Accessibility/LCP/CLS/TBT, and compare using a consistent mobile profile. The npm registry fetch stalled in this environment, so the current session cannot provide fresh Lighthouse category scores. Confirm INP with field monitoring after deployment. Investigate the larger JS transfers and the long startup tasks on service/project/form routes before signing off on the PRD's JS and performance budgets.
+
 Date: 2026-10-09
 
 ## Scope

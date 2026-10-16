@@ -9,7 +9,7 @@ import { normalizeHomeCta, normalizeHomeHero, normalizeHomeProcess } from "@/ser
 describe("home PageSection normalization", () => {
   it("supplies route defaults for legacy hero content", () => {
     const hero = normalizeHomeHero({ eyebrow: "Eyebrow", title: "Title", description: "Description", primaryCta: "Quote", secondaryCta: "Call" });
-    expect(hero).toMatchObject({ primaryHref: "/estimate", secondaryHref: "tel:+919821502956", backgroundImageId: null });
+    expect(hero).toMatchObject({ primaryHref: "/estimate", secondaryHref: "/contact", backgroundImageId: null });
   });
 
   it("normalizes seeded string process steps into accessible step records", () => {

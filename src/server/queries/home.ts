@@ -6,9 +6,9 @@ import type { Prisma } from "@/generated/prisma/client";
 import { resolveSiteSettings, type ResolvedSiteSettings } from "@/config/site";
 import { prisma } from "@/lib/db/client";
 import { pageSectionSchemas } from "@/lib/validation/pages";
-import { getPublicPageSections } from "@/server/queries/pages";
 import { getPublishedFaqs } from "@/server/queries/faqs";
 import { getFeaturedGallery } from "@/server/queries/gallery";
+import { getPublishedBlogPostsPage } from "@/server/queries/blog";
 import { getPublishedProjects } from "@/server/queries/projects";
 import { getPublicSettings } from "@/server/queries/settings";
 import { getPublishedServices, type PublishedService } from "@/server/queries/services";
@@ -17,7 +17,14 @@ import { getPublishedTestimonials } from "@/server/queries/testimonials";
 
 export type HomeHero = z.infer<typeof pageSectionSchemas.home.hero>;
 export type HomeStats = z.infer<typeof pageSectionSchemas.home.stats>;
+export type HomeServicesSection = z.infer<typeof pageSectionSchemas.home.services>;
+export type HomeProjectsSection = z.infer<typeof pageSectionSchemas.home.projects>;
+export type HomeWhySection = z.infer<typeof pageSectionSchemas.home.why>;
 export type HomeProcess = z.infer<typeof pageSectionSchemas.home.process>;
+export type HomeSpecialtySection = z.infer<typeof pageSectionSchemas.home.specialty>;
+export type HomeInsightsSection = z.infer<typeof pageSectionSchemas.home.insights>;
+export type HomeFaqSection = z.infer<typeof pageSectionSchemas.home.faq>;
+export type HomeEstimatorSection = z.infer<typeof pageSectionSchemas.home.estimator>;
 export type HomeCta = z.infer<typeof pageSectionSchemas.home.cta>;
 
 export type HomeHeroImage = { url: string; alt: string; width: number | null; height: number | null };
@@ -25,9 +32,25 @@ export type HomeHeroImage = { url: string; alt: string; width: number | null; he
 export type HomePageData = {
   settings: ResolvedSiteSettings;
   hero: HomeHero;
+  heroVisible: boolean;
   heroImage: HomeHeroImage | null;
   stats: HomeStats | null;
+  servicesSection: HomeServicesSection | null;
+  servicesVisible: boolean;
+  projectsSection: HomeProjectsSection;
+  projectsVisible: boolean;
+  whySection: HomeWhySection | null;
+  whyVisible: boolean;
   process: HomeProcess | null;
+  specialtySection: HomeSpecialtySection | null;
+  specialtyVisible: boolean;
+  insightsSection: HomeInsightsSection | null;
+  insightsVisible: boolean;
+  latestInsights: Awaited<ReturnType<typeof getPublishedBlogPostsPage>>["items"];
+  faqSection: HomeFaqSection | null;
+  faqVisible: boolean;
+  estimatorSection: HomeEstimatorSection | null;
+  estimatorVisible: boolean;
   cta: HomeCta | null;
   services: Awaited<ReturnType<typeof getPublishedServices>>;
   featuredProjects: Awaited<ReturnType<typeof getPublishedProjects>>;
@@ -44,13 +67,13 @@ function asObject(value: Prisma.JsonValue): JsonObject | null {
   return typeof value === "object" && value !== null && !Array.isArray(value) ? value as JsonObject : null;
 }
 
-export function normalizeHomeHero(value: Prisma.JsonValue): HomeHero | null {
+export function normalizeHomeHero(value: Prisma.JsonValue, phone = ""): HomeHero | null {
   const object = asObject(value);
   if (!object) return null;
   const candidate = {
     ...object,
-    primaryHref: typeof object.primaryHref === "string" ? object.primaryHref : "/estimate",
-    secondaryHref: typeof object.secondaryHref === "string" ? object.secondaryHref : "tel:+919821502956",
+    primaryHref: typeof object.primaryHref === "string" && object.primaryHref.trim() ? object.primaryHref : "/estimate",
+    secondaryHref: typeof object.secondaryHref === "string" && object.secondaryHref.trim() ? object.secondaryHref : phone ? `tel:${phone}` : "/contact",
     backgroundImageId: typeof object.backgroundImageId === "string" ? object.backgroundImageId : null,
   };
   const result = pageSectionSchemas.home.hero.safeParse(candidate);
@@ -62,6 +85,41 @@ function normalizeStats(value: Prisma.JsonValue): HomeStats | null {
   return result.success ? result.data : null;
 }
 
+function normalizeHomeProjects(value: Prisma.JsonValue): HomeProjectsSection | null {
+  const result = pageSectionSchemas.home.projects.safeParse(value);
+  return result.success ? result.data : null;
+}
+
+function normalizeHomeServices(value: Prisma.JsonValue): HomeServicesSection | null {
+  const result = pageSectionSchemas.home.services.safeParse(value);
+  return result.success ? result.data : null;
+}
+
+function normalizeHomeWhy(value: Prisma.JsonValue): HomeWhySection | null {
+  const result = pageSectionSchemas.home.why.safeParse(value);
+  return result.success ? result.data : null;
+}
+
+function normalizeHomeSpecialty(value: Prisma.JsonValue): HomeSpecialtySection | null {
+  const result = pageSectionSchemas.home.specialty.safeParse(value);
+  return result.success ? result.data : null;
+}
+
+function normalizeHomeInsights(value: Prisma.JsonValue): HomeInsightsSection | null {
+  const result = pageSectionSchemas.home.insights.safeParse(value);
+  return result.success ? result.data : null;
+}
+
+function normalizeHomeFaq(value: Prisma.JsonValue): HomeFaqSection | null {
+  const result = pageSectionSchemas.home.faq.safeParse(value);
+  return result.success ? result.data : null;
+}
+
+function normalizeHomeEstimator(value: Prisma.JsonValue): HomeEstimatorSection | null {
+  const result = pageSectionSchemas.home.estimator.safeParse(value);
+  return result.success ? result.data : null;
+}
+
 export function normalizeHomeProcess(value: Prisma.JsonValue): HomeProcess | null {
   const object = asObject(value);
   if (!object || typeof object.title !== "string" || !Array.isArray(object.steps)) return null;
@@ -70,7 +128,7 @@ export function normalizeHomeProcess(value: Prisma.JsonValue): HomeProcess | nul
     if (typeof step === "object" && step !== null && !Array.isArray(step) && typeof step.title === "string") return [{ title: step.title, description: typeof step.description === "string" ? step.description : "" }];
     return [];
   });
-  const result = pageSectionSchemas.home.process.safeParse({ title: object.title, steps });
+  const result = pageSectionSchemas.home.process.safeParse({ eyebrow: typeof object.eyebrow === "string" ? object.eyebrow : "", title: object.title, steps });
   return result.success ? result.data : null;
 }
 
@@ -83,43 +141,81 @@ export function normalizeHomeCta(value: Prisma.JsonValue): HomeCta | null {
 
 function fallbackHero(settings: ResolvedSiteSettings): HomeHero {
   const phone = settings.phones[0] ?? "";
-  return { eyebrow: "Project Management Consultant & Turnkey Project Developers", title: `Building trust since ${settings.foundedYear}`, description: "Civil engineering services for project management, repairs and rehabilitation of RCC structures, and construction of new buildings.", primaryCta: "Get Free Quote", primaryHref: "/estimate", secondaryCta: "Call Now", secondaryHref: phone ? `tel:${phone}` : "/contact", backgroundImageId: null };
+  return { eyebrow: "", title: "", description: "", trustChips: [], primaryCta: "Get Free Quote", primaryHref: "/estimate", secondaryCta: "Call Now", secondaryHref: phone ? `tel:${phone}` : "/contact", backgroundImageId: null };
 }
 
-function fallbackCta(): HomeCta {
-  return { title: "Quality is our first priority", description: "Talk to Vakratund Construction about your construction, repair or rehabilitation requirement.", primaryCta: "Get Free Quote", primaryHref: "/estimate", secondaryCta: "Request Site Inspection", secondaryHref: "/contact?type=inspection" };
+function fallbackProjectsSection(): HomeProjectsSection {
+  return { eyebrow: "Featured work", title: "Selected projects", description: "", viewAllLabel: "View all projects" };
 }
 
 function fallbackHomePageData(): HomePageData {
   const settings = resolveSiteSettings(null);
-  return { settings, hero: fallbackHero(settings), heroImage: null, stats: null, process: null, cta: fallbackCta(), services: [], featuredProjects: [], featuredGallery: [], structuralService: null, testimonials: [], faqs: [], team: [] };
+  return { settings, hero: fallbackHero(settings), heroVisible: true, heroImage: null, stats: null, servicesSection: null, servicesVisible: false, projectsSection: fallbackProjectsSection(), projectsVisible: true, whySection: null, whyVisible: false, process: null, specialtySection: null, specialtyVisible: false, insightsSection: null, insightsVisible: false, latestInsights: [], faqSection: null, faqVisible: false, estimatorSection: null, estimatorVisible: false, cta: null, services: [], featuredProjects: [], featuredGallery: [], structuralService: null, testimonials: [], faqs: [], team: [] };
 }
 
 async function readHomePageData(): Promise<HomePageData> {
   try {
-    const [settingsRow, sections, services, featuredProjects, featuredGallery, testimonials, faqs, team] = await Promise.all([
+    const [settingsRow, sections, services, featuredProjects, featuredGallery, testimonials, faqs, team, latestBlogPage] = await Promise.all([
       getPublicSettings(),
-      getPublicPageSections("home"),
+      prisma.pageSection.findMany({ where: { pageKey: "home" }, orderBy: { sortOrder: "asc" }, select: { sectionKey: true, content: true, isVisible: true } }),
       getPublishedServices(),
       getPublishedProjects({ isFeatured: true }),
       getFeaturedGallery(),
       getPublishedTestimonials(),
       getPublishedFaqs(),
       getVisibleTeamMembers(),
+      getPublishedBlogPostsPage(undefined, 1, 3),
     ]);
     const settings = resolveSiteSettings(settingsRow);
     const heroSection = sections.find((section) => section.sectionKey === "hero");
-    const hero = heroSection ? normalizeHomeHero(heroSection.content) ?? fallbackHero(settings) : fallbackHero(settings);
+    const hero = heroSection ? normalizeHomeHero(heroSection.content, settings.phones[0] ?? "") ?? fallbackHero(settings) : fallbackHero(settings);
     const statsSection = sections.find((section) => section.sectionKey === "stats");
+    const servicesSection = sections.find((section) => section.sectionKey === "services");
+    const projectsSection = sections.find((section) => section.sectionKey === "projects");
+    const whySection = sections.find((section) => section.sectionKey === "why");
     const processSection = sections.find((section) => section.sectionKey === "process");
+    const specialtySection = sections.find((section) => section.sectionKey === "specialty");
+    const insightsSection = sections.find((section) => section.sectionKey === "insights");
+    const faqSection = sections.find((section) => section.sectionKey === "faq");
+    const estimatorSection = sections.find((section) => section.sectionKey === "estimator");
     const ctaSection = sections.find((section) => section.sectionKey === "cta");
     const heroImage = hero.backgroundImageId ? await prisma.mediaAsset.findFirst({ where: { id: hero.backgroundImageId, kind: "IMAGE" }, select: { url: true, alt: true, width: true, height: true } }) : null;
 
-    return { settings, hero, heroImage, stats: statsSection ? normalizeStats(statsSection.content) : null, process: processSection ? normalizeHomeProcess(processSection.content) : null, cta: ctaSection ? normalizeHomeCta(ctaSection.content) ?? fallbackCta() : fallbackCta(), services, featuredProjects, featuredGallery, structuralService: services.find((service) => service.slug === "structural-repairs-rehabilitation") ?? null, testimonials, faqs, team };
+    return {
+      settings,
+      hero,
+      heroVisible: heroSection?.isVisible ?? true,
+      heroImage,
+      stats: statsSection?.isVisible ? normalizeStats(statsSection.content) : null,
+      servicesSection: servicesSection?.isVisible ? normalizeHomeServices(servicesSection.content) : null,
+      servicesVisible: servicesSection?.isVisible ?? false,
+      projectsSection: projectsSection ? normalizeHomeProjects(projectsSection.content) ?? fallbackProjectsSection() : fallbackProjectsSection(),
+      projectsVisible: projectsSection?.isVisible ?? true,
+      whySection: whySection?.isVisible ? normalizeHomeWhy(whySection.content) : null,
+      whyVisible: whySection?.isVisible ?? false,
+      process: processSection?.isVisible ? normalizeHomeProcess(processSection.content) : null,
+      specialtySection: specialtySection?.isVisible ? normalizeHomeSpecialty(specialtySection.content) : null,
+      specialtyVisible: specialtySection?.isVisible ?? false,
+      insightsSection: insightsSection?.isVisible ? normalizeHomeInsights(insightsSection.content) : null,
+      insightsVisible: insightsSection?.isVisible ?? false,
+      latestInsights: latestBlogPage.items,
+      faqSection: faqSection?.isVisible ? normalizeHomeFaq(faqSection.content) : null,
+      faqVisible: faqSection?.isVisible ?? false,
+      estimatorSection: estimatorSection?.isVisible ? normalizeHomeEstimator(estimatorSection.content) : null,
+      estimatorVisible: estimatorSection?.isVisible ?? false,
+      cta: ctaSection?.isVisible ? normalizeHomeCta(ctaSection.content) : null,
+      services,
+      featuredProjects,
+      featuredGallery,
+      structuralService: services.find((service) => service.slug === "structural-repairs-rehabilitation") ?? null,
+      testimonials,
+      faqs,
+      team,
+    };
   } catch (error) {
     if (process.env.NEXT_PHASE === "phase-production-build") return fallbackHomePageData();
     throw error;
   }
 }
 
-export const getHomePageData = unstable_cache(readHomePageData, ["home-page"], { tags: ["settings", "pages", "services", "projects", "gallery", "testimonials", "faqs", "team"], revalidate: 3600 });
+export const getHomePageData = unstable_cache(readHomePageData, ["home-page"], { tags: ["settings", "pages", "services", "projects", "gallery", "testimonials", "faqs", "team", "blog"], revalidate: 3600 });

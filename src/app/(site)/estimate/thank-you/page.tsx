@@ -4,6 +4,7 @@ import Link from "next/link";
 
 import { AnalyticsConversion } from "@/components/site/analytics-conversion";
 import { ContactLink, TrackedWhatsAppLink } from "@/components/site/contact-link";
+import { WhatsAppIcon } from "@/components/ui/whatsapp-icon";
 import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
 import { resolveSiteSettings } from "@/config/site";
 import { Container, Card, SectionHeading } from "@/components/ui";
@@ -46,7 +47,7 @@ export default async function EstimateThankYouPage({ searchParams }: { searchPar
         </Card>
         <div className="mt-8 grid gap-3 sm:grid-cols-3">
           <ContactLink href={phoneHref(resolved.phones[0] ?? "")} eventType="CALL" context="estimate-thank-you-call" className="inline-flex min-h-12 items-center justify-center rounded-control border bg-surface px-5 font-semibold hover:bg-surface-alt">Call us</ContactLink>
-          <TrackedWhatsAppLink settings={resolved} whatsappContext={{ pageTitle: "Estimate thank-you", estimateReference: quote.publicId }} context="estimate-thank-you-whatsapp" target="_blank" rel="noreferrer" className="inline-flex min-h-12 items-center justify-center rounded-control bg-[#25D366] px-5 font-semibold text-white hover:brightness-95">WhatsApp us</TrackedWhatsAppLink>
+          <TrackedWhatsAppLink settings={resolved} whatsappContext={{ pageTitle: "Estimate thank-you", estimateReference: quote.publicId }} context="estimate-thank-you-whatsapp" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-control bg-whatsapp px-5 font-semibold text-charcoal hover:bg-whatsapp-dark"><WhatsAppIcon size={18} />WhatsApp us</TrackedWhatsAppLink>
           <Link href="/" className="inline-flex min-h-12 items-center justify-center rounded-control bg-brand px-5 font-bold text-brand-ink hover:bg-brand/90">Back to home</Link>
         </div>
         <div className="mt-12"><h2 className="font-heading text-2xl font-bold">What happens next?</h2><ol className="mt-5 grid gap-3 sm:grid-cols-3"><li className="rounded-control border bg-surface p-4 text-sm text-ink-muted"><strong className="block text-ink">1. Review</strong>Our team reviews the details you shared.</li><li className="rounded-control border bg-surface p-4 text-sm text-ink-muted"><strong className="block text-ink">2. Discuss</strong>We clarify scope and project requirements.</li><li className="rounded-control border bg-surface p-4 text-sm text-ink-muted"><strong className="block text-ink">3. Inspect</strong>Final quotation follows a site inspection.</li></ol></div>

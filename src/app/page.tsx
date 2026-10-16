@@ -14,5 +14,5 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function Home() {
   const data = await getHomePageData();
-  return <SiteShell settings={data.settings}><HomePage data={data} /></SiteShell>;
+  return <SiteShell settings={data.settings} services={data.services} overlayHeader><HomePage data={data} /></SiteShell>;
 }

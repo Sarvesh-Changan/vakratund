@@ -587,6 +587,7 @@ const pageSections = [
       title: "Building trust since 2003",
       description:
         "Civil engineering services for project management, repairs and rehabilitation of RCC structures, and construction of new buildings.",
+      trustChips: ["MSME registered", "Insured workforce", "Since 2003"],
       primaryCta: "Get Free Quote",
       secondaryCta: "Call Now",
     },
@@ -598,8 +599,44 @@ const pageSections = [
     content: {
       items: [
         { label: "Established", value: "2003" },
-        { label: "Region", value: "Thane and Mumbai" },
+        { label: "Residential & commercial building area", value: "~15,000 sq.ft." },
+        { label: "Commercial building & strong room area", value: "~25,000 sq.ft." },
+        { label: "Residential building area", value: "~17,000 sq.ft." },
       ],
+    },
+  },
+  {
+    id: "seed-section-home-projects",
+    pageKey: "home",
+    sectionKey: "projects",
+    content: {
+      eyebrow: "Featured work",
+      title: "Selected projects",
+      description: "",
+      viewAllLabel: "View all projects",
+    },
+  },
+  {
+    id: "seed-section-home-services",
+    pageKey: "home",
+    sectionKey: "services",
+    content: {
+      eyebrow: "Services",
+      title: "Our services",
+      description: "",
+      viewAllLabel: "View all services",
+      serviceLinkLabel: "Explore service",
+    },
+  },
+  {
+    id: "seed-section-home-why",
+    pageKey: "home",
+    sectionKey: "why",
+    content: {
+      eyebrow: "Leadership",
+      title: "Why Vakratund",
+      description: "",
+      quote: "",
     },
   },
   {
@@ -607,8 +644,52 @@ const pageSections = [
     pageKey: "home",
     sectionKey: "process",
     content: {
+      eyebrow: "How we work",
       title: "Our process",
       steps: ["Survey", "Plan", "Execute", "Handover"],
+    },
+  },
+  {
+    id: "seed-section-home-specialty",
+    pageKey: "home",
+    sectionKey: "specialty",
+    content: {
+      eyebrow: "Structural repairs",
+      title: "Structural audit and repair for societies",
+      description: "",
+      ctaLabel: "Request Site Inspection",
+      ctaHref: "/contact?type=inspection",
+    },
+  },
+  {
+    id: "seed-section-home-insights",
+    pageKey: "home",
+    sectionKey: "insights",
+    content: {
+      eyebrow: "From the blog",
+      title: "Latest insights",
+      viewAllLabel: "View all insights",
+    },
+  },
+  {
+    id: "seed-section-home-faq",
+    pageKey: "home",
+    sectionKey: "faq",
+    content: {
+      eyebrow: "FAQs",
+      title: "Common questions",
+      viewAllLabel: "View all FAQs",
+    },
+  },
+  {
+    id: "seed-section-home-estimator",
+    pageKey: "home",
+    sectionKey: "estimator",
+    content: {
+      eyebrow: "Project planning",
+      title: "Explore an indicative estimate",
+      description: "Use the estimator to share project requirements. Final quotation follows site inspection.",
+      ctaLabel: "Estimate a project",
     },
   },
   {
@@ -619,6 +700,8 @@ const pageSections = [
       title: "Quality is our first priority",
       primaryCta: "Get Free Quote",
       secondaryCta: "Request Site Inspection",
+      callCta: "Call Now",
+      whatsappCta: "Chat on WhatsApp",
     },
   },
   {

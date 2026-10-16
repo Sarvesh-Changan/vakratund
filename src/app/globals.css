@@ -7,6 +7,7 @@
   --surface-alt: #f3ecdd;
   --ink: #17130f;
   --ink-muted: #5b5249;
+  --ink-on-dark: rgb(255 255 255 / 0.72);
   --line: #e4dac8;
   --brand: #f59a0c;
   --brand-ink: #1a1208;
@@ -15,6 +16,10 @@
   --success: #1f8a4c;
   --warning: #b7791f;
   --danger: #c0392b;
+  /* The one permitted brand-color exception to the no-hard-coded-hex rule. */
+  --whatsapp: #25d366;
+  --whatsapp-dark: #128c7e;
+  --whatsapp-text: #137a3a;
   --space-1: 0.25rem;
   --space-2: 0.5rem;
   --space-3: 0.75rem;
@@ -31,13 +36,34 @@
   --radius-pill: 999px;
   --elevation-soft: 0 1px 2px rgb(20 17 15 / 0.06), 0 8px 24px rgb(20 17 15 / 0.06);
   --elevation-raised: 0 8px 24px rgb(20 17 15 / 0.12);
-  --type-display: clamp(2.5rem, 5vw + 1rem, 4.5rem);
-  --type-h1: clamp(2rem, 3.2vw + 1rem, 3.25rem);
-  --type-h2: clamp(1.625rem, 2vw + 1rem, 2.375rem);
-  --type-h3: clamp(1.25rem, 1vw + 1rem, 1.625rem);
+  --type-hero: clamp(3.25rem, 8vw + 1rem, 8rem);
+  --type-display: clamp(3rem, 5vw + 1rem, 6rem);
+  --type-h1: clamp(2.5rem, 4vw + 1rem, 4.5rem);
+  --type-h2: clamp(2rem, 2.5vw + 1rem, 3.25rem);
+  --type-h3: clamp(1.5rem, 1.2vw + 1rem, 2rem);
   --type-body: clamp(1rem, 0.25vw + 0.95rem, 1.125rem);
+  --type-eyebrow: clamp(0.75rem, 0.3vw + 0.7rem, 0.875rem);
   --type-small: 0.875rem;
   --type-caption: 0.75rem;
+  --section-space-compact: 3rem;
+  --section-space: 4rem;
+  --section-space-generous: 5rem;
+}
+
+@media (min-width: 48rem) {
+  :root {
+    --section-space-compact: 4rem;
+    --section-space: 5.5rem;
+    --section-space-generous: 6.5rem;
+  }
+}
+
+@media (min-width: 80rem) {
+  :root {
+    --section-space-compact: 5rem;
+    --section-space: 7rem;
+    --section-space-generous: 8rem;
+  }
 }
 
 [data-theme="dark"] {
@@ -75,11 +101,33 @@
 }
 
 @theme inline {
+  --text-hero: var(--type-hero);
+  --text-hero--line-height: 0.95;
+  --text-hero--letter-spacing: -0.055em;
+  --text-display: var(--type-display);
+  --text-display--line-height: 0.98;
+  --text-display--letter-spacing: -0.045em;
+  --text-h1: var(--type-h1);
+  --text-h1--line-height: 1.05;
+  --text-h1--letter-spacing: -0.04em;
+  --text-h2: var(--type-h2);
+  --text-h2--line-height: 1.1;
+  --text-h2--letter-spacing: -0.035em;
+  --text-h3: var(--type-h3);
+  --text-h3--line-height: 1.15;
+  --text-h3--letter-spacing: -0.03em;
+  --container-narrow: 48rem;
+  --container-default: 77.5rem;
+  --container-wide: 90rem;
+  --spacing-section-compact: var(--section-space-compact);
+  --spacing-section: var(--section-space);
+  --spacing-section-generous: var(--section-space-generous);
   --color-bg: var(--bg);
   --color-surface: var(--surface);
   --color-surface-alt: var(--surface-alt);
   --color-ink: var(--ink);
   --color-ink-muted: var(--ink-muted);
+  --color-ink-on-dark: var(--ink-on-dark);
   --color-line: var(--line);
   --color-brand: var(--brand);
   --color-brand-ink: var(--brand-ink);
@@ -88,6 +136,9 @@
   --color-success: var(--success);
   --color-warning: var(--warning);
   --color-danger: var(--danger);
+  --color-whatsapp: var(--whatsapp);
+  --color-whatsapp-dark: var(--whatsapp-dark);
+  --color-whatsapp-text: var(--whatsapp-text);
   --spacing-1: var(--space-1);
   --spacing-2: var(--space-2);
   --spacing-3: var(--space-3);
@@ -108,6 +159,18 @@
   --font-heading: var(--font-sora);
 }
 
+@utility section-space {
+  padding-block: var(--section-space);
+}
+
+@utility section-space-compact {
+  padding-block: var(--section-space-compact);
+}
+
+@utility section-space-generous {
+  padding-block: var(--section-space-generous);
+}
+
 * { border-color: var(--line); }
 
 html { scroll-behavior: smooth; }
@@ -124,18 +187,142 @@ body {
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-sora), Arial, sans-serif;
   line-height: 1.15;
-  letter-spacing: -0.025em;
+  letter-spacing: -0.035em;
+}
+
+.eyebrow {
+  color: var(--brand-deep);
+  font-size: var(--type-eyebrow);
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.site-public .bg-charcoal .eyebrow { color: var(--brand); }
+
+.eyebrow-on-dark { color: var(--ink-on-dark); }
+
+.home-blueprint-pattern {
+  background-image: linear-gradient(to right, color-mix(in srgb, var(--ink-on-dark) 18%, transparent) 1px, transparent 1px), linear-gradient(to bottom, color-mix(in srgb, var(--ink-on-dark) 18%, transparent) 1px, transparent 1px);
+  background-size: 4rem 4rem;
+  mask-image: radial-gradient(ellipse at 72% 50%, black 0%, transparent 78%);
+}
+
+.home-proof-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+  gap: 0.75rem;
+}
+
+@media (min-width: 40rem) {
+  .home-proof-grid { gap: 1rem; }
 }
 
 :focus-visible { outline: 2px solid var(--brand-deep); outline-offset: 2px; }
 ::selection { background: var(--brand); color: var(--brand-ink); }
 
+@keyframes whatsapp-gentle-pulse {
+  0%, 88%, 100% { box-shadow: var(--elevation-raised); }
+  92% { box-shadow: 0 0 0 0.625rem rgb(37 211 102 / 0.18), var(--elevation-raised); }
+}
+
+.whatsapp-float { animation: whatsapp-gentle-pulse 4s ease-in-out infinite; }
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
+  .whatsapp-float { animation: none; }
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+@keyframes site-page-load-reveal {
+  from { opacity: 0.97; transform: translateY(0.35rem); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes site-menu-link-reveal {
+  from { opacity: 0; transform: translateY(0.5rem); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.site-page-load { animation: site-page-load-reveal 420ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+.footer-cta-eyebrow { color: var(--brand-ink); }
+.site-mobile-navigation-open .site-mobile-menu-link {
+  animation: site-menu-link-reveal 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes public-route-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes public-route-fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+::view-transition-old(.page-fade) { animation: public-route-fade-out 120ms ease-out both; }
+::view-transition-new(.page-fade) { animation: public-route-fade-in 180ms ease-out both; }
+
+.site-public button:not(:disabled),
+.site-public a { transition: scale 140ms cubic-bezier(0.22, 1, 0.36, 1); }
+.site-public button:active:not(:disabled),
+.site-public a:active { scale: 0.985; }
+
+.site-public input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+.site-public select,
+.site-public textarea {
+  transition: border-color 160ms ease-out, box-shadow 160ms ease-out;
+}
+.site-public input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):focus-visible,
+.site-public select:focus-visible,
+.site-public textarea:focus-visible {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand-deep) 20%, transparent);
+}
+
+.site-public a:not([class*="bg-"]):not([class*="rounded"]):not([class*="after:absolute"]) {
+  text-decoration-color: transparent;
+  text-underline-offset: 0.25em;
+  transition: scale 140ms cubic-bezier(0.22, 1, 0.36, 1), text-decoration-color 180ms ease-out;
+}
+.site-public a:not([class*="bg-"]):not([class*="rounded"]):not([class*="after:absolute"]):hover,
+.site-public a:not([class*="bg-"]):not([class*="rounded"]):not([class*="after:absolute"]):focus-visible {
+  text-decoration-color: currentColor;
+}
+
+.site-public details[open] > div { animation: public-accordion-open 180ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+@keyframes public-accordion-open {
+  from { opacity: 0; transform: translateY(-0.25rem); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.estimator-step-transition { animation: estimator-step-enter 220ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+@keyframes estimator-step-enter {
+  from { opacity: 0; transform: translateY(0.35rem); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-page-load,
+  .site-mobile-navigation-open .site-mobile-menu-link,
+  .site-public details[open] > div,
+  .estimator-step-transition { animation: none; }
+  .site-public button:not(:disabled),
+  .site-public a,
+  .site-public input,
+  .site-public select,
+  .site-public textarea { transition: none; }
+  .site-public button:active:not(:disabled),
+  .site-public a:active { scale: 1; }
+  .site-public input:focus-visible,
+  .site-public select:focus-visible,
+  .site-public textarea:focus-visible { box-shadow: none; }
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-group(*) { animation-duration: 0s !important; animation-delay: 0s !important; }
 }

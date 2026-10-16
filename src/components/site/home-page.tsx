@@ -5,11 +5,28 @@ import { HomeHero } from "./home-hero";
 import { HomeGallery } from "./home-gallery";
 import { HomeProcess } from "./home-process";
 import { HomeProjects } from "./home-projects";
-import { HomeServices } from "./home-services";
+import { HomeServiceMarquee, HomeServices } from "./home-services";
 import { HomeSocialProof } from "./home-social-proof";
 import { HomeStats } from "./home-stats";
-import { HomeTrust } from "./home-trust";
+import { HomeWhy } from "./home-why";
+import { HomeSpecialty } from "./home-specialty";
+import { HomeInsights } from "./home-insights";
 
 export function HomePage({ data }: { data: HomePageData }) {
-  return <><HomeHero hero={data.hero} image={data.heroImage} settings={data.settings} /><HomeStats stats={data.stats} /><HomeServices services={data.services} /><HomeProjects projects={data.featuredProjects} /><HomeGallery items={data.featuredGallery} /><HomeProcess process={data.process} /><HomeTrust settings={data.settings} service={data.structuralService} team={data.team} /><HomeSocialProof testimonials={data.testimonials} /><HomeEstimatorTeaser /><HomeFaq faqs={data.faqs} /><HomeFinalCta cta={data.cta} /></>;
+  return <>
+    {data.heroVisible ? <HomeHero hero={data.hero} image={data.heroImage} settings={data.settings} /> : null}
+    <HomeStats stats={data.stats} />
+    {data.servicesVisible ? <HomeServices services={data.services} section={data.servicesSection} /> : null}
+    {data.projectsVisible ? <HomeProjects projects={data.featuredProjects} section={data.projectsSection} /> : null}
+    {data.whyVisible ? <HomeWhy settings={data.settings} team={data.team} section={data.whySection} /> : null}
+    <HomeProcess process={data.process} />
+    {data.specialtyVisible ? <HomeSpecialty section={data.specialtySection} service={data.structuralService} /> : null}
+    {data.servicesVisible ? <HomeServiceMarquee services={data.services} /> : null}
+    <HomeGallery items={data.featuredGallery} />
+    <HomeSocialProof testimonials={data.testimonials} />
+    {data.insightsVisible ? <HomeInsights posts={data.latestInsights} section={data.insightsSection} /> : null}
+    {data.estimatorVisible ? <HomeEstimatorTeaser section={data.estimatorSection} /> : null}
+    {data.faqVisible ? <HomeFaq faqs={data.faqs} section={data.faqSection} /> : null}
+    <HomeFinalCta cta={data.cta} settings={data.settings} />
+  </>;
 }
