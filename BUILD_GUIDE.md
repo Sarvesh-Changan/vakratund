@@ -226,7 +226,7 @@ Done when: I can create/edit/reorder/publish a service and changes revalidate ca
 ```text
 PHASE 7b — Projects and Gallery modules using the recipe from 7a.
 Projects: all fields in docs/DATABASE.md (service relation, location, area, floors text, scope, year, status, progress %, showClientName toggle default off, featured, publish status, SEO), media attach with cover/before/after flags and drag ordering. Publishing rules from DATABASE.md §4 enforced in the service layer.
-Gallery: items from MediaAsset with category, title, order, visibility; bulk add from the media library.
+Gallery: category/year-managed items with title, alt text, caption, order, visibility, signed bulk image/video upload and duplicate handling.
 Done when: CRUD works with role checks (EDITOR allowed), validation errors show inline, publish rules are enforced and tested.
 ```
 **7c — Testimonials, FAQs, Team**
@@ -287,7 +287,7 @@ Done when: Lighthouse mobile ≥ 90 performance locally (production build), no C
 PHASE 10 — Services, Projects, Gallery public pages.
 1. /services (grid) and /services/[slug] (hero, scope, process, related projects, gallery, FAQs with FAQPage JSON-LD, CTA, Service JSON-LD, breadcrumbs). generateStaticParams + ISR; 404 for unpublished.
 2. /projects (filters by service/status/year via search params, pagination) and /projects/[slug] (gallery + lightbox, facts table, before/after slider, related projects, enquiry CTA that prefills the contact form with the project name). Respect showClientName=false by hiding client name everywhere (including JSON-LD and meta).
-3. /gallery with category filter and accessible lightbox (focus trap, Esc, arrow keys, swipe).
+3. /gallery with category/year filters, year grouping, canonical filtered-view noindex, ImageGallery JSON-LD and accessible lightbox (focus trap, Esc, arrow keys, swipe).
 4. Skeletons for loading; empty states; metadata per page from entity SEO fields with fallbacks.
 Done when: pages render from DB, filters work without full reload where appropriate (progressive enhancement), lightbox is keyboard accessible.
 ```

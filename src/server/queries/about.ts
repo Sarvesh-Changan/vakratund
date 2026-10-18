@@ -48,7 +48,7 @@ async function readAboutPageData(): Promise<AboutPageData> {
     getVisibleTeamMembers(),
     getPublishedTestimonials(),
     getPublishedServices(),
-    getFeaturedGallery(),
+    getFeaturedGallery().catch(() => []),
   ]);
   return { settings: resolveSiteSettings(settings), story: sectionContent(sections, "story"), mission: sectionContent(sections, "mission"), journey: journeyContent(sections), aboutImage: gallery.find((item) => item.mediaType === "IMAGE") ?? null, serviceCount: services.length, team, testimonials };
 }

@@ -20,7 +20,7 @@ async function readPublishedServiceDetail(slug: string): Promise<PublishedServic
 
   const [relatedProjects, gallery, faqs, services] = await Promise.all([
     getPublishedProjects({ serviceSlug: service.slug }),
-    getPublishedGallery(service.slug),
+    getPublishedGallery(),
     getPublishedFaqs(service.slug),
     getPublishedServices(),
   ]);

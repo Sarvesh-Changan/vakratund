@@ -46,7 +46,7 @@ export type GalleryItemMinAggregateOutputType = {
   id: string | null
   title: string | null
   categoryId: string | null
-  designType: $Enums.GalleryDesignType | null
+  yearId: string | null
   mediaType: $Enums.GalleryMediaType | null
   publicId: string | null
   url: string | null
@@ -56,6 +56,8 @@ export type GalleryItemMinAggregateOutputType = {
   width: number | null
   height: number | null
   duration: number | null
+  caption: string | null
+  alt: string | null
   isCategoryCover: boolean | null
   isFeatured: boolean | null
   isPublished: boolean | null
@@ -68,7 +70,7 @@ export type GalleryItemMaxAggregateOutputType = {
   id: string | null
   title: string | null
   categoryId: string | null
-  designType: $Enums.GalleryDesignType | null
+  yearId: string | null
   mediaType: $Enums.GalleryMediaType | null
   publicId: string | null
   url: string | null
@@ -78,6 +80,8 @@ export type GalleryItemMaxAggregateOutputType = {
   width: number | null
   height: number | null
   duration: number | null
+  caption: string | null
+  alt: string | null
   isCategoryCover: boolean | null
   isFeatured: boolean | null
   isPublished: boolean | null
@@ -90,7 +94,7 @@ export type GalleryItemCountAggregateOutputType = {
   id: number
   title: number
   categoryId: number
-  designType: number
+  yearId: number
   mediaType: number
   publicId: number
   url: number
@@ -100,6 +104,8 @@ export type GalleryItemCountAggregateOutputType = {
   width: number
   height: number
   duration: number
+  caption: number
+  alt: number
   isCategoryCover: number
   isFeatured: number
   isPublished: number
@@ -130,7 +136,7 @@ export type GalleryItemMinAggregateInputType = {
   id?: true
   title?: true
   categoryId?: true
-  designType?: true
+  yearId?: true
   mediaType?: true
   publicId?: true
   url?: true
@@ -140,6 +146,8 @@ export type GalleryItemMinAggregateInputType = {
   width?: true
   height?: true
   duration?: true
+  caption?: true
+  alt?: true
   isCategoryCover?: true
   isFeatured?: true
   isPublished?: true
@@ -152,7 +160,7 @@ export type GalleryItemMaxAggregateInputType = {
   id?: true
   title?: true
   categoryId?: true
-  designType?: true
+  yearId?: true
   mediaType?: true
   publicId?: true
   url?: true
@@ -162,6 +170,8 @@ export type GalleryItemMaxAggregateInputType = {
   width?: true
   height?: true
   duration?: true
+  caption?: true
+  alt?: true
   isCategoryCover?: true
   isFeatured?: true
   isPublished?: true
@@ -174,7 +184,7 @@ export type GalleryItemCountAggregateInputType = {
   id?: true
   title?: true
   categoryId?: true
-  designType?: true
+  yearId?: true
   mediaType?: true
   publicId?: true
   url?: true
@@ -184,6 +194,8 @@ export type GalleryItemCountAggregateInputType = {
   width?: true
   height?: true
   duration?: true
+  caption?: true
+  alt?: true
   isCategoryCover?: true
   isFeatured?: true
   isPublished?: true
@@ -283,7 +295,7 @@ export type GalleryItemGroupByOutputType = {
   id: string
   title: string
   categoryId: string
-  designType: $Enums.GalleryDesignType
+  yearId: string
   mediaType: $Enums.GalleryMediaType
   publicId: string
   url: string
@@ -293,6 +305,8 @@ export type GalleryItemGroupByOutputType = {
   width: number | null
   height: number | null
   duration: number | null
+  caption: string | null
+  alt: string
   isCategoryCover: boolean
   isFeatured: boolean
   isPublished: boolean
@@ -328,7 +342,7 @@ export type GalleryItemWhereInput = {
   id?: Prisma.StringFilter<"GalleryItem"> | string
   title?: Prisma.StringFilter<"GalleryItem"> | string
   categoryId?: Prisma.StringFilter<"GalleryItem"> | string
-  designType?: Prisma.EnumGalleryDesignTypeFilter<"GalleryItem"> | $Enums.GalleryDesignType
+  yearId?: Prisma.StringFilter<"GalleryItem"> | string
   mediaType?: Prisma.EnumGalleryMediaTypeFilter<"GalleryItem"> | $Enums.GalleryMediaType
   publicId?: Prisma.StringFilter<"GalleryItem"> | string
   url?: Prisma.StringFilter<"GalleryItem"> | string
@@ -338,6 +352,8 @@ export type GalleryItemWhereInput = {
   width?: Prisma.IntNullableFilter<"GalleryItem"> | number | null
   height?: Prisma.IntNullableFilter<"GalleryItem"> | number | null
   duration?: Prisma.FloatNullableFilter<"GalleryItem"> | number | null
+  caption?: Prisma.StringNullableFilter<"GalleryItem"> | string | null
+  alt?: Prisma.StringFilter<"GalleryItem"> | string
   isCategoryCover?: Prisma.BoolFilter<"GalleryItem"> | boolean
   isFeatured?: Prisma.BoolFilter<"GalleryItem"> | boolean
   isPublished?: Prisma.BoolFilter<"GalleryItem"> | boolean
@@ -345,13 +361,14 @@ export type GalleryItemWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"GalleryItem"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"GalleryItem"> | Date | string
   category?: Prisma.XOR<Prisma.GalleryCategoryScalarRelationFilter, Prisma.GalleryCategoryWhereInput>
+  year?: Prisma.XOR<Prisma.GalleryYearScalarRelationFilter, Prisma.GalleryYearWhereInput>
 }
 
 export type GalleryItemOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
-  designType?: Prisma.SortOrder
+  yearId?: Prisma.SortOrder
   mediaType?: Prisma.SortOrder
   publicId?: Prisma.SortOrder
   url?: Prisma.SortOrder
@@ -361,6 +378,8 @@ export type GalleryItemOrderByWithRelationInput = {
   width?: Prisma.SortOrderInput | Prisma.SortOrder
   height?: Prisma.SortOrderInput | Prisma.SortOrder
   duration?: Prisma.SortOrderInput | Prisma.SortOrder
+  caption?: Prisma.SortOrderInput | Prisma.SortOrder
+  alt?: Prisma.SortOrder
   isCategoryCover?: Prisma.SortOrder
   isFeatured?: Prisma.SortOrder
   isPublished?: Prisma.SortOrder
@@ -368,6 +387,7 @@ export type GalleryItemOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   category?: Prisma.GalleryCategoryOrderByWithRelationInput
+  year?: Prisma.GalleryYearOrderByWithRelationInput
 }
 
 export type GalleryItemWhereUniqueInput = Prisma.AtLeast<{
@@ -378,7 +398,7 @@ export type GalleryItemWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.GalleryItemWhereInput | Prisma.GalleryItemWhereInput[]
   title?: Prisma.StringFilter<"GalleryItem"> | string
   categoryId?: Prisma.StringFilter<"GalleryItem"> | string
-  designType?: Prisma.EnumGalleryDesignTypeFilter<"GalleryItem"> | $Enums.GalleryDesignType
+  yearId?: Prisma.StringFilter<"GalleryItem"> | string
   mediaType?: Prisma.EnumGalleryMediaTypeFilter<"GalleryItem"> | $Enums.GalleryMediaType
   url?: Prisma.StringFilter<"GalleryItem"> | string
   format?: Prisma.StringFilter<"GalleryItem"> | string
@@ -387,6 +407,8 @@ export type GalleryItemWhereUniqueInput = Prisma.AtLeast<{
   width?: Prisma.IntNullableFilter<"GalleryItem"> | number | null
   height?: Prisma.IntNullableFilter<"GalleryItem"> | number | null
   duration?: Prisma.FloatNullableFilter<"GalleryItem"> | number | null
+  caption?: Prisma.StringNullableFilter<"GalleryItem"> | string | null
+  alt?: Prisma.StringFilter<"GalleryItem"> | string
   isCategoryCover?: Prisma.BoolFilter<"GalleryItem"> | boolean
   isFeatured?: Prisma.BoolFilter<"GalleryItem"> | boolean
   isPublished?: Prisma.BoolFilter<"GalleryItem"> | boolean
@@ -394,13 +416,14 @@ export type GalleryItemWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"GalleryItem"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"GalleryItem"> | Date | string
   category?: Prisma.XOR<Prisma.GalleryCategoryScalarRelationFilter, Prisma.GalleryCategoryWhereInput>
+  year?: Prisma.XOR<Prisma.GalleryYearScalarRelationFilter, Prisma.GalleryYearWhereInput>
 }, "id" | "publicId">
 
 export type GalleryItemOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
-  designType?: Prisma.SortOrder
+  yearId?: Prisma.SortOrder
   mediaType?: Prisma.SortOrder
   publicId?: Prisma.SortOrder
   url?: Prisma.SortOrder
@@ -410,6 +433,8 @@ export type GalleryItemOrderByWithAggregationInput = {
   width?: Prisma.SortOrderInput | Prisma.SortOrder
   height?: Prisma.SortOrderInput | Prisma.SortOrder
   duration?: Prisma.SortOrderInput | Prisma.SortOrder
+  caption?: Prisma.SortOrderInput | Prisma.SortOrder
+  alt?: Prisma.SortOrder
   isCategoryCover?: Prisma.SortOrder
   isFeatured?: Prisma.SortOrder
   isPublished?: Prisma.SortOrder
@@ -430,7 +455,7 @@ export type GalleryItemScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"GalleryItem"> | string
   title?: Prisma.StringWithAggregatesFilter<"GalleryItem"> | string
   categoryId?: Prisma.StringWithAggregatesFilter<"GalleryItem"> | string
-  designType?: Prisma.EnumGalleryDesignTypeWithAggregatesFilter<"GalleryItem"> | $Enums.GalleryDesignType
+  yearId?: Prisma.StringWithAggregatesFilter<"GalleryItem"> | string
   mediaType?: Prisma.EnumGalleryMediaTypeWithAggregatesFilter<"GalleryItem"> | $Enums.GalleryMediaType
   publicId?: Prisma.StringWithAggregatesFilter<"GalleryItem"> | string
   url?: Prisma.StringWithAggregatesFilter<"GalleryItem"> | string
@@ -440,6 +465,8 @@ export type GalleryItemScalarWhereWithAggregatesInput = {
   width?: Prisma.IntNullableWithAggregatesFilter<"GalleryItem"> | number | null
   height?: Prisma.IntNullableWithAggregatesFilter<"GalleryItem"> | number | null
   duration?: Prisma.FloatNullableWithAggregatesFilter<"GalleryItem"> | number | null
+  caption?: Prisma.StringNullableWithAggregatesFilter<"GalleryItem"> | string | null
+  alt?: Prisma.StringWithAggregatesFilter<"GalleryItem"> | string
   isCategoryCover?: Prisma.BoolWithAggregatesFilter<"GalleryItem"> | boolean
   isFeatured?: Prisma.BoolWithAggregatesFilter<"GalleryItem"> | boolean
   isPublished?: Prisma.BoolWithAggregatesFilter<"GalleryItem"> | boolean
@@ -451,7 +478,6 @@ export type GalleryItemScalarWhereWithAggregatesInput = {
 export type GalleryItemCreateInput = {
   id?: string
   title: string
-  designType: $Enums.GalleryDesignType
   mediaType: $Enums.GalleryMediaType
   publicId: string
   url: string
@@ -461,6 +487,8 @@ export type GalleryItemCreateInput = {
   width?: number | null
   height?: number | null
   duration?: number | null
+  caption?: string | null
+  alt: string
   isCategoryCover?: boolean
   isFeatured?: boolean
   isPublished?: boolean
@@ -468,13 +496,14 @@ export type GalleryItemCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   category: Prisma.GalleryCategoryCreateNestedOneWithoutItemsInput
+  year: Prisma.GalleryYearCreateNestedOneWithoutItemsInput
 }
 
 export type GalleryItemUncheckedCreateInput = {
   id?: string
   title: string
   categoryId: string
-  designType: $Enums.GalleryDesignType
+  yearId: string
   mediaType: $Enums.GalleryMediaType
   publicId: string
   url: string
@@ -484,6 +513,8 @@ export type GalleryItemUncheckedCreateInput = {
   width?: number | null
   height?: number | null
   duration?: number | null
+  caption?: string | null
+  alt: string
   isCategoryCover?: boolean
   isFeatured?: boolean
   isPublished?: boolean
@@ -495,7 +526,6 @@ export type GalleryItemUncheckedCreateInput = {
 export type GalleryItemUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
-  designType?: Prisma.EnumGalleryDesignTypeFieldUpdateOperationsInput | $Enums.GalleryDesignType
   mediaType?: Prisma.EnumGalleryMediaTypeFieldUpdateOperationsInput | $Enums.GalleryMediaType
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.StringFieldUpdateOperationsInput | string
@@ -505,6 +535,8 @@ export type GalleryItemUpdateInput = {
   width?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   height?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   duration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  caption?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alt?: Prisma.StringFieldUpdateOperationsInput | string
   isCategoryCover?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -512,13 +544,14 @@ export type GalleryItemUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   category?: Prisma.GalleryCategoryUpdateOneRequiredWithoutItemsNestedInput
+  year?: Prisma.GalleryYearUpdateOneRequiredWithoutItemsNestedInput
 }
 
 export type GalleryItemUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
-  designType?: Prisma.EnumGalleryDesignTypeFieldUpdateOperationsInput | $Enums.GalleryDesignType
+  yearId?: Prisma.StringFieldUpdateOperationsInput | string
   mediaType?: Prisma.EnumGalleryMediaTypeFieldUpdateOperationsInput | $Enums.GalleryMediaType
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.StringFieldUpdateOperationsInput | string
@@ -528,6 +561,8 @@ export type GalleryItemUncheckedUpdateInput = {
   width?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   height?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   duration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  caption?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alt?: Prisma.StringFieldUpdateOperationsInput | string
   isCategoryCover?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -540,7 +575,7 @@ export type GalleryItemCreateManyInput = {
   id?: string
   title: string
   categoryId: string
-  designType: $Enums.GalleryDesignType
+  yearId: string
   mediaType: $Enums.GalleryMediaType
   publicId: string
   url: string
@@ -550,6 +585,8 @@ export type GalleryItemCreateManyInput = {
   width?: number | null
   height?: number | null
   duration?: number | null
+  caption?: string | null
+  alt: string
   isCategoryCover?: boolean
   isFeatured?: boolean
   isPublished?: boolean
@@ -561,7 +598,6 @@ export type GalleryItemCreateManyInput = {
 export type GalleryItemUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
-  designType?: Prisma.EnumGalleryDesignTypeFieldUpdateOperationsInput | $Enums.GalleryDesignType
   mediaType?: Prisma.EnumGalleryMediaTypeFieldUpdateOperationsInput | $Enums.GalleryMediaType
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.StringFieldUpdateOperationsInput | string
@@ -571,6 +607,8 @@ export type GalleryItemUpdateManyMutationInput = {
   width?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   height?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   duration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  caption?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alt?: Prisma.StringFieldUpdateOperationsInput | string
   isCategoryCover?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -583,7 +621,7 @@ export type GalleryItemUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
-  designType?: Prisma.EnumGalleryDesignTypeFieldUpdateOperationsInput | $Enums.GalleryDesignType
+  yearId?: Prisma.StringFieldUpdateOperationsInput | string
   mediaType?: Prisma.EnumGalleryMediaTypeFieldUpdateOperationsInput | $Enums.GalleryMediaType
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.StringFieldUpdateOperationsInput | string
@@ -593,6 +631,8 @@ export type GalleryItemUncheckedUpdateManyInput = {
   width?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   height?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   duration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  caption?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alt?: Prisma.StringFieldUpdateOperationsInput | string
   isCategoryCover?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -615,7 +655,7 @@ export type GalleryItemCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
-  designType?: Prisma.SortOrder
+  yearId?: Prisma.SortOrder
   mediaType?: Prisma.SortOrder
   publicId?: Prisma.SortOrder
   url?: Prisma.SortOrder
@@ -625,6 +665,8 @@ export type GalleryItemCountOrderByAggregateInput = {
   width?: Prisma.SortOrder
   height?: Prisma.SortOrder
   duration?: Prisma.SortOrder
+  caption?: Prisma.SortOrder
+  alt?: Prisma.SortOrder
   isCategoryCover?: Prisma.SortOrder
   isFeatured?: Prisma.SortOrder
   isPublished?: Prisma.SortOrder
@@ -645,7 +687,7 @@ export type GalleryItemMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
-  designType?: Prisma.SortOrder
+  yearId?: Prisma.SortOrder
   mediaType?: Prisma.SortOrder
   publicId?: Prisma.SortOrder
   url?: Prisma.SortOrder
@@ -655,6 +697,8 @@ export type GalleryItemMaxOrderByAggregateInput = {
   width?: Prisma.SortOrder
   height?: Prisma.SortOrder
   duration?: Prisma.SortOrder
+  caption?: Prisma.SortOrder
+  alt?: Prisma.SortOrder
   isCategoryCover?: Prisma.SortOrder
   isFeatured?: Prisma.SortOrder
   isPublished?: Prisma.SortOrder
@@ -667,7 +711,7 @@ export type GalleryItemMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
-  designType?: Prisma.SortOrder
+  yearId?: Prisma.SortOrder
   mediaType?: Prisma.SortOrder
   publicId?: Prisma.SortOrder
   url?: Prisma.SortOrder
@@ -677,6 +721,8 @@ export type GalleryItemMinOrderByAggregateInput = {
   width?: Prisma.SortOrder
   height?: Prisma.SortOrder
   duration?: Prisma.SortOrder
+  caption?: Prisma.SortOrder
+  alt?: Prisma.SortOrder
   isCategoryCover?: Prisma.SortOrder
   isFeatured?: Prisma.SortOrder
   isPublished?: Prisma.SortOrder
@@ -735,8 +781,46 @@ export type GalleryItemUncheckedUpdateManyWithoutCategoryNestedInput = {
   deleteMany?: Prisma.GalleryItemScalarWhereInput | Prisma.GalleryItemScalarWhereInput[]
 }
 
-export type EnumGalleryDesignTypeFieldUpdateOperationsInput = {
-  set?: $Enums.GalleryDesignType
+export type GalleryItemCreateNestedManyWithoutYearInput = {
+  create?: Prisma.XOR<Prisma.GalleryItemCreateWithoutYearInput, Prisma.GalleryItemUncheckedCreateWithoutYearInput> | Prisma.GalleryItemCreateWithoutYearInput[] | Prisma.GalleryItemUncheckedCreateWithoutYearInput[]
+  connectOrCreate?: Prisma.GalleryItemCreateOrConnectWithoutYearInput | Prisma.GalleryItemCreateOrConnectWithoutYearInput[]
+  createMany?: Prisma.GalleryItemCreateManyYearInputEnvelope
+  connect?: Prisma.GalleryItemWhereUniqueInput | Prisma.GalleryItemWhereUniqueInput[]
+}
+
+export type GalleryItemUncheckedCreateNestedManyWithoutYearInput = {
+  create?: Prisma.XOR<Prisma.GalleryItemCreateWithoutYearInput, Prisma.GalleryItemUncheckedCreateWithoutYearInput> | Prisma.GalleryItemCreateWithoutYearInput[] | Prisma.GalleryItemUncheckedCreateWithoutYearInput[]
+  connectOrCreate?: Prisma.GalleryItemCreateOrConnectWithoutYearInput | Prisma.GalleryItemCreateOrConnectWithoutYearInput[]
+  createMany?: Prisma.GalleryItemCreateManyYearInputEnvelope
+  connect?: Prisma.GalleryItemWhereUniqueInput | Prisma.GalleryItemWhereUniqueInput[]
+}
+
+export type GalleryItemUpdateManyWithoutYearNestedInput = {
+  create?: Prisma.XOR<Prisma.GalleryItemCreateWithoutYearInput, Prisma.GalleryItemUncheckedCreateWithoutYearInput> | Prisma.GalleryItemCreateWithoutYearInput[] | Prisma.GalleryItemUncheckedCreateWithoutYearInput[]
+  connectOrCreate?: Prisma.GalleryItemCreateOrConnectWithoutYearInput | Prisma.GalleryItemCreateOrConnectWithoutYearInput[]
+  upsert?: Prisma.GalleryItemUpsertWithWhereUniqueWithoutYearInput | Prisma.GalleryItemUpsertWithWhereUniqueWithoutYearInput[]
+  createMany?: Prisma.GalleryItemCreateManyYearInputEnvelope
+  set?: Prisma.GalleryItemWhereUniqueInput | Prisma.GalleryItemWhereUniqueInput[]
+  disconnect?: Prisma.GalleryItemWhereUniqueInput | Prisma.GalleryItemWhereUniqueInput[]
+  delete?: Prisma.GalleryItemWhereUniqueInput | Prisma.GalleryItemWhereUniqueInput[]
+  connect?: Prisma.GalleryItemWhereUniqueInput | Prisma.GalleryItemWhereUniqueInput[]
+  update?: Prisma.GalleryItemUpdateWithWhereUniqueWithoutYearInput | Prisma.GalleryItemUpdateWithWhereUniqueWithoutYearInput[]
+  updateMany?: Prisma.GalleryItemUpdateManyWithWhereWithoutYearInput | Prisma.GalleryItemUpdateManyWithWhereWithoutYearInput[]
+  deleteMany?: Prisma.GalleryItemScalarWhereInput | Prisma.GalleryItemScalarWhereInput[]
+}
+
+export type GalleryItemUncheckedUpdateManyWithoutYearNestedInput = {
+  create?: Prisma.XOR<Prisma.GalleryItemCreateWithoutYearInput, Prisma.GalleryItemUncheckedCreateWithoutYearInput> | Prisma.GalleryItemCreateWithoutYearInput[] | Prisma.GalleryItemUncheckedCreateWithoutYearInput[]
+  connectOrCreate?: Prisma.GalleryItemCreateOrConnectWithoutYearInput | Prisma.GalleryItemCreateOrConnectWithoutYearInput[]
+  upsert?: Prisma.GalleryItemUpsertWithWhereUniqueWithoutYearInput | Prisma.GalleryItemUpsertWithWhereUniqueWithoutYearInput[]
+  createMany?: Prisma.GalleryItemCreateManyYearInputEnvelope
+  set?: Prisma.GalleryItemWhereUniqueInput | Prisma.GalleryItemWhereUniqueInput[]
+  disconnect?: Prisma.GalleryItemWhereUniqueInput | Prisma.GalleryItemWhereUniqueInput[]
+  delete?: Prisma.GalleryItemWhereUniqueInput | Prisma.GalleryItemWhereUniqueInput[]
+  connect?: Prisma.GalleryItemWhereUniqueInput | Prisma.GalleryItemWhereUniqueInput[]
+  update?: Prisma.GalleryItemUpdateWithWhereUniqueWithoutYearInput | Prisma.GalleryItemUpdateWithWhereUniqueWithoutYearInput[]
+  updateMany?: Prisma.GalleryItemUpdateManyWithWhereWithoutYearInput | Prisma.GalleryItemUpdateManyWithWhereWithoutYearInput[]
+  deleteMany?: Prisma.GalleryItemScalarWhereInput | Prisma.GalleryItemScalarWhereInput[]
 }
 
 export type EnumGalleryMediaTypeFieldUpdateOperationsInput = {
@@ -754,7 +838,6 @@ export type NullableFloatFieldUpdateOperationsInput = {
 export type GalleryItemCreateWithoutCategoryInput = {
   id?: string
   title: string
-  designType: $Enums.GalleryDesignType
   mediaType: $Enums.GalleryMediaType
   publicId: string
   url: string
@@ -764,18 +847,21 @@ export type GalleryItemCreateWithoutCategoryInput = {
   width?: number | null
   height?: number | null
   duration?: number | null
+  caption?: string | null
+  alt: string
   isCategoryCover?: boolean
   isFeatured?: boolean
   isPublished?: boolean
   sortOrder?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  year: Prisma.GalleryYearCreateNestedOneWithoutItemsInput
 }
 
 export type GalleryItemUncheckedCreateWithoutCategoryInput = {
   id?: string
   title: string
-  designType: $Enums.GalleryDesignType
+  yearId: string
   mediaType: $Enums.GalleryMediaType
   publicId: string
   url: string
@@ -785,6 +871,8 @@ export type GalleryItemUncheckedCreateWithoutCategoryInput = {
   width?: number | null
   height?: number | null
   duration?: number | null
+  caption?: string | null
+  alt: string
   isCategoryCover?: boolean
   isFeatured?: boolean
   isPublished?: boolean
@@ -826,7 +914,7 @@ export type GalleryItemScalarWhereInput = {
   id?: Prisma.StringFilter<"GalleryItem"> | string
   title?: Prisma.StringFilter<"GalleryItem"> | string
   categoryId?: Prisma.StringFilter<"GalleryItem"> | string
-  designType?: Prisma.EnumGalleryDesignTypeFilter<"GalleryItem"> | $Enums.GalleryDesignType
+  yearId?: Prisma.StringFilter<"GalleryItem"> | string
   mediaType?: Prisma.EnumGalleryMediaTypeFilter<"GalleryItem"> | $Enums.GalleryMediaType
   publicId?: Prisma.StringFilter<"GalleryItem"> | string
   url?: Prisma.StringFilter<"GalleryItem"> | string
@@ -836,6 +924,8 @@ export type GalleryItemScalarWhereInput = {
   width?: Prisma.IntNullableFilter<"GalleryItem"> | number | null
   height?: Prisma.IntNullableFilter<"GalleryItem"> | number | null
   duration?: Prisma.FloatNullableFilter<"GalleryItem"> | number | null
+  caption?: Prisma.StringNullableFilter<"GalleryItem"> | string | null
+  alt?: Prisma.StringFilter<"GalleryItem"> | string
   isCategoryCover?: Prisma.BoolFilter<"GalleryItem"> | boolean
   isFeatured?: Prisma.BoolFilter<"GalleryItem"> | boolean
   isPublished?: Prisma.BoolFilter<"GalleryItem"> | boolean
@@ -844,10 +934,9 @@ export type GalleryItemScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"GalleryItem"> | Date | string
 }
 
-export type GalleryItemCreateManyCategoryInput = {
+export type GalleryItemCreateWithoutYearInput = {
   id?: string
   title: string
-  designType: $Enums.GalleryDesignType
   mediaType: $Enums.GalleryMediaType
   publicId: string
   url: string
@@ -857,6 +946,81 @@ export type GalleryItemCreateManyCategoryInput = {
   width?: number | null
   height?: number | null
   duration?: number | null
+  caption?: string | null
+  alt: string
+  isCategoryCover?: boolean
+  isFeatured?: boolean
+  isPublished?: boolean
+  sortOrder?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  category: Prisma.GalleryCategoryCreateNestedOneWithoutItemsInput
+}
+
+export type GalleryItemUncheckedCreateWithoutYearInput = {
+  id?: string
+  title: string
+  categoryId: string
+  mediaType: $Enums.GalleryMediaType
+  publicId: string
+  url: string
+  format: string
+  bytes: number
+  etag: string
+  width?: number | null
+  height?: number | null
+  duration?: number | null
+  caption?: string | null
+  alt: string
+  isCategoryCover?: boolean
+  isFeatured?: boolean
+  isPublished?: boolean
+  sortOrder?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type GalleryItemCreateOrConnectWithoutYearInput = {
+  where: Prisma.GalleryItemWhereUniqueInput
+  create: Prisma.XOR<Prisma.GalleryItemCreateWithoutYearInput, Prisma.GalleryItemUncheckedCreateWithoutYearInput>
+}
+
+export type GalleryItemCreateManyYearInputEnvelope = {
+  data: Prisma.GalleryItemCreateManyYearInput | Prisma.GalleryItemCreateManyYearInput[]
+  skipDuplicates?: boolean
+}
+
+export type GalleryItemUpsertWithWhereUniqueWithoutYearInput = {
+  where: Prisma.GalleryItemWhereUniqueInput
+  update: Prisma.XOR<Prisma.GalleryItemUpdateWithoutYearInput, Prisma.GalleryItemUncheckedUpdateWithoutYearInput>
+  create: Prisma.XOR<Prisma.GalleryItemCreateWithoutYearInput, Prisma.GalleryItemUncheckedCreateWithoutYearInput>
+}
+
+export type GalleryItemUpdateWithWhereUniqueWithoutYearInput = {
+  where: Prisma.GalleryItemWhereUniqueInput
+  data: Prisma.XOR<Prisma.GalleryItemUpdateWithoutYearInput, Prisma.GalleryItemUncheckedUpdateWithoutYearInput>
+}
+
+export type GalleryItemUpdateManyWithWhereWithoutYearInput = {
+  where: Prisma.GalleryItemScalarWhereInput
+  data: Prisma.XOR<Prisma.GalleryItemUpdateManyMutationInput, Prisma.GalleryItemUncheckedUpdateManyWithoutYearInput>
+}
+
+export type GalleryItemCreateManyCategoryInput = {
+  id?: string
+  title: string
+  yearId: string
+  mediaType: $Enums.GalleryMediaType
+  publicId: string
+  url: string
+  format: string
+  bytes: number
+  etag: string
+  width?: number | null
+  height?: number | null
+  duration?: number | null
+  caption?: string | null
+  alt: string
   isCategoryCover?: boolean
   isFeatured?: boolean
   isPublished?: boolean
@@ -868,7 +1032,6 @@ export type GalleryItemCreateManyCategoryInput = {
 export type GalleryItemUpdateWithoutCategoryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
-  designType?: Prisma.EnumGalleryDesignTypeFieldUpdateOperationsInput | $Enums.GalleryDesignType
   mediaType?: Prisma.EnumGalleryMediaTypeFieldUpdateOperationsInput | $Enums.GalleryMediaType
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.StringFieldUpdateOperationsInput | string
@@ -878,18 +1041,21 @@ export type GalleryItemUpdateWithoutCategoryInput = {
   width?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   height?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   duration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  caption?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alt?: Prisma.StringFieldUpdateOperationsInput | string
   isCategoryCover?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  year?: Prisma.GalleryYearUpdateOneRequiredWithoutItemsNestedInput
 }
 
 export type GalleryItemUncheckedUpdateWithoutCategoryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
-  designType?: Prisma.EnumGalleryDesignTypeFieldUpdateOperationsInput | $Enums.GalleryDesignType
+  yearId?: Prisma.StringFieldUpdateOperationsInput | string
   mediaType?: Prisma.EnumGalleryMediaTypeFieldUpdateOperationsInput | $Enums.GalleryMediaType
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.StringFieldUpdateOperationsInput | string
@@ -899,6 +1065,8 @@ export type GalleryItemUncheckedUpdateWithoutCategoryInput = {
   width?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   height?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   duration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  caption?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alt?: Prisma.StringFieldUpdateOperationsInput | string
   isCategoryCover?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -910,7 +1078,7 @@ export type GalleryItemUncheckedUpdateWithoutCategoryInput = {
 export type GalleryItemUncheckedUpdateManyWithoutCategoryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
-  designType?: Prisma.EnumGalleryDesignTypeFieldUpdateOperationsInput | $Enums.GalleryDesignType
+  yearId?: Prisma.StringFieldUpdateOperationsInput | string
   mediaType?: Prisma.EnumGalleryMediaTypeFieldUpdateOperationsInput | $Enums.GalleryMediaType
   publicId?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.StringFieldUpdateOperationsInput | string
@@ -920,6 +1088,100 @@ export type GalleryItemUncheckedUpdateManyWithoutCategoryInput = {
   width?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   height?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   duration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  caption?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alt?: Prisma.StringFieldUpdateOperationsInput | string
+  isCategoryCover?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type GalleryItemCreateManyYearInput = {
+  id?: string
+  title: string
+  categoryId: string
+  mediaType: $Enums.GalleryMediaType
+  publicId: string
+  url: string
+  format: string
+  bytes: number
+  etag: string
+  width?: number | null
+  height?: number | null
+  duration?: number | null
+  caption?: string | null
+  alt: string
+  isCategoryCover?: boolean
+  isFeatured?: boolean
+  isPublished?: boolean
+  sortOrder?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type GalleryItemUpdateWithoutYearInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  mediaType?: Prisma.EnumGalleryMediaTypeFieldUpdateOperationsInput | $Enums.GalleryMediaType
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  url?: Prisma.StringFieldUpdateOperationsInput | string
+  format?: Prisma.StringFieldUpdateOperationsInput | string
+  bytes?: Prisma.IntFieldUpdateOperationsInput | number
+  etag?: Prisma.StringFieldUpdateOperationsInput | string
+  width?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  height?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  duration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  caption?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alt?: Prisma.StringFieldUpdateOperationsInput | string
+  isCategoryCover?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  category?: Prisma.GalleryCategoryUpdateOneRequiredWithoutItemsNestedInput
+}
+
+export type GalleryItemUncheckedUpdateWithoutYearInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  mediaType?: Prisma.EnumGalleryMediaTypeFieldUpdateOperationsInput | $Enums.GalleryMediaType
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  url?: Prisma.StringFieldUpdateOperationsInput | string
+  format?: Prisma.StringFieldUpdateOperationsInput | string
+  bytes?: Prisma.IntFieldUpdateOperationsInput | number
+  etag?: Prisma.StringFieldUpdateOperationsInput | string
+  width?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  height?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  duration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  caption?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alt?: Prisma.StringFieldUpdateOperationsInput | string
+  isCategoryCover?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type GalleryItemUncheckedUpdateManyWithoutYearInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  mediaType?: Prisma.EnumGalleryMediaTypeFieldUpdateOperationsInput | $Enums.GalleryMediaType
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  url?: Prisma.StringFieldUpdateOperationsInput | string
+  format?: Prisma.StringFieldUpdateOperationsInput | string
+  bytes?: Prisma.IntFieldUpdateOperationsInput | number
+  etag?: Prisma.StringFieldUpdateOperationsInput | string
+  width?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  height?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  duration?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  caption?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  alt?: Prisma.StringFieldUpdateOperationsInput | string
   isCategoryCover?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -934,7 +1196,7 @@ export type GalleryItemSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   id?: boolean
   title?: boolean
   categoryId?: boolean
-  designType?: boolean
+  yearId?: boolean
   mediaType?: boolean
   publicId?: boolean
   url?: boolean
@@ -944,6 +1206,8 @@ export type GalleryItemSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   width?: boolean
   height?: boolean
   duration?: boolean
+  caption?: boolean
+  alt?: boolean
   isCategoryCover?: boolean
   isFeatured?: boolean
   isPublished?: boolean
@@ -951,13 +1215,14 @@ export type GalleryItemSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   createdAt?: boolean
   updatedAt?: boolean
   category?: boolean | Prisma.GalleryCategoryDefaultArgs<ExtArgs>
+  year?: boolean | Prisma.GalleryYearDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["galleryItem"]>
 
 export type GalleryItemSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   title?: boolean
   categoryId?: boolean
-  designType?: boolean
+  yearId?: boolean
   mediaType?: boolean
   publicId?: boolean
   url?: boolean
@@ -967,6 +1232,8 @@ export type GalleryItemSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   width?: boolean
   height?: boolean
   duration?: boolean
+  caption?: boolean
+  alt?: boolean
   isCategoryCover?: boolean
   isFeatured?: boolean
   isPublished?: boolean
@@ -974,13 +1241,14 @@ export type GalleryItemSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   createdAt?: boolean
   updatedAt?: boolean
   category?: boolean | Prisma.GalleryCategoryDefaultArgs<ExtArgs>
+  year?: boolean | Prisma.GalleryYearDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["galleryItem"]>
 
 export type GalleryItemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   title?: boolean
   categoryId?: boolean
-  designType?: boolean
+  yearId?: boolean
   mediaType?: boolean
   publicId?: boolean
   url?: boolean
@@ -990,6 +1258,8 @@ export type GalleryItemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   width?: boolean
   height?: boolean
   duration?: boolean
+  caption?: boolean
+  alt?: boolean
   isCategoryCover?: boolean
   isFeatured?: boolean
   isPublished?: boolean
@@ -997,13 +1267,14 @@ export type GalleryItemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   createdAt?: boolean
   updatedAt?: boolean
   category?: boolean | Prisma.GalleryCategoryDefaultArgs<ExtArgs>
+  year?: boolean | Prisma.GalleryYearDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["galleryItem"]>
 
 export type GalleryItemSelectScalar = {
   id?: boolean
   title?: boolean
   categoryId?: boolean
-  designType?: boolean
+  yearId?: boolean
   mediaType?: boolean
   publicId?: boolean
   url?: boolean
@@ -1013,6 +1284,8 @@ export type GalleryItemSelectScalar = {
   width?: boolean
   height?: boolean
   duration?: boolean
+  caption?: boolean
+  alt?: boolean
   isCategoryCover?: boolean
   isFeatured?: boolean
   isPublished?: boolean
@@ -1021,27 +1294,31 @@ export type GalleryItemSelectScalar = {
   updatedAt?: boolean
 }
 
-export type GalleryItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "categoryId" | "designType" | "mediaType" | "publicId" | "url" | "format" | "bytes" | "etag" | "width" | "height" | "duration" | "isCategoryCover" | "isFeatured" | "isPublished" | "sortOrder" | "createdAt" | "updatedAt", ExtArgs["result"]["galleryItem"]>
+export type GalleryItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "categoryId" | "yearId" | "mediaType" | "publicId" | "url" | "format" | "bytes" | "etag" | "width" | "height" | "duration" | "caption" | "alt" | "isCategoryCover" | "isFeatured" | "isPublished" | "sortOrder" | "createdAt" | "updatedAt", ExtArgs["result"]["galleryItem"]>
 export type GalleryItemInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   category?: boolean | Prisma.GalleryCategoryDefaultArgs<ExtArgs>
+  year?: boolean | Prisma.GalleryYearDefaultArgs<ExtArgs>
 }
 export type GalleryItemIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   category?: boolean | Prisma.GalleryCategoryDefaultArgs<ExtArgs>
+  year?: boolean | Prisma.GalleryYearDefaultArgs<ExtArgs>
 }
 export type GalleryItemIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   category?: boolean | Prisma.GalleryCategoryDefaultArgs<ExtArgs>
+  year?: boolean | Prisma.GalleryYearDefaultArgs<ExtArgs>
 }
 
 export type $GalleryItemPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "GalleryItem"
   objects: {
     category: Prisma.$GalleryCategoryPayload<ExtArgs>
+    year: Prisma.$GalleryYearPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     title: string
     categoryId: string
-    designType: $Enums.GalleryDesignType
+    yearId: string
     mediaType: $Enums.GalleryMediaType
     publicId: string
     url: string
@@ -1051,6 +1328,8 @@ export type $GalleryItemPayload<ExtArgs extends runtime.Types.Extensions.Interna
     width: number | null
     height: number | null
     duration: number | null
+    caption: string | null
+    alt: string
     isCategoryCover: boolean
     isFeatured: boolean
     isPublished: boolean
@@ -1452,6 +1731,7 @@ readonly fields: GalleryItemFieldRefs;
 export interface Prisma__GalleryItemClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   category<T extends Prisma.GalleryCategoryDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.GalleryCategoryDefaultArgs<ExtArgs>>): Prisma.Prisma__GalleryCategoryClient<runtime.Types.Result.GetResult<Prisma.$GalleryCategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  year<T extends Prisma.GalleryYearDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.GalleryYearDefaultArgs<ExtArgs>>): Prisma.Prisma__GalleryYearClient<runtime.Types.Result.GetResult<Prisma.$GalleryYearPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1484,7 +1764,7 @@ export interface GalleryItemFieldRefs {
   readonly id: Prisma.FieldRef<"GalleryItem", 'String'>
   readonly title: Prisma.FieldRef<"GalleryItem", 'String'>
   readonly categoryId: Prisma.FieldRef<"GalleryItem", 'String'>
-  readonly designType: Prisma.FieldRef<"GalleryItem", 'GalleryDesignType'>
+  readonly yearId: Prisma.FieldRef<"GalleryItem", 'String'>
   readonly mediaType: Prisma.FieldRef<"GalleryItem", 'GalleryMediaType'>
   readonly publicId: Prisma.FieldRef<"GalleryItem", 'String'>
   readonly url: Prisma.FieldRef<"GalleryItem", 'String'>
@@ -1494,6 +1774,8 @@ export interface GalleryItemFieldRefs {
   readonly width: Prisma.FieldRef<"GalleryItem", 'Int'>
   readonly height: Prisma.FieldRef<"GalleryItem", 'Int'>
   readonly duration: Prisma.FieldRef<"GalleryItem", 'Float'>
+  readonly caption: Prisma.FieldRef<"GalleryItem", 'String'>
+  readonly alt: Prisma.FieldRef<"GalleryItem", 'String'>
   readonly isCategoryCover: Prisma.FieldRef<"GalleryItem", 'Boolean'>
   readonly isFeatured: Prisma.FieldRef<"GalleryItem", 'Boolean'>
   readonly isPublished: Prisma.FieldRef<"GalleryItem", 'Boolean'>

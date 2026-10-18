@@ -68,6 +68,11 @@ export type ProjectMedia = Prisma.ProjectMediaModel
  */
 export type GalleryCategory = Prisma.GalleryCategoryModel
 /**
+ * Model GalleryYear
+ * 
+ */
+export type GalleryYear = Prisma.GalleryYearModel
+/**
  * Model GalleryItem
  * 
  */

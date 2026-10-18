@@ -6,6 +6,12 @@ Existing assets are not deleted automatically. If cleanup is approved, delete th
 
 ## Secret configuration
 
+## Gallery migration and Cloudinary cleanup
+
+Deploy the Gallery schema migration with `npm run db:deploy`, then run `npm run db:seed` to add the default categories and years. Existing gallery rows are assigned to the year from `createdAt`; verify the assignments in `/admin/gallery` before publishing.
+
+Gallery deletion removes database metadata and attempts best-effort Cloudinary cleanup. Existing Cloudinary assets are never bulk-deleted by the migration. If an old folder must be removed, use the Cloudinary dashboard manually and delete only the approved `vakratund/gallery` assets after confirming they are unused.
+
 `BETTER_AUTH_SECRET` signs Better Auth sessions and `IP_HASH_SECRET` hashes IP addresses before they are stored in activity logs. Keep both values only in `.env.local` for local development and in the hosting provider's encrypted environment settings for deployment. Never commit them, print them, or place them in `NEXT_PUBLIC_` variables.
 
 Generate each value independently with:

@@ -12,12 +12,14 @@ Use this checklist after the production domain and final client content are live
 - [ ] Provide approved original project and team images with descriptive alt text.
 - [ ] Review every SEO title and description in `/admin/seo` and for each published service and project.
 - [ ] Validate JSON-LD with the [Schema Markup Validator](https://validator.schema.org/) and the [Rich Results Test](https://search.google.com/test/rich-results).
+- [ ] Validate `/gallery`, its ImageGallery JSON-LD, category/year filters, canonical URL and filtered-view `noindex,follow` behavior.
 
 ## Search Console and sitemap
 
 - [ ] Verify the production domain in Google Search Console.
 - [ ] Submit `https://<production-domain>/sitemap.xml` in Search Console.
 - [ ] Inspect the home page, the three local landing pages, priority service pages, project pages and FAQs.
+- [ ] Inspect `/gallery` and confirm only the canonical unfiltered gallery URL is indexed.
 - [ ] Confirm `/admin`, `/api` and all thank-you paths are excluded by robots and carry `noindex`.
 - [ ] Monitor indexing coverage and canonical warnings after the first crawl.
 

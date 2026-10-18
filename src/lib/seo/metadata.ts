@@ -23,6 +23,7 @@ export type BuildMetadataOptions = {
   siteName?: string;
   ogImage?: { url: string; alt: string } | null;
   noIndex?: boolean;
+  noIndexFollow?: boolean;
   siteUrl?: string;
 };
 
@@ -57,7 +58,7 @@ export function buildMetadata(options: BuildMetadataOptions): Metadata {
     title,
     description,
     alternates: { canonical },
-    robots: noIndex ? { index: false, follow: false } : { index: true, follow: true },
+    robots: noIndex ? { index: false, follow: options.noIndexFollow ?? false } : { index: true, follow: true },
     openGraph: {
       type: "website",
       url: canonical,

@@ -738,6 +738,12 @@ const pageSeo = [
       "Selected construction, turnkey, repair survey and rehabilitation projects.",
   },
   {
+    path: "/gallery",
+    title: "Project Gallery",
+    description:
+      "Explore selected construction, repair and rehabilitation work by Vakratund Construction.",
+  },
+  {
     path: "/faqs",
     title: "Frequently Asked Questions",
     description:
@@ -1053,6 +1059,7 @@ async function main() {
     { name: "Interiors", slug: "interiors" },
     { name: "Fabrication & Porta House", slug: "fabrication-porta-house" },
     { name: "Building Construction", slug: "building-construction" },
+    { name: "Roads", slug: "roads" },
   ];
   for (const [sortOrder, category] of galleryCategories.entries()) {
     const existing = await prisma.galleryCategory.findFirst({
@@ -1064,6 +1071,16 @@ async function main() {
         data: { ...category, sortOrder },
       });
     }
+  }
+
+  setSeedStage("gallery years");
+  const currentGalleryYear = new Date().getFullYear();
+  for (let year = 2003; year <= currentGalleryYear; year += 1) {
+    await prisma.galleryYear.upsert({
+      where: { year },
+      create: { year },
+      update: {},
+    });
   }
 
   setSeedStage("location zones");

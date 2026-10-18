@@ -1,5 +1,6 @@
 import type { BusinessHours } from "@/lib/validation/settings";
 import type { PublicSiteSettings } from "@/server/queries/settings";
+export { primaryNavigation as siteNavigation } from "@/config/navigation";
 
 export type ResolvedSiteSettings = {
   businessName: string;
@@ -55,14 +56,6 @@ export function resolveSiteSettings(settings: PublicSiteSettings | null): Resolv
     foundedYear: settings?.foundedYear || fallbackSiteSettings.foundedYear,
   };
 }
-
-export const siteNavigation = [
-  { label: "Home", href: "/" },
-  { label: "About", href: "/about" },
-  { label: "Services", href: "/services" },
-  { label: "Projects", href: "/projects" },
-  { label: "Contact", href: "/contact" },
-] as const;
 
 export const footerServiceLinks = [
   { label: "Building Construction", href: "/services/building-construction" },

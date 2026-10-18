@@ -14,6 +14,7 @@ type UploadJob = {
   kind: UploadKind;
   previewUrl: string | null;
   alt: string;
+  title: string;
   caption: string;
   progress: number;
   status: "queued" | "uploading" | "saving" | "done" | "error";
@@ -127,7 +128,7 @@ function reportCloudinaryError(message: string, signedParameterNames: readonly s
   }).catch(() => undefined);
 }
 
-export function SectionUploader({ section, multiple = false, accept, defaultAlt = "", onUploaded, onRemoved, title = "Upload media" }: { section: UploadSection; multiple?: boolean; accept?: string; defaultAlt?: string | ((file: File) => string); onUploaded: (asset: MediaAssetView, details?: { fileName: string; duration?: number }) => void | Promise<void>; onRemoved?: (asset: MediaAssetView) => void; title?: string }) {
+export function SectionUploader({ section, multiple = false, accept, defaultAlt = "", defaultTitle = "", onUploaded, onRemoved, title = "Upload media" }: { section: UploadSection; multiple?: boolean; accept?: string; defaultAlt?: string | ((file: File) => string); defaultTitle?: string; onUploaded: (asset: MediaAssetView, details?: { fileName: string; title: string; duration?: number }) => void | Promise<void>; onRemoved?: (asset: MediaAssetView) => void; title?: string }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [jobs, setJobs] = useState<UploadJob[]>([]);
   const [dragging, setDragging] = useState(false);
@@ -143,7 +144,7 @@ export function SectionUploader({ section, multiple = false, accept, defaultAlt 
       const upload = kind ? uploadPolicy(section, kind) : null;
       if (!kind || !upload) { setQueueMessage(`${file.name}: this file type is not allowed in the ${section} section.`); continue; }
       if (file.size > upload.maxBytes) { setQueueMessage(`${file.name}: file is too large. Maximum ${formatLimit(upload.maxBytes)}.`); continue; }
-      next.push({ id: `${file.name}-${file.lastModified}-${crypto.randomUUID()}`, file, kind, previewUrl: kind === "IMAGE" ? URL.createObjectURL(file) : null, alt: typeof defaultAlt === "function" ? defaultAlt(file) : defaultAlt, caption: "", progress: 0, status: "queued" });
+      next.push({ id: `${file.name}-${file.lastModified}-${crypto.randomUUID()}`, file, kind, previewUrl: kind === "IMAGE" ? URL.createObjectURL(file) : null, alt: typeof defaultAlt === "function" ? defaultAlt(file) : defaultAlt, title: defaultTitle || (typeof defaultAlt === "string" ? defaultAlt : "") || file.name.replace(/\.[^.]+$/, "").replace(/[_-]+/g, " ").trim(), caption: "", progress: 0, status: "queued" });
     }
     if (!multiple) setJobs((current) => { current.forEach((job) => { if (job.previewUrl) URL.revokeObjectURL(job.previewUrl); }); return next.slice(0, 1); });
     else setJobs((current) => [...current, ...next]);
@@ -173,7 +174,7 @@ export function SectionUploader({ section, multiple = false, accept, defaultAlt 
       const saved = await saveMediaAsset({ section, publicId: uploaded.public_id, url: uploaded.secure_url, kind: job.kind, format: uploaded.format, bytes: uploaded.bytes, etag: uploaded.etag, width: uploaded.width, height: uploaded.height, alt, caption: job.caption || undefined });
       if (!saved.ok) throw new Error(saved.error.message);
       updateJob(job.id, { status: "done", error: undefined, asset: saved.data });
-      await onUploaded(saved.data, { fileName: job.file.name, ...(uploaded.duration !== undefined ? { duration: uploaded.duration } : {}) });
+      await onUploaded(saved.data, { fileName: job.file.name, title: job.title, ...(uploaded.duration !== undefined ? { duration: uploaded.duration } : {}) });
     } catch (error) {
       if (error instanceof CloudinaryUploadError && signed) reportCloudinaryError(error.providerMessage, signed.signed_parameter_names);
       updateJob(job.id, { status: "error", error: error instanceof Error ? error.message : "Upload failed." });

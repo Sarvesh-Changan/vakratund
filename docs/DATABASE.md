@@ -196,7 +196,6 @@ model ProjectMedia {
   @@index([projectId, sortOrder])
 }
 
-enum GalleryDesignType { INTERIOR EXTERIOR }
 enum GalleryMediaType  { IMAGE VIDEO }
 
 model GalleryCategory {
@@ -210,11 +209,18 @@ model GalleryCategory {
   @@index([sortOrder, name])
 }
 
+model GalleryYear {
+  id        String        @id @default(cuid())
+  year      Int           @unique
+  createdAt DateTime      @default(now())
+  items     GalleryItem[]
+}
+
 model GalleryItem {
   id              String            @id @default(cuid())
   title           String
   categoryId      String
-  designType      GalleryDesignType
+  yearId          String
   mediaType       GalleryMediaType
   publicId        String            @unique
   url             String
@@ -224,6 +230,8 @@ model GalleryItem {
   width           Int?
   height          Int?
   duration        Float?
+  caption         String?
+  alt             String
   isCategoryCover Boolean           @default(false)
   isFeatured      Boolean           @default(false)
   isPublished     Boolean           @default(true)
@@ -231,10 +239,11 @@ model GalleryItem {
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
   category        GalleryCategory   @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  @@index([categoryId, sortOrder])
+  year             GalleryYear       @relation(fields: [yearId], references: [id], onDelete: Restrict)
+  @@index([categoryId, yearId, sortOrder])
+  @@index([yearId])
   @@index([isPublished, isFeatured])
   @@index([etag])
-  @@index([designType])
 }
 
 model Testimonial {

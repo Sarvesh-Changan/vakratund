@@ -48,7 +48,7 @@ integrations, native apps. Keep data model extensible for them.
 | PUB-2 | About | Company story, mission, proprietor and team (4 members from PDF), credentials (MSME, workmen's compensation insurance), experience stats. |
 | PUB-3 | Services | Index + one detail page per service (11 seeded). Each has description, scope bullets, process, related projects, gallery, FAQs, CTA. |
 | PUB-4 | Projects | Index with filters (service, status, year); detail page with gallery, scope, area, floors, location, status, optional client name (toggle), before/after pairs. |
-| PUB-5 | Gallery | Category-filtered grid, lazy-loaded, keyboard-accessible lightbox. |
+| PUB-5 | Gallery | Admin-managed category/year gallery with published filters, responsive year grouping, lazy-loaded grid and keyboard-accessible lightbox. |
 | PUB-6 | Testimonials | Cards with name, role/society, rating optional; shown on Home, About and relevant services. |
 | PUB-8 | FAQs | Grouped by service/general; FAQPage schema. |
 | PUB-9 | Contact | Form, map embed, address, phones, email, WhatsApp, hours. |
@@ -89,7 +89,7 @@ integrations, native apps. Keep data model extensible for them.
 | ADM-4 | Projects | CRUD, drag-order, featured, publish/draft, media attach, SEO. |
 | ADM-5 | Services | CRUD, order, FAQs, SEO, icon/image. |
 | ADM-6 | Testimonials, FAQs, Team | CRUD, order, publish. |
-| ADM-8 | Gallery & Media | Cloudinary uploads (signed), library, alt text required, delete with usage check. |
+| ADM-8 | Gallery & Media | Signed Cloudinary image/video uploads with category/year assignment, duplicate detection, publish/featured/cover controls, year management, library and usage-safe deletion. |
 | ADM-9 | Pages/content | Edit Home hero, stats, About text, CTA copy via structured sections (no HTML injection). |
 | ADM-10 | SEO | Per-page and per-entity title/description/OG image/canonical/noindex; sitemap and robots preview. |
 | ADM-11 | Settings | Business info, phones, email, address, hours, social links, WhatsApp number/message, brochure file, email recipients. |

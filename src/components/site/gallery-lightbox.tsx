@@ -105,8 +105,7 @@ export function GalleryLightbox({ items }: { items: PublishedGalleryItem[] }) {
                 <span className="block p-4">
                   <span className="block font-semibold">{item.title}</span>
                   <span className="mt-1 block text-sm text-ink-muted">
-                    {item.category.name} ·{" "}
-                    {item.designType === "INTERIOR" ? "Interior" : "Exterior"}
+                    {item.category.name} · {item.year}
                   </span>
                 </span>
               </button>
@@ -133,8 +132,7 @@ export function GalleryLightbox({ items }: { items: PublishedGalleryItem[] }) {
               <div className="min-w-0">
                 <p className="truncate font-semibold">{active.title}</p>
                 <p className="text-sm text-white/65">
-                  {active.category.name} ·{" "}
-                  {active.designType === "INTERIOR" ? "Interior" : "Exterior"}
+                  {active.category.name} · {active.year}
                 </p>
               </div>
               <button
@@ -204,6 +202,9 @@ export function GalleryLightbox({ items }: { items: PublishedGalleryItem[] }) {
                 </>
               ) : null}
             </div>
+            <p className="border-t border-white/15 px-5 py-3 text-sm text-white/70">
+              {active.caption || `${active.title} · ${active.category.name} · ${active.year}`}
+            </p>
             <p
               className="border-t border-white/15 px-5 py-3 text-sm text-white/70"
               aria-live="polite"

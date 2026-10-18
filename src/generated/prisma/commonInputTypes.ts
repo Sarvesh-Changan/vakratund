@@ -321,13 +321,6 @@ export type EnumProjectStatusWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumProjectStatusFilter<$PrismaModel>
 }
 
-export type EnumGalleryDesignTypeFilter<$PrismaModel = never> = {
-  equals?: $Enums.GalleryDesignType | Prisma.EnumGalleryDesignTypeFieldRefInput<$PrismaModel>
-  in?: $Enums.GalleryDesignType[] | Prisma.ListEnumGalleryDesignTypeFieldRefInput<$PrismaModel>
-  notIn?: $Enums.GalleryDesignType[] | Prisma.ListEnumGalleryDesignTypeFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumGalleryDesignTypeFilter<$PrismaModel> | $Enums.GalleryDesignType
-}
-
 export type EnumGalleryMediaTypeFilter<$PrismaModel = never> = {
   equals?: $Enums.GalleryMediaType | Prisma.EnumGalleryMediaTypeFieldRefInput<$PrismaModel>
   in?: $Enums.GalleryMediaType[] | Prisma.ListEnumGalleryMediaTypeFieldRefInput<$PrismaModel>
@@ -344,16 +337,6 @@ export type FloatNullableFilter<$PrismaModel = never> = {
   gt?: number | Prisma.FloatFieldRefInput<$PrismaModel>
   gte?: number | Prisma.FloatFieldRefInput<$PrismaModel>
   not?: Prisma.NestedFloatNullableFilter<$PrismaModel> | number | null
-}
-
-export type EnumGalleryDesignTypeWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.GalleryDesignType | Prisma.EnumGalleryDesignTypeFieldRefInput<$PrismaModel>
-  in?: $Enums.GalleryDesignType[] | Prisma.ListEnumGalleryDesignTypeFieldRefInput<$PrismaModel>
-  notIn?: $Enums.GalleryDesignType[] | Prisma.ListEnumGalleryDesignTypeFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumGalleryDesignTypeWithAggregatesFilter<$PrismaModel> | $Enums.GalleryDesignType
-  _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumGalleryDesignTypeFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumGalleryDesignTypeFilter<$PrismaModel>
 }
 
 export type EnumGalleryMediaTypeWithAggregatesFilter<$PrismaModel = never> = {
@@ -933,28 +916,11 @@ export type NestedEnumProjectStatusWithAggregatesFilter<$PrismaModel = never> = 
   _max?: Prisma.NestedEnumProjectStatusFilter<$PrismaModel>
 }
 
-export type NestedEnumGalleryDesignTypeFilter<$PrismaModel = never> = {
-  equals?: $Enums.GalleryDesignType | Prisma.EnumGalleryDesignTypeFieldRefInput<$PrismaModel>
-  in?: $Enums.GalleryDesignType[] | Prisma.ListEnumGalleryDesignTypeFieldRefInput<$PrismaModel>
-  notIn?: $Enums.GalleryDesignType[] | Prisma.ListEnumGalleryDesignTypeFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumGalleryDesignTypeFilter<$PrismaModel> | $Enums.GalleryDesignType
-}
-
 export type NestedEnumGalleryMediaTypeFilter<$PrismaModel = never> = {
   equals?: $Enums.GalleryMediaType | Prisma.EnumGalleryMediaTypeFieldRefInput<$PrismaModel>
   in?: $Enums.GalleryMediaType[] | Prisma.ListEnumGalleryMediaTypeFieldRefInput<$PrismaModel>
   notIn?: $Enums.GalleryMediaType[] | Prisma.ListEnumGalleryMediaTypeFieldRefInput<$PrismaModel>
   not?: Prisma.NestedEnumGalleryMediaTypeFilter<$PrismaModel> | $Enums.GalleryMediaType
-}
-
-export type NestedEnumGalleryDesignTypeWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.GalleryDesignType | Prisma.EnumGalleryDesignTypeFieldRefInput<$PrismaModel>
-  in?: $Enums.GalleryDesignType[] | Prisma.ListEnumGalleryDesignTypeFieldRefInput<$PrismaModel>
-  notIn?: $Enums.GalleryDesignType[] | Prisma.ListEnumGalleryDesignTypeFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumGalleryDesignTypeWithAggregatesFilter<$PrismaModel> | $Enums.GalleryDesignType
-  _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumGalleryDesignTypeFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumGalleryDesignTypeFilter<$PrismaModel>
 }
 
 export type NestedEnumGalleryMediaTypeWithAggregatesFilter<$PrismaModel = never> = {

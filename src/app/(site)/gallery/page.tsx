@@ -1,168 +1,79 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { BreadcrumbJsonLd, ImageGalleryJsonLd } from "@/components/seo/json-ld";
 import { GalleryLightbox } from "@/components/site/gallery-lightbox";
-import { CloudImage } from "@/components/cloud-image";
-import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
-import { HoverCard, MaskImage, Reveal, RevealGroup } from "@/components/motion";
-import { Container } from "@/components/ui";
-import {
-  getGalleryLandingData,
-  getPublishedGallery,
-} from "@/server/queries/gallery";
-import type { GalleryDesignType, GalleryMediaType } from "@/generated/prisma/client";
 import { PageHero } from "@/components/site/page-hero";
+import { Container } from "@/components/ui";
+import { buildMetadata } from "@/lib/seo/metadata";
+import { getGalleryLandingData } from "@/server/queries/gallery";
+import { getPublicSeo } from "@/server/queries/seo";
 
-export const metadata: Metadata = {
-  title: "Project Gallery | Vakratund Construction",
-  description:
-    "Explore interior and exterior construction, repair and rehabilitation work by Vakratund Construction.",
-};
+export const revalidate = 3600;
 
-type GalleryPageProps = {
-  searchParams: Promise<{ category?: string; design?: string; media?: string }>;
-};
+type GalleryParams = { category?: string; year?: string };
+type GalleryPageProps = { searchParams: Promise<GalleryParams> };
 
-export default async function GalleryPage({ searchParams }: GalleryPageProps) {
+async function readParams(searchParams: Promise<GalleryParams>): Promise<{ categorySlug?: string; year?: number }> {
   const params = await searchParams;
-  const designType: GalleryDesignType | undefined =
-    params.design === "INTERIOR" || params.design === "EXTERIOR"
-      ? params.design
-      : undefined;
-  const mediaType: GalleryMediaType | undefined =
-    params.media === "IMAGE" || params.media === "VIDEO" ? params.media : undefined;
-  const landing = await getGalleryLandingData(designType).catch(() => ({ categories: [], items: [] }));
-  const selectedCategory = landing.categories.find(
-    (category) => category.slug === params.category,
-  );
-  const items = await getPublishedGallery(selectedCategory?.slug, designType, mediaType).catch(() => []);
-  const breadcrumbs = [
-    { name: "Home", item: "/" },
-    { name: "Gallery", item: "/gallery" },
-  ] as const;
+  const numericYear = params.year ? Number(params.year) : undefined;
+  return {
+    ...(params.category?.trim() ? { categorySlug: params.category.trim() } : {}),
+    ...(numericYear && Number.isInteger(numericYear) ? { year: numericYear } : {}),
+  };
+}
+
+export async function generateMetadata({ searchParams }: GalleryPageProps): Promise<Metadata> {
+  const filter = await readParams(searchParams);
+  const pageSeo = await getPublicSeo("/gallery").catch(() => null);
+  const filtered = Boolean(filter.categorySlug || filter.year);
+  return buildMetadata({ path: "/gallery", fallbackTitle: filtered ? "Filtered project gallery" : "Project gallery", fallbackDescription: "Explore selected construction, repair, rehabilitation and turnkey project work by Vakratund Construction.", pageSeo, noIndex: filtered, noIndexFollow: filtered });
+}
+
+export default async function GalleryRoute({ searchParams }: GalleryPageProps) {
+  const filter = await readParams(searchParams);
+  const landing = await getGalleryLandingData(filter).catch(() => ({ categories: [], years: [], items: [], counts: { categories: {}, years: {} } }));
+  const selectedCategory = landing.categories.find((category) => category.slug === filter.categorySlug);
+  const breadcrumbs = [{ name: "Home", item: "/" }, { name: "Gallery", item: "/gallery" }] as const;
+  const query = (category?: string, year?: number) => {
+    const params = new URLSearchParams();
+    if (category) params.set("category", category);
+    if (year) params.set("year", String(year));
+    const value = params.toString();
+    return value ? `/gallery?${value}` : "/gallery";
+  };
+  const hasFilter = Boolean(filter.categorySlug || filter.year);
+  const years = Array.from(new Set(landing.items.map((item) => item.year))).sort((a, b) => b - a);
 
   return (
     <>
       <BreadcrumbJsonLd items={breadcrumbs} />
-      <PageHero
-        breadcrumbs={breadcrumbs.map((item) => ({
-          label: item.name,
-          href: item.item,
-        }))}
-        eyebrow="Our work"
-        title="Construction gallery"
-        description="Browse selected interior and exterior construction, repair and rehabilitation work."
-      />
+      {!hasFilter ? <ImageGalleryJsonLd gallery={{ name: "Vakratund Construction project gallery", description: "Selected construction, repair and rehabilitation work by Vakratund Construction.", url: "/gallery", images: landing.items.slice(0, 20).map((item) => item.url) }} /> : null}
+      <PageHero breadcrumbs={breadcrumbs.map((item) => ({ label: item.name, href: item.item }))} eyebrow="Our work" title="Construction gallery" description="Browse selected construction, repair, rehabilitation and turnkey work, organized by category and year." />
       <section className="section-tint">
         <Container className="section-space-generous">
-          {landing.categories.length > 0 ? (
-            <section className="mb-16" aria-label="Gallery categories">
-              <RevealGroup className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {landing.categories.map((category) => (
-                  <Reveal key={category.id}>
-                    <HoverCard className="rounded-card">
-                      <Link
-                        href={`/gallery?category=${encodeURIComponent(category.slug)}${designType ? `&design=${designType}` : ""}${mediaType ? `&media=${mediaType}` : ""}`}
-                        className="group relative block overflow-hidden rounded-card bg-surface focus-visible:outline-2 focus-visible:outline-brand-deep focus-visible:outline-offset-2"
-                      >
-                        <MaskImage>
-                          <div className="relative aspect-[16/9] bg-surface-alt">
-                            <CloudImage
-                              src={category.cover.url}
-                              alt={category.cover.title}
-                              fill
-                              sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                              data-hover-image
-                              className="object-cover"
-                            />
-                            <span className="absolute inset-0 bg-gradient-to-t from-charcoal/85 via-charcoal/10 to-transparent" />
-                            <span className="absolute inset-x-4 bottom-4 font-heading text-xl font-semibold text-white">
-                              {category.name}
-                            </span>
-                          </div>
-                        </MaskImage>
-                      </Link>
-                    </HoverCard>
-                  </Reveal>
-                ))}
-              </RevealGroup>
-            </section>
-          ) : null}
-          <section aria-labelledby="gallery-items-heading">
-            <div className="flex flex-wrap items-end justify-between gap-4">
-              <div>
-                <p className="eyebrow">Portfolio</p>
-                <h2
-                  id="gallery-items-heading"
-                  className="mt-2 font-heading text-h2 font-semibold"
-                >
-                  {selectedCategory?.name ?? "All published work"}
-                </h2>
-                <div className="mt-5 flex flex-wrap gap-2" aria-label="Gallery quick filters">
-                  {[{ label: "All design", value: "all" }, { label: "Interior", value: "INTERIOR" }, { label: "Exterior", value: "EXTERIOR" }].map((chip) => <Link key={chip.value} href={`/gallery?${selectedCategory ? `category=${encodeURIComponent(selectedCategory.slug)}&` : ""}${chip.value === "all" ? "" : `design=${chip.value}&`}${mediaType ? `media=${mediaType}` : ""}`} aria-current={(chip.value === "all" ? !designType : chip.value === designType) ? "page" : undefined} className={`inline-flex min-h-10 items-center rounded-pill border px-4 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 ${(chip.value === "all" ? !designType : chip.value === designType) ? "border-dark bg-dark text-white" : "border-line bg-bg text-ink hover:bg-tint"}`}>{chip.label}</Link>)}
-                  {[{ label: "All media", value: "all" }, { label: "Images", value: "IMAGE" }, { label: "Video", value: "VIDEO" }].map((chip) => <Link key={chip.value} href={`/gallery?${selectedCategory ? `category=${encodeURIComponent(selectedCategory.slug)}&` : ""}${designType ? `design=${designType}&` : ""}${chip.value === "all" ? "" : `media=${chip.value}`}`} aria-current={(chip.value === "all" ? !mediaType : chip.value === mediaType) ? "page" : undefined} className={`inline-flex min-h-10 items-center rounded-pill border px-4 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 ${(chip.value === "all" ? !mediaType : chip.value === mediaType) ? "border-accent bg-accent/15 text-accent-ink" : "border-line bg-bg text-ink hover:bg-tint"}`}>{chip.label}</Link>)}
-                </div>
+          <div className="sticky top-20 z-10 rounded-card border bg-surface/95 p-4 shadow-soft backdrop-blur">
+            <div className="grid gap-3 lg:grid-cols-[5rem_1fr]">
+              <p className="text-sm font-semibold">Categories</p>
+              <div className="flex gap-2 overflow-x-auto pb-1">
+                <Link href={query(undefined, filter.year)} aria-current={!filter.categorySlug ? "page" : undefined} className={`inline-flex min-h-10 shrink-0 items-center rounded-pill border px-4 text-sm font-semibold ${!filter.categorySlug ? "border-dark bg-dark text-white" : "border-line hover:bg-tint"}`}>All</Link>
+                {landing.categories.map((category) => <Link key={category.id} href={query(category.slug, filter.year)} aria-current={filter.categorySlug === category.slug ? "page" : undefined} className={`inline-flex min-h-10 shrink-0 items-center rounded-pill border px-4 text-sm font-semibold ${filter.categorySlug === category.slug ? "border-dark bg-dark text-white" : "border-line hover:bg-tint"}`}>{category.name}<span className="ml-2 text-xs opacity-70">{category.count}</span></Link>)}
               </div>
-              <form method="get" className="flex flex-wrap items-end gap-3">
-                <label className="text-sm font-semibold">
-                  Category
-                  <select
-                    name="category"
-                    defaultValue={selectedCategory?.slug ?? "all"}
-                    className="mt-1 block min-h-11 rounded-control border bg-surface px-3"
-                  >
-                    <option value="all">All categories</option>
-                    {landing.categories.map((category) => (
-                      <option key={category.id} value={category.slug}>
-                        {category.name}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-                <label className="text-sm font-semibold">
-                  Media
-                  <select name="media" defaultValue={mediaType ?? "all"} className="mt-1 block min-h-11 rounded-control border bg-surface px-3">
-                    <option value="all">Images and video</option>
-                    <option value="IMAGE">Images</option>
-                    <option value="VIDEO">Video</option>
-                  </select>
-                </label>
-                <label className="text-sm font-semibold">
-                  Design type
-                  <select
-                    name="design"
-                    defaultValue={designType ?? "all"}
-                    className="mt-1 block min-h-11 rounded-control border bg-surface px-3"
-                  >
-                    <option value="all">Interior and exterior</option>
-                    <option value="INTERIOR">Interior</option>
-                    <option value="EXTERIOR">Exterior</option>
-                  </select>
-                </label>
-                <button
-                  type="submit"
-                  className="min-h-11 rounded-control bg-brand px-4 text-sm font-semibold text-brand-ink transition-colors hover:bg-brand/90 focus-visible:outline-2 focus-visible:outline-brand-deep focus-visible:outline-offset-2 active:scale-[0.98]"
-                >
-                  Apply filters
-                </button>
-              </form>
+              <p className="text-sm font-semibold">Years</p>
+              <div className="flex gap-2 overflow-x-auto pb-1">
+                <Link href={query(filter.categorySlug)} aria-current={!filter.year ? "page" : undefined} className={`inline-flex min-h-10 shrink-0 items-center rounded-pill border px-4 text-sm font-semibold ${!filter.year ? "border-dark bg-dark text-white" : "border-line hover:bg-tint"}`}>All</Link>
+                {landing.years.map((entry) => <Link key={entry.id} href={query(filter.categorySlug, entry.year)} aria-current={filter.year === entry.year ? "page" : undefined} className={`inline-flex min-h-10 shrink-0 items-center rounded-pill border px-4 text-sm font-semibold ${filter.year === entry.year ? "border-dark bg-dark text-white" : "border-line hover:bg-tint"}`}>{entry.year}<span className="ml-2 text-xs opacity-70">{entry.count}</span></Link>)}
+              </div>
             </div>
-            <div className="mt-7">
-              {items.length > 0 ? (
-                <GalleryLightbox items={items} />
-              ) : (
-                <div className="rounded-card border border-dashed p-10 text-center">
-                  <p className="font-semibold">
-                    No published work in this selection yet
-                  </p>
-                  <p className="mt-2 text-sm text-ink-muted">
-                    Choose another category or design type to explore more
-                    projects.
-                  </p>
-                </div>
-              )}
-            </div>
-          </section>
+          </div>
+          {landing.items.length > 0 ? (
+            <section className="mt-8" aria-labelledby="gallery-items-heading">
+              <div className="mb-5 flex items-end justify-between gap-4"><div><p className="eyebrow">Portfolio</p><h2 id="gallery-items-heading" className="mt-2 font-heading text-h2 font-semibold">{selectedCategory?.name ?? (filter.year ? `Work from ${filter.year}` : "All published work")}</h2></div>{hasFilter ? <Link href="/gallery" className="text-sm font-semibold text-accent-ink hover:underline">Clear filters</Link> : null}</div>
+              {!filter.year ? <div className="space-y-10">{years.map((year) => <section key={year} aria-labelledby={`gallery-year-${year}`}><h3 id={`gallery-year-${year}`} className="mb-4 font-heading text-xl font-semibold">{year}</h3><GalleryLightbox items={landing.items.filter((item) => item.year === year)} /></section>)}</div> : <GalleryLightbox items={landing.items} />}
+            </section>
+          ) : (
+            <div className="mt-8 rounded-card border border-dashed p-10 text-center"><p className="font-semibold">{hasFilter ? "No results for these filters" : "No gallery images yet"}</p><p className="mt-2 text-sm text-ink-muted">{hasFilter ? "Try another category or year." : "We are preparing selected project work. Contact us to discuss your requirement."}</p><div className="mt-5 flex justify-center gap-3"><Link href="/contact" className="inline-flex min-h-11 items-center rounded-control bg-brand px-4 font-semibold text-brand-ink">Contact us</Link>{hasFilter ? <Link href="/gallery" className="inline-flex min-h-11 items-center rounded-control border px-4 font-semibold">Clear filters</Link> : null}</div></div>
+          )}
         </Container>
       </section>
     </>

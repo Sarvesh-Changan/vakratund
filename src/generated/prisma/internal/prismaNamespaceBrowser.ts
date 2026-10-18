@@ -61,6 +61,7 @@ export const ModelName = {
   Project: 'Project',
   ProjectMedia: 'ProjectMedia',
   GalleryCategory: 'GalleryCategory',
+  GalleryYear: 'GalleryYear',
   GalleryItem: 'GalleryItem',
   Testimonial: 'Testimonial',
   Faq: 'Faq',
@@ -276,11 +277,20 @@ export const GalleryCategoryScalarFieldEnum = {
 export type GalleryCategoryScalarFieldEnum = (typeof GalleryCategoryScalarFieldEnum)[keyof typeof GalleryCategoryScalarFieldEnum]
 
 
+export const GalleryYearScalarFieldEnum = {
+  id: 'id',
+  year: 'year',
+  createdAt: 'createdAt'
+} as const
+
+export type GalleryYearScalarFieldEnum = (typeof GalleryYearScalarFieldEnum)[keyof typeof GalleryYearScalarFieldEnum]
+
+
 export const GalleryItemScalarFieldEnum = {
   id: 'id',
   title: 'title',
   categoryId: 'categoryId',
-  designType: 'designType',
+  yearId: 'yearId',
   mediaType: 'mediaType',
   publicId: 'publicId',
   url: 'url',
@@ -290,6 +300,8 @@ export const GalleryItemScalarFieldEnum = {
   width: 'width',
   height: 'height',
   duration: 'duration',
+  caption: 'caption',
+  alt: 'alt',
   isCategoryCover: 'isCategoryCover',
   isFeatured: 'isFeatured',
   isPublished: 'isPublished',

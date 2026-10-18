@@ -44,8 +44,9 @@ flowchart LR
 | Admin `/admin/**` | Dynamic, no cache, `noindex`, auth-gated | n/a |
 | `/api/**` | Dynamic route handlers | n/a |
 
-Tag convention: `services`, `service:{slug}`, `projects`, `project:{slug}`, `settings`, `faqs`,
-`testimonials`, `pages`, `estimator`.
+Tag convention: `services`, `service:{slug}`, `projects`, `project:{slug}`, `gallery`,
+`gallery:category:{slug}`, `gallery:year:{year}`, `settings`, `faqs`, `testimonials`,
+`pages`, `estimator`.
 
 ## 4. Layering (strict)
 ```

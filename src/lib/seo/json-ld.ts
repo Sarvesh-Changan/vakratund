@@ -12,6 +12,7 @@ export type ServiceJsonLdInput = {
   providerName: string;
 };
 export type FaqJsonLdItem = { question: string; answer: string };
+export type ImageGalleryJsonLdInput = { name: string; description: string; url: string; images: readonly string[] };
 export type CreativeWorkJsonLdInput = {
   name: string;
   description: string;
@@ -115,6 +116,17 @@ export function buildFaqPageJsonLd(faqs: readonly FaqJsonLdItem[]): JsonLdValue 
       name: faq.question,
       acceptedAnswer: { "@type": "Answer", text: faq.answer },
     })),
+  };
+}
+
+export function buildImageGalleryJsonLd(gallery: ImageGalleryJsonLdInput): JsonLdValue {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ImageGallery",
+    name: gallery.name,
+    description: gallery.description,
+    url: absoluteUrl(gallery.url),
+    image: gallery.images.map((image) => absoluteUrl(image)),
   };
 }
 

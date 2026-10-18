@@ -1,5 +1,5 @@
 import type { ResolvedSiteSettings } from "@/config/site";
-import { buildBreadcrumbListJsonLd, buildCreativeWorkJsonLd, buildFaqPageJsonLd, buildGeneralContractorJsonLd, buildServiceJsonLd, serializeJsonLd, type BreadcrumbItem, type CreativeWorkJsonLdInput, type FaqJsonLdItem, type ServiceJsonLdInput } from "@/lib/seo/json-ld";
+import { buildBreadcrumbListJsonLd, buildCreativeWorkJsonLd, buildFaqPageJsonLd, buildGeneralContractorJsonLd, buildImageGalleryJsonLd, buildServiceJsonLd, serializeJsonLd, type BreadcrumbItem, type CreativeWorkJsonLdInput, type FaqJsonLdItem, type ImageGalleryJsonLdInput, type ServiceJsonLdInput } from "@/lib/seo/json-ld";
 
 export function JsonLd({ data }: { data: Parameters<typeof serializeJsonLd>[0] }) {
   return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(data) }} />;
@@ -19,6 +19,10 @@ export function ServiceJsonLd({ service }: { service: ServiceJsonLdInput }) {
 
 export function FaqPageJsonLd({ faqs }: { faqs: readonly FaqJsonLdItem[] }) {
   return <JsonLd data={buildFaqPageJsonLd(faqs)} />;
+}
+
+export function ImageGalleryJsonLd({ gallery }: { gallery: ImageGalleryJsonLdInput }) {
+  return <JsonLd data={buildImageGalleryJsonLd(gallery)} />;
 }
 
 export function CreativeWorkJsonLd({ project }: { project: CreativeWorkJsonLdInput }) {

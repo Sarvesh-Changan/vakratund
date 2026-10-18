@@ -407,6 +407,7 @@ export const ModelName = {
   Project: 'Project',
   ProjectMedia: 'ProjectMedia',
   GalleryCategory: 'GalleryCategory',
+  GalleryYear: 'GalleryYear',
   GalleryItem: 'GalleryItem',
   Testimonial: 'Testimonial',
   Faq: 'Faq',
@@ -440,7 +441,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "account" | "verification" | "activityLog" | "mediaAsset" | "service" | "project" | "projectMedia" | "galleryCategory" | "galleryItem" | "testimonial" | "faq" | "teamMember" | "pageSection" | "pageSeo" | "siteSetting" | "lead" | "leadNote" | "leadStatusHistory" | "contactEvent" | "estimatorService" | "estimatorField" | "fieldOption" | "locationZone" | "pricingRule" | "quote" | "emailLog"
+    modelProps: "user" | "session" | "account" | "verification" | "activityLog" | "mediaAsset" | "service" | "project" | "projectMedia" | "galleryCategory" | "galleryYear" | "galleryItem" | "testimonial" | "faq" | "teamMember" | "pageSection" | "pageSeo" | "siteSetting" | "lead" | "leadNote" | "leadStatusHistory" | "contactEvent" | "estimatorService" | "estimatorField" | "fieldOption" | "locationZone" | "pricingRule" | "quote" | "emailLog"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1181,6 +1182,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.GalleryCategoryCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.GalleryCategoryCountAggregateOutputType> | number
+        }
+      }
+    }
+    GalleryYear: {
+      payload: Prisma.$GalleryYearPayload<ExtArgs>
+      fields: Prisma.GalleryYearFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.GalleryYearFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GalleryYearPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.GalleryYearFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GalleryYearPayload>
+        }
+        findFirst: {
+          args: Prisma.GalleryYearFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GalleryYearPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.GalleryYearFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GalleryYearPayload>
+        }
+        findMany: {
+          args: Prisma.GalleryYearFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GalleryYearPayload>[]
+        }
+        create: {
+          args: Prisma.GalleryYearCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GalleryYearPayload>
+        }
+        createMany: {
+          args: Prisma.GalleryYearCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.GalleryYearCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GalleryYearPayload>[]
+        }
+        delete: {
+          args: Prisma.GalleryYearDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GalleryYearPayload>
+        }
+        update: {
+          args: Prisma.GalleryYearUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GalleryYearPayload>
+        }
+        deleteMany: {
+          args: Prisma.GalleryYearDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.GalleryYearUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.GalleryYearUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GalleryYearPayload>[]
+        }
+        upsert: {
+          args: Prisma.GalleryYearUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GalleryYearPayload>
+        }
+        aggregate: {
+          args: Prisma.GalleryYearAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateGalleryYear>
+        }
+        groupBy: {
+          args: Prisma.GalleryYearGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GalleryYearGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.GalleryYearCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GalleryYearCountAggregateOutputType> | number
         }
       }
     }
@@ -2734,11 +2809,20 @@ export const GalleryCategoryScalarFieldEnum = {
 export type GalleryCategoryScalarFieldEnum = (typeof GalleryCategoryScalarFieldEnum)[keyof typeof GalleryCategoryScalarFieldEnum]
 
 
+export const GalleryYearScalarFieldEnum = {
+  id: 'id',
+  year: 'year',
+  createdAt: 'createdAt'
+} as const
+
+export type GalleryYearScalarFieldEnum = (typeof GalleryYearScalarFieldEnum)[keyof typeof GalleryYearScalarFieldEnum]
+
+
 export const GalleryItemScalarFieldEnum = {
   id: 'id',
   title: 'title',
   categoryId: 'categoryId',
-  designType: 'designType',
+  yearId: 'yearId',
   mediaType: 'mediaType',
   publicId: 'publicId',
   url: 'url',
@@ -2748,6 +2832,8 @@ export const GalleryItemScalarFieldEnum = {
   width: 'width',
   height: 'height',
   duration: 'duration',
+  caption: 'caption',
+  alt: 'alt',
   isCategoryCover: 'isCategoryCover',
   isFeatured: 'isFeatured',
   isPublished: 'isPublished',
@@ -3232,20 +3318,6 @@ export type ListEnumProjectStatusFieldRefInput<$PrismaModel> = FieldRefInputType
 
 
 /**
- * Reference to a field of type 'GalleryDesignType'
- */
-export type EnumGalleryDesignTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GalleryDesignType'>
-    
-
-
-/**
- * Reference to a field of type 'GalleryDesignType[]'
- */
-export type ListEnumGalleryDesignTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GalleryDesignType[]'>
-    
-
-
-/**
  * Reference to a field of type 'GalleryMediaType'
  */
 export type EnumGalleryMediaTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'GalleryMediaType'>
@@ -3476,7 +3548,7 @@ export interface PrismaClientBaseOptions {
    *   adapter,
    *   comments: [
    *     traceContext(),
-   *     queryPerformance(),
+   *     queryInsights(),
    *   ],
    * })
    * ```
@@ -3559,6 +3631,7 @@ export type GlobalOmitConfig = {
   project?: Prisma.ProjectOmit
   projectMedia?: Prisma.ProjectMediaOmit
   galleryCategory?: Prisma.GalleryCategoryOmit
+  galleryYear?: Prisma.GalleryYearOmit
   galleryItem?: Prisma.GalleryItemOmit
   testimonial?: Prisma.TestimonialOmit
   faq?: Prisma.FaqOmit
