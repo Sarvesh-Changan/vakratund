@@ -10,9 +10,13 @@ export type ServiceView = {
   id: string;
   title: string;
   slug: string;
+  group: string | null;
   shortDesc: string;
   description: string;
   scopeItems: string[];
+  processSteps: string[];
+  typicalProjects: string | null;
+  audience: string | null;
   iconKey: string | null;
   coverId: string | null;
   status: PublishStatus;
@@ -51,9 +55,13 @@ const serviceSelect = {
   id: true,
   title: true,
   slug: true,
+  group: true,
   shortDesc: true,
   description: true,
   scopeItems: true,
+  processSteps: true,
+  typicalProjects: true,
+  audience: true,
   iconKey: true,
   coverId: true,
   status: true,
@@ -73,9 +81,13 @@ function inputData(input: CreateServiceInput | UpdateServiceInput, slug: string)
   return {
     title: input.title,
     slug,
+    group: input.group || null,
     shortDesc: input.shortDesc,
     description: input.description,
     scopeItems: input.scopeItems,
+    processSteps: input.processSteps,
+    typicalProjects: input.typicalProjects || null,
+    audience: input.audience || null,
     iconKey: input.iconKey,
     coverId: input.coverId,
     isFeatured: input.isFeatured,

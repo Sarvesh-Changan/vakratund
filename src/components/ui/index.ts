@@ -9,6 +9,7 @@ export * from "./dialog";
 export * from "./empty-state";
 export * from "./error-state";
 export * from "./form-field";
+export * from "./glow-blob";
 export * from "./input";
 export * from "./motion";
 export * from "./count-up";

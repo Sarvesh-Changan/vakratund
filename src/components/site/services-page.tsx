@@ -1,12 +1,8 @@
-import { ArrowRight } from "lucide-react";
-import Link from "next/link";
-
 import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
-import { HoverCard, Reveal, RevealGroup } from "@/components/motion";
-import { Card, Container, EmptyState, SectionHeading } from "@/components/ui";
+import { Container, SectionHeading } from "@/components/ui";
 import type { PublishedService } from "@/server/queries/services";
-import { ServiceIcon } from "./service-icon";
 import { PageHero } from "./page-hero";
+import { ServicesFilterGrid } from "./services-filter-grid";
 
 export function ServicesPage({ services }: { services: PublishedService[] }) {
   const breadcrumbs = [
@@ -24,58 +20,21 @@ export function ServicesPage({ services }: { services: PublishedService[] }) {
         eyebrow="Services"
         title="Construction, repair and project management services"
         description="Explore the published services configured for M/s. Vakratund Construction."
+        compact
       />
 
-      <section className="bg-bg">
-        <Container className="py-16 lg:py-24">
+      <section className="section-tint">
+        <Container className="section-space-generous">
           <SectionHeading
             eyebrow="What we do"
             title="Practical engineering for complex work"
             description="Choose a service to review its scope, process, related work and frequently asked questions."
           />
-          {services.length === 0 ? (
-            <div className="mt-10">
-              <EmptyState
-                title="Services are being prepared"
-                description="Published service information will appear here once it is available."
-              />
-            </div>
-          ) : (
-            <RevealGroup className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {services.map((service) => (
-                <Reveal key={service.id}>
-                  <HoverCard className="h-full">
-                    <Card className="group relative h-full">
-                      <div className="flex size-12 items-center justify-center rounded-control bg-brand/15 text-brand-deep">
-                        <ServiceIcon iconKey={service.iconKey} />
-                      </div>
-                      <h2 className="mt-5 font-heading text-xl font-semibold">
-                        <Link
-                          href={`/services/${service.slug}`}
-                          className="after:absolute after:inset-0"
-                        >
-                          {service.title}
-                        </Link>
-                      </h2>
-                      <p className="mt-3 text-sm leading-7 text-ink-muted">
-                        {service.shortDesc}
-                      </p>
-                      <span className="relative mt-5 inline-flex items-center gap-2 text-sm font-semibold text-brand-deep">
-                        View service{" "}
-                        <ArrowRight
-                          size={16}
-                          aria-hidden="true"
-                          className="transition-transform group-hover:translate-x-1"
-                        />
-                      </span>
-                    </Card>
-                  </HoverCard>
-                </Reveal>
-              ))}
-            </RevealGroup>
-          )}
+          <div className="mt-10"><ServicesFilterGrid services={services} /></div>
         </Container>
       </section>
+
+      <section className="section-light"><Container className="section-space"><div className="mx-auto flex max-w-5xl flex-col gap-6 rounded-panel border border-line bg-bg p-7 shadow-soft sm:p-10 md:flex-row md:items-center md:justify-between"><div><p className="eyebrow">Need a starting point?</p><h2 className="mt-3 font-heading text-2xl font-semibold sm:text-3xl">Not sure which service you need?</h2><p className="mt-3 max-w-2xl text-ink-muted">Share the project context and use the available estimator or contact route to choose the next step.</p></div><div className="flex shrink-0 flex-col gap-3 sm:flex-row"><a href="/estimate" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-control bg-accent px-5 font-bold text-accent-ink">Open estimator <span aria-hidden="true">→</span></a><a href="/contact" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-control border border-line px-5 font-semibold text-ink">Contact us <span aria-hidden="true">→</span></a></div></div></Container></section>
     </>
   );
 }

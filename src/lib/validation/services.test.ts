@@ -5,9 +5,13 @@ import { createServiceSchema } from "@/lib/validation/services";
 const valid = {
   title: "Building Construction",
   slug: "",
+  group: "",
   shortDesc: "Residential and commercial construction.",
   description: "## Scope\n\nReliable construction delivery.",
   scopeItems: ["RCC works"],
+  processSteps: [],
+  typicalProjects: "",
+  audience: "",
   iconKey: "Building2" as const,
   coverId: null,
   isFeatured: false,

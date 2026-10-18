@@ -151,6 +151,12 @@ export function getPublishedProjects(filters: PublishedProjectFilters & { isFeat
   return unstable_cache(() => readPublishedProjects(filters), ["published-projects", key], { tags: ["projects"], revalidate: 3600 })();
 }
 
+async function readPublishedProjectCount(): Promise<number> {
+  return prisma.project.count({ where: publishedProjectWhere() });
+}
+
+export const getPublishedProjectCount = unstable_cache(readPublishedProjectCount, ["published-project-count"], { tags: ["projects"], revalidate: 3600 });
+
 async function readPublishedProjectsPage(filters: PublishedProjectFilters, page: number, pageSize: number): Promise<PublishedProjectsPage> {
   const safePage = Math.max(1, Math.floor(page));
   const safePageSize = Math.min(24, Math.max(1, Math.floor(pageSize)));

@@ -7,6 +7,7 @@ export default defineConfig({
     globals: true,
     testTimeout: 15000,
     pool: 'threads',
+    fileParallelism: true,
     maxWorkers: 2,
     exclude: [...defaultExclude, "tests/e2e/**"],
   },

@@ -93,13 +93,13 @@ export function SiteHeader({ settings, services, overlayAtTop = false }: { setti
     };
   }, [servicesOpen]);
 
-  const navLinkClass = "rounded-control px-3 py-2 text-sm font-medium text-white/85 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand";
+  const navLinkClass = "rounded-control px-3 py-2 text-sm font-medium text-ink-muted transition-colors hover:bg-tint hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent";
 
   return (
-    <header onFocusCapture={() => setHeaderVisible(true)} className={cn("fixed inset-x-0 top-0 z-50 h-20 border-b text-white transition-[transform,background-color,border-color,box-shadow] duration-300 motion-reduce:transition-none", transparent ? "border-transparent bg-transparent" : "border-white/10 bg-charcoal/95 shadow-soft backdrop-blur-lg", !headerVisible && !menuOpen && "-translate-y-full")}>
-      <div className="mx-auto flex h-full max-w-[1440px] items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
+    <header onFocusCapture={() => setHeaderVisible(true)} className={cn("fixed inset-x-3 top-3 z-50 mx-auto h-16 max-w-[1300px] rounded-pill border text-ink shadow-soft transition-[transform,height,box-shadow] duration-300 motion-reduce:transition-none", transparent ? "border-line bg-white/90 backdrop-blur-xl" : "border-line bg-white/95 shadow-raised backdrop-blur-xl", scrolled && "h-14", !headerVisible && !menuOpen && "-translate-y-[calc(100%+1rem)]")}>
+      <div className="relative z-50 mx-auto flex h-full items-center justify-between gap-3 px-3 sm:px-5 lg:px-6">
         <Link href="/" onClick={() => { setMenuOpen(false); setServicesOpen(false); }} className="group flex min-h-11 shrink-0 items-center gap-2 rounded-control" aria-label={`${settings.businessName} home`}>
-          <span className="flex size-9 items-center justify-center rounded-full bg-brand text-sm font-bold text-brand-ink transition-transform group-hover:rotate-6" aria-hidden="true">V</span>
+          <span className="flex size-9 items-center justify-center rounded-full bg-brand-signature text-sm font-bold text-white transition-transform group-hover:rotate-6" aria-hidden="true">V</span>
           <span className="max-w-[11rem] font-heading text-sm font-bold leading-tight tracking-tight sm:max-w-none sm:text-base">{settings.businessName.replace(/^M\/s\.\s*/, "")}</span>
         </Link>
 
@@ -123,19 +123,19 @@ export function SiteHeader({ settings, services, overlayAtTop = false }: { setti
         </nav>
 
         <div className="hidden items-center gap-2 xl:flex">
-          {phone ? <ContactLink href={phoneHref(phone)} eventType="CALL" context="header-phone" className="inline-flex min-h-11 items-center gap-2 rounded-control px-2 text-sm font-semibold text-white/90 hover:text-white"><Phone size={16} aria-hidden="true" /><span>{phone.replace("+91", "")}</span></ContactLink> : null}
-          <TrackedWhatsAppLink settings={settings} whatsappContext={{ pageTitle: "Header" }} context="header-whatsapp" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-2 rounded-control px-2 text-sm font-semibold text-white/90 hover:text-white"><WhatsAppIcon size={18} />WhatsApp</TrackedWhatsAppLink>
-          <Link href="/estimate" className="inline-flex min-h-11 items-center justify-center whitespace-nowrap rounded-control bg-brand px-4 text-sm font-bold text-brand-ink transition-colors hover:bg-brand/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-deep">Get Free Quote</Link>
+          {phone ? <ContactLink href={phoneHref(phone)} eventType="CALL" context="header-phone" className="inline-flex min-h-10 items-center gap-2 rounded-control border border-line px-3 text-sm font-semibold text-ink-muted hover:border-accent hover:text-ink"><Phone size={15} aria-hidden="true" /><span>Call</span></ContactLink> : null}
+          <TrackedWhatsAppLink settings={settings} whatsappContext={{ pageTitle: "Header" }} context="header-whatsapp" target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp" className="inline-flex size-10 items-center justify-center rounded-full bg-whatsapp text-white shadow-soft hover:-translate-y-0.5"><WhatsAppIcon size={18} /></TrackedWhatsAppLink>
+          <Link href="/estimate" className="inline-flex min-h-10 items-center justify-center whitespace-nowrap rounded-control bg-accent px-4 text-sm font-bold text-accent-ink transition-transform hover:-translate-y-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">Get Free Quote</Link>
         </div>
 
-        {phone ? <ContactLink href={phoneHref(phone)} eventType="CALL" context="header-phone-compact" className="ml-auto hidden min-h-11 items-center gap-2 rounded-control px-2 text-sm font-semibold text-white/90 hover:text-white lg:inline-flex xl:hidden"><Phone size={16} aria-hidden="true" /><span>{phone.replace("+91", "")}</span></ContactLink> : null}
-        <Link href="/estimate" className="hidden min-h-11 items-center justify-center whitespace-nowrap rounded-control bg-brand px-3 text-sm font-bold text-brand-ink transition-colors hover:bg-brand/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-deep md:inline-flex xl:hidden">Get Free Quote</Link>
-        <button ref={menuButtonRef} type="button" className="inline-flex size-11 shrink-0 items-center justify-center rounded-control text-white hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand xl:hidden" aria-label={menuOpen ? "Close menu" : "Open menu"} aria-expanded={menuOpen} aria-controls="mobile-navigation" onClick={() => setMenuOpen((open) => !open)}>
+        {phone ? <ContactLink href={phoneHref(phone)} eventType="CALL" context="header-phone-compact" className="ml-auto hidden min-h-10 items-center gap-2 rounded-control border border-line px-3 text-sm font-semibold text-ink-muted hover:border-accent hover:text-ink lg:inline-flex xl:hidden"><Phone size={15} aria-hidden="true" /><span>Call</span></ContactLink> : null}
+        <Link href="/estimate" className="hidden min-h-10 items-center justify-center whitespace-nowrap rounded-control bg-accent px-3 text-sm font-bold text-accent-ink transition-transform hover:-translate-y-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent md:inline-flex xl:hidden">Get Free Quote</Link>
+        <button ref={menuButtonRef} type="button" className="relative z-50 inline-flex size-10 shrink-0 items-center justify-center rounded-full border border-line text-ink hover:bg-tint focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent xl:hidden" aria-label={menuOpen ? "Close menu" : "Open menu"} aria-expanded={menuOpen} aria-controls="mobile-navigation" onClick={() => setMenuOpen((open) => !open)}>
           {menuOpen ? <X size={23} aria-hidden="true" /> : <Menu size={23} aria-hidden="true" />}
         </button>
       </div>
 
-      <div className={cn("fixed inset-x-0 bottom-0 top-20 z-40 overflow-y-auto overscroll-contain border-t border-white/10 bg-charcoal px-5 pb-10 pt-5 shadow-raised xl:hidden", menuOpen ? "site-mobile-navigation-open block" : "hidden")}>
+      <div className={cn("fixed inset-0 z-40 overflow-y-auto overscroll-contain bg-dark px-5 pb-10 pt-24 text-white shadow-raised xl:hidden", menuOpen ? "site-mobile-navigation-open block" : "hidden")}>
         <div ref={menuPanelRef} id="mobile-navigation" role="dialog" aria-modal="true" aria-label="Main menu" className="mx-auto flex min-h-full max-w-2xl flex-col">
           <nav aria-label="Mobile navigation" className="flex flex-col">
             {[{ label: "Home", href: "/" }, { label: "About", href: "/about" }, { label: "Projects", href: "/projects" }, { label: "Insights", href: "/blog" }, { label: "Contact", href: "/contact" }].map((item, index) => <Link key={item.href} href={item.href} style={{ animationDelay: `${index * 45}ms` }} className="site-mobile-menu-link border-b border-white/10 py-4 font-heading text-2xl font-semibold text-white" onClick={() => setMenuOpen(false)}>{item.label}</Link>)}

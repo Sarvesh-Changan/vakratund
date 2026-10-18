@@ -17,6 +17,7 @@ export type PublicSiteSettings = {
   email: string | null;
   whatsappNumber: string | null;
   whatsappMessage: string | null;
+  responseTimeText: string | null;
   address: string | null;
   mapEmbedUrl: string | null;
   businessHours: BusinessHours | null;
@@ -32,6 +33,7 @@ const publicSettingsSelect = {
   email: true,
   whatsappNumber: true,
   whatsappMessage: true,
+  responseTimeText: true,
   address: true,
   mapEmbedUrl: true,
   businessHours: true,

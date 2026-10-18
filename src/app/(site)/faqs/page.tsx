@@ -3,6 +3,8 @@ import type { Metadata } from "next";
 import { FaqsPage } from "@/components/site/faqs-page";
 import { buildMetadata } from "@/lib/seo/metadata";
 import { getPublishedFaqs } from "@/server/queries/faqs";
+import { getPublicSettings } from "@/server/queries/settings";
+import { resolveSiteSettings } from "@/config/site";
 import { getPublicSeo } from "@/server/queries/seo";
 
 export const revalidate = 3600;
@@ -13,6 +15,6 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function FaqsRoute() {
-  const faqs = await getPublishedFaqs().catch(() => []);
-  return <FaqsPage faqs={faqs} />;
+  const [faqs, settings] = await Promise.all([getPublishedFaqs().catch(() => []), getPublicSettings().catch(() => null)]);
+  return <FaqsPage faqs={faqs} settings={resolveSiteSettings(settings)} />;
 }

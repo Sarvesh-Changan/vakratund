@@ -22,5 +22,5 @@ export default async function BrochureThankYou({ searchParams }: { searchParams:
   const [lead, settings, brochure] = await Promise.all([getPublicLeadByReference(reference, "BROCHURE"), getPublicSettings().catch(() => null), getPublicBrochureMedia()]);
   if (!lead || !brochure) notFound();
   const token = createBrochureToken(brochure.id);
-  return <LeadThankYou settings={resolveSiteSettings(settings)} eyebrow="Brochure request received" title="Your company profile is ready." description="Thank you. Use the short-lived link below to download the configured company profile PDF." downloadHref={`/api/brochure/download?token=${encodeURIComponent(token)}`} breadcrumbs={[{ name: "Home", item: "/" }, { name: "Company profile", item: "/download/company-profile" }, { name: "Download ready", item: "/download/company-profile/thank-you" }]} />;
+  return <LeadThankYou reference={lead.publicId} settings={resolveSiteSettings(settings)} eyebrow="Brochure request received" title="Your company profile is ready." description="Thank you. Use the short-lived link below to download the configured company profile PDF." downloadHref={`/api/brochure/download?token=${encodeURIComponent(token)}`} breadcrumbs={[{ name: "Home", item: "/" }, { name: "Company profile", item: "/download/company-profile" }, { name: "Download ready", item: "/download/company-profile/thank-you" }]} />;
 }

@@ -4,7 +4,16 @@ import { useEffect, useRef, useState } from "react";
 import { useMotionPreference, useOnceInView } from "./motion-preference";
 
 type Easing = "easeOutCubic" | "easeOutQuad" | "linear";
-export function CountUp({ value, duration = 900, className, prefix = "", suffix = "", easing = "easeOutCubic" }: { value: number; duration?: number; className?: string; prefix?: string; suffix?: string; easing?: Easing }) {
+export type CountUpFormat = "number" | "year" | "compact" | "percent";
+
+function formatValue(value: number, format: CountUpFormat): string {
+  if (format === "year") return String(Math.round(value));
+  if (format === "compact") return Intl.NumberFormat("en-IN", { notation: "compact", maximumFractionDigits: 1 }).format(value);
+  if (format === "percent") return `${Math.round(value)}%`;
+  return Math.round(value).toLocaleString("en-IN");
+}
+
+export function CountUp({ value, duration = 900, className, prefix = "", suffix = "", easing = "easeOutCubic", format = "number" }: { value: number; duration?: number; className?: string; prefix?: string; suffix?: string; easing?: Easing; format?: CountUpFormat }) {
   const [count, setCount] = useState(value);
   const started = useRef(false);
   const [node, setNode] = useState<HTMLSpanElement | null>(null);
@@ -25,6 +34,6 @@ export function CountUp({ value, duration = 900, className, prefix = "", suffix 
     frame = requestAnimationFrame(update);
     return () => cancelAnimationFrame(frame);
   }, [duration, easing, motion.entered, reducedMotion, value]);
-  const format = (number: number) => `${prefix}${Math.round(number).toLocaleString("en-IN")}${suffix}`;
-  return <span ref={setNode} className={className} aria-label={format(value)}><span className="sr-only">{format(value)}</span><span aria-hidden="true" className="motion-count-value">{format(reducedMotion ? value : count)}</span></span>;
+  const formatCount = (number: number) => `${prefix}${formatValue(number, format)}${suffix}`;
+  return <span ref={setNode} className={className} aria-label={formatCount(value)}><span className="sr-only">{formatCount(value)}</span><span aria-hidden="true" className="motion-count-value">{formatCount(reducedMotion ? value : count)}</span></span>;
 }

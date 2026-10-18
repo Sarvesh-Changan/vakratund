@@ -9,7 +9,7 @@ import { MediaPicker, type MediaPickerAsset } from "@/components/admin/media-pic
 import { ServiceIcon, serviceIcons } from "@/components/admin/service-icon";
 import { ServiceMarkdownEditor } from "@/components/admin/service-markdown-editor";
 import { createService, updateService } from "@/app/(admin)/admin/(protected)/services/actions";
-import { SERVICE_ICON_KEYS, type CreateServiceInput } from "@/lib/validation/services";
+import { SERVICE_GROUPS, SERVICE_ICON_KEYS, type CreateServiceInput } from "@/lib/validation/services";
 import type { ServiceView } from "@/server/services/services";
 
 type ServiceFormState = CreateServiceInput;
@@ -17,9 +17,13 @@ type ServiceFormState = CreateServiceInput;
 const blankService: ServiceFormState = {
   title: "",
   slug: "",
+  group: "",
   shortDesc: "",
   description: "",
   scopeItems: [""],
+  processSteps: [],
+  typicalProjects: "",
+  audience: "",
   iconKey: "Building2",
   coverId: null,
   isFeatured: false,
@@ -34,9 +38,13 @@ function initialState(initial: ServiceView | null): ServiceFormState {
   return {
     title: initial.title,
     slug: initial.slug,
+    group: initial.group ?? "",
     shortDesc: initial.shortDesc,
     description: initial.description,
     scopeItems: initial.scopeItems,
+    processSteps: initial.processSteps,
+    typicalProjects: initial.typicalProjects ?? "",
+    audience: initial.audience ?? "",
     iconKey: initial.iconKey as ServiceFormState["iconKey"],
     coverId: initial.coverId,
     isFeatured: initial.isFeatured,
@@ -81,6 +89,10 @@ export function ServiceForm({ initial, assets }: { initial: ServiceView | null; 
     setForm((current) => ({ ...current, scopeItems: current.scopeItems.filter((_, itemIndex) => itemIndex !== index) }));
   }
 
+  function setProcessSteps(value: string) {
+    setField("processSteps", value.split("\n").map((item) => item.trim()).filter(Boolean).slice(0, 8));
+  }
+
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setSaving(true);
@@ -103,6 +115,7 @@ export function ServiceForm({ initial, assets }: { initial: ServiceView | null; 
       <div className="grid gap-5 md:grid-cols-2">
         <FormField label="Title" htmlFor="title" required error={fieldError(errors, "title")}><Input id="title" value={form.title} onChange={(event) => setField("title", event.target.value)} aria-invalid={Boolean(fieldError(errors, "title"))} /></FormField>
         <FormField label="Slug" htmlFor="slug" hint="Leave blank to generate it from the title." error={fieldError(errors, "slug")}><Input id="slug" value={form.slug} onChange={(event) => setField("slug", event.target.value)} aria-invalid={Boolean(fieldError(errors, "slug"))} /></FormField>
+        <FormField label="Service group" htmlFor="group" hint="Leave blank to show only under All." error={fieldError(errors, "group")}><Select id="group" value={form.group} onChange={(event) => setField("group", event.target.value)}><option value="">All only</option>{SERVICE_GROUPS.map((group) => <option value={group} key={group}>{group}</option>)}</Select></FormField>
       </div>
       <FormField label="Short description" htmlFor="shortDesc" required error={fieldError(errors, "shortDesc")}><Textarea id="shortDesc" rows={3} value={form.shortDesc} onChange={(event) => setField("shortDesc", event.target.value)} aria-invalid={Boolean(fieldError(errors, "shortDesc"))} /></FormField>
     </FormSection>
@@ -110,6 +123,8 @@ export function ServiceForm({ initial, assets }: { initial: ServiceView | null; 
     <FormSection title="Description" description="Use Markdown for headings, emphasis, lists, and safe links. Raw HTML is removed in the preview and public renderer.">
       <FormField label="Markdown description" htmlFor="description" required error={fieldError(errors, "description")}><ServiceMarkdownEditor value={form.description} onChange={(value) => setField("description", value)} /></FormField>
       <div className="space-y-3"><div className="flex items-center justify-between"><h3 className="text-sm font-semibold">Scope bullets</h3><Button type="button" size="sm" variant="secondary" onClick={addScopeItem}>Add bullet</Button></div>{form.scopeItems.map((item, index) => <div className="flex gap-2" key={`scope-${index}`}><Input value={item} onChange={(event) => setScopeItem(index, event.target.value)} aria-label={`Scope bullet ${index + 1}`} /><Button type="button" size="sm" variant="ghost" onClick={() => removeScopeItem(index)} aria-label={`Remove scope bullet ${index + 1}`}>Remove</Button></div>)}{fieldError(errors, "scopeItems") ? <p className="text-sm text-danger" role="alert">{fieldError(errors, "scopeItems")}</p> : null}</div>
+      <div className="grid gap-5 md:grid-cols-2"><FormField label="Typical projects" htmlFor="typicalProjects" hint="Optional, verified service context." error={fieldError(errors, "typicalProjects")}><Textarea id="typicalProjects" rows={3} value={form.typicalProjects ?? ""} onChange={(event) => setField("typicalProjects", event.target.value)} /></FormField><FormField label="Who it is for" htmlFor="audience" hint="Optional, approved audience description." error={fieldError(errors, "audience")}><Textarea id="audience" rows={3} value={form.audience ?? ""} onChange={(event) => setField("audience", event.target.value)} /></FormField></div>
+      <FormField label="How we work steps (one per line)" htmlFor="processSteps" hint="Leave blank to use the standard four-step strip." error={fieldError(errors, "processSteps")}><Textarea id="processSteps" rows={4} value={form.processSteps.join("\n")} onChange={(event) => setProcessSteps(event.target.value)} /></FormField>
     </FormSection>
 
     <FormSection title="Presentation" description="Choose a recognizable Lucide icon and a Cloudinary image from the media library.">

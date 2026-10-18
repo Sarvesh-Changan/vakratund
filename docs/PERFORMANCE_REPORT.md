@@ -1,5 +1,28 @@
 # Performance and accessibility report
 
+## Visual QA and responsive sweep — 2026-10-18
+
+The public route matrix was captured with Playwright against the production build at 360, 390, 768, 1024, 1280 and 1536px. The screenshots and per-route browser metrics are preserved in [`docs/visual-qa/`](visual-qa/). The sweep covers 15 public routes and 90 viewport captures:
+
+| Route group | Routes | Viewports | HTTP 200 | Horizontal overflow | Max browser-observed CLS |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Public pages | 15 | 90 | 90/90 | 0/90 | 0.000 |
+
+Routes included `/`, `/about`, `/services`, `/services/building-construction`, `/projects`, `/projects/residential-commercial-building-kharkar-ali`, `/gallery`, `/testimonials`, `/blog`, `/contact`, `/estimate`, `/faqs`, `/privacy`, `/terms` and `/download/company-profile`. Each route had one H1 in the captured document. Browser CLS is an automated local observation from the Playwright `layout-shift` API; it is not a Lighthouse score.
+
+### Visual and accessibility fixes from this sweep
+
+- Restored a database-safe home hero fallback when a published-but-empty hero section exists, preventing a missing H1 and empty first paint.
+- Made the gallery query resilient to unavailable local gallery data so the page renders its designed empty state instead of a 500 response.
+- Changed light-section links and eyebrows from the light lavender accent to `--brand-deep`: 6.10:1 against white and 5.41:1 against the tint background.
+- Preserved dark-section and gradient-specific link colors, including their contrast-safe focus rings.
+- Added mobile bottom clearance to the public main landmark so the fixed Call/WhatsApp/Quote bar cannot cover the final interactive content. The estimator's separate summary sheet remains offset above that bar.
+- Captured scroll-state screenshots and metrics for each route to check fixed elements, section rhythm, and post-scroll rendering.
+
+### Lighthouse status
+
+Fresh Lighthouse scores could not be produced in this environment: no local Lighthouse binary is installed and `npx --no-install lighthouse` did not resolve. No new Lighthouse category scores are claimed for this sweep. Run Lighthouse 12.8.2 from clean CI or production against `/`, `/services/building-construction`, `/projects/residential-commercial-building-kharkar-ali`, `/estimate` and `/contact`, then record Performance, Accessibility, SEO, LCP, CLS and TBT in this report. The historical results below remain clearly labeled and are not substitutes for that rerun.
+
 ## Recheck — 2026-10-16
 
 This is a production-build recheck of `/`, `/services/building-construction`, `/projects/residential-commercial-building-kharkar-ali`, `/estimate`, and `/contact`. Lighthouse was not rerun in this session: the CLI is not installed locally, and fetching it through `npx` did not complete. Therefore the Lighthouse score table and before/after scores below are the prior 2026-10-09 run, not scores from this recheck. Do not treat the following browser measurements as Lighthouse scores.

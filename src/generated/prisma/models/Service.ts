@@ -38,8 +38,11 @@ export type ServiceMinAggregateOutputType = {
   id: string | null
   slug: string | null
   title: string | null
+  group: string | null
   shortDesc: string | null
   description: string | null
+  typicalProjects: string | null
+  audience: string | null
   iconKey: string | null
   coverId: string | null
   status: $Enums.PublishStatus | null
@@ -55,8 +58,11 @@ export type ServiceMaxAggregateOutputType = {
   id: string | null
   slug: string | null
   title: string | null
+  group: string | null
   shortDesc: string | null
   description: string | null
+  typicalProjects: string | null
+  audience: string | null
   iconKey: string | null
   coverId: string | null
   status: $Enums.PublishStatus | null
@@ -72,9 +78,13 @@ export type ServiceCountAggregateOutputType = {
   id: number
   slug: number
   title: number
+  group: number
   shortDesc: number
   description: number
   scopeItems: number
+  processSteps: number
+  typicalProjects: number
+  audience: number
   iconKey: number
   coverId: number
   status: number
@@ -100,8 +110,11 @@ export type ServiceMinAggregateInputType = {
   id?: true
   slug?: true
   title?: true
+  group?: true
   shortDesc?: true
   description?: true
+  typicalProjects?: true
+  audience?: true
   iconKey?: true
   coverId?: true
   status?: true
@@ -117,8 +130,11 @@ export type ServiceMaxAggregateInputType = {
   id?: true
   slug?: true
   title?: true
+  group?: true
   shortDesc?: true
   description?: true
+  typicalProjects?: true
+  audience?: true
   iconKey?: true
   coverId?: true
   status?: true
@@ -134,9 +150,13 @@ export type ServiceCountAggregateInputType = {
   id?: true
   slug?: true
   title?: true
+  group?: true
   shortDesc?: true
   description?: true
   scopeItems?: true
+  processSteps?: true
+  typicalProjects?: true
+  audience?: true
   iconKey?: true
   coverId?: true
   status?: true
@@ -239,9 +259,13 @@ export type ServiceGroupByOutputType = {
   id: string
   slug: string
   title: string
+  group: string | null
   shortDesc: string
   description: string
   scopeItems: string[]
+  processSteps: string[]
+  typicalProjects: string | null
+  audience: string | null
   iconKey: string | null
   coverId: string | null
   status: $Enums.PublishStatus
@@ -280,9 +304,13 @@ export type ServiceWhereInput = {
   id?: Prisma.StringFilter<"Service"> | string
   slug?: Prisma.StringFilter<"Service"> | string
   title?: Prisma.StringFilter<"Service"> | string
+  group?: Prisma.StringNullableFilter<"Service"> | string | null
   shortDesc?: Prisma.StringFilter<"Service"> | string
   description?: Prisma.StringFilter<"Service"> | string
   scopeItems?: Prisma.StringNullableListFilter<"Service">
+  processSteps?: Prisma.StringNullableListFilter<"Service">
+  typicalProjects?: Prisma.StringNullableFilter<"Service"> | string | null
+  audience?: Prisma.StringNullableFilter<"Service"> | string | null
   iconKey?: Prisma.StringNullableFilter<"Service"> | string | null
   coverId?: Prisma.StringNullableFilter<"Service"> | string | null
   status?: Prisma.EnumPublishStatusFilter<"Service"> | $Enums.PublishStatus
@@ -301,9 +329,13 @@ export type ServiceOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   title?: Prisma.SortOrder
+  group?: Prisma.SortOrderInput | Prisma.SortOrder
   shortDesc?: Prisma.SortOrder
   description?: Prisma.SortOrder
   scopeItems?: Prisma.SortOrder
+  processSteps?: Prisma.SortOrder
+  typicalProjects?: Prisma.SortOrderInput | Prisma.SortOrder
+  audience?: Prisma.SortOrderInput | Prisma.SortOrder
   iconKey?: Prisma.SortOrderInput | Prisma.SortOrder
   coverId?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -325,9 +357,13 @@ export type ServiceWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.ServiceWhereInput[]
   NOT?: Prisma.ServiceWhereInput | Prisma.ServiceWhereInput[]
   title?: Prisma.StringFilter<"Service"> | string
+  group?: Prisma.StringNullableFilter<"Service"> | string | null
   shortDesc?: Prisma.StringFilter<"Service"> | string
   description?: Prisma.StringFilter<"Service"> | string
   scopeItems?: Prisma.StringNullableListFilter<"Service">
+  processSteps?: Prisma.StringNullableListFilter<"Service">
+  typicalProjects?: Prisma.StringNullableFilter<"Service"> | string | null
+  audience?: Prisma.StringNullableFilter<"Service"> | string | null
   iconKey?: Prisma.StringNullableFilter<"Service"> | string | null
   coverId?: Prisma.StringNullableFilter<"Service"> | string | null
   status?: Prisma.EnumPublishStatusFilter<"Service"> | $Enums.PublishStatus
@@ -346,9 +382,13 @@ export type ServiceOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   title?: Prisma.SortOrder
+  group?: Prisma.SortOrderInput | Prisma.SortOrder
   shortDesc?: Prisma.SortOrder
   description?: Prisma.SortOrder
   scopeItems?: Prisma.SortOrder
+  processSteps?: Prisma.SortOrder
+  typicalProjects?: Prisma.SortOrderInput | Prisma.SortOrder
+  audience?: Prisma.SortOrderInput | Prisma.SortOrder
   iconKey?: Prisma.SortOrderInput | Prisma.SortOrder
   coverId?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -372,9 +412,13 @@ export type ServiceScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Service"> | string
   slug?: Prisma.StringWithAggregatesFilter<"Service"> | string
   title?: Prisma.StringWithAggregatesFilter<"Service"> | string
+  group?: Prisma.StringNullableWithAggregatesFilter<"Service"> | string | null
   shortDesc?: Prisma.StringWithAggregatesFilter<"Service"> | string
   description?: Prisma.StringWithAggregatesFilter<"Service"> | string
   scopeItems?: Prisma.StringNullableListFilter<"Service">
+  processSteps?: Prisma.StringNullableListFilter<"Service">
+  typicalProjects?: Prisma.StringNullableWithAggregatesFilter<"Service"> | string | null
+  audience?: Prisma.StringNullableWithAggregatesFilter<"Service"> | string | null
   iconKey?: Prisma.StringNullableWithAggregatesFilter<"Service"> | string | null
   coverId?: Prisma.StringNullableWithAggregatesFilter<"Service"> | string | null
   status?: Prisma.EnumPublishStatusWithAggregatesFilter<"Service"> | $Enums.PublishStatus
@@ -390,9 +434,13 @@ export type ServiceCreateInput = {
   id?: string
   slug: string
   title: string
+  group?: string | null
   shortDesc: string
   description: string
   scopeItems?: Prisma.ServiceCreatescopeItemsInput | string[]
+  processSteps?: Prisma.ServiceCreateprocessStepsInput | string[]
+  typicalProjects?: string | null
+  audience?: string | null
   iconKey?: string | null
   coverId?: string | null
   status?: $Enums.PublishStatus
@@ -411,9 +459,13 @@ export type ServiceUncheckedCreateInput = {
   id?: string
   slug: string
   title: string
+  group?: string | null
   shortDesc: string
   description: string
   scopeItems?: Prisma.ServiceCreatescopeItemsInput | string[]
+  processSteps?: Prisma.ServiceCreateprocessStepsInput | string[]
+  typicalProjects?: string | null
+  audience?: string | null
   iconKey?: string | null
   coverId?: string | null
   status?: $Enums.PublishStatus
@@ -432,9 +484,13 @@ export type ServiceUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
+  group?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shortDesc?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   scopeItems?: Prisma.ServiceUpdatescopeItemsInput | string[]
+  processSteps?: Prisma.ServiceUpdateprocessStepsInput | string[]
+  typicalProjects?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   iconKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPublishStatusFieldUpdateOperationsInput | $Enums.PublishStatus
@@ -453,9 +509,13 @@ export type ServiceUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
+  group?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shortDesc?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   scopeItems?: Prisma.ServiceUpdatescopeItemsInput | string[]
+  processSteps?: Prisma.ServiceUpdateprocessStepsInput | string[]
+  typicalProjects?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   iconKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPublishStatusFieldUpdateOperationsInput | $Enums.PublishStatus
@@ -474,9 +534,13 @@ export type ServiceCreateManyInput = {
   id?: string
   slug: string
   title: string
+  group?: string | null
   shortDesc: string
   description: string
   scopeItems?: Prisma.ServiceCreatescopeItemsInput | string[]
+  processSteps?: Prisma.ServiceCreateprocessStepsInput | string[]
+  typicalProjects?: string | null
+  audience?: string | null
   iconKey?: string | null
   coverId?: string | null
   status?: $Enums.PublishStatus
@@ -492,9 +556,13 @@ export type ServiceUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
+  group?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shortDesc?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   scopeItems?: Prisma.ServiceUpdatescopeItemsInput | string[]
+  processSteps?: Prisma.ServiceUpdateprocessStepsInput | string[]
+  typicalProjects?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   iconKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPublishStatusFieldUpdateOperationsInput | $Enums.PublishStatus
@@ -510,9 +578,13 @@ export type ServiceUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
+  group?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shortDesc?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   scopeItems?: Prisma.ServiceUpdatescopeItemsInput | string[]
+  processSteps?: Prisma.ServiceUpdateprocessStepsInput | string[]
+  typicalProjects?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   iconKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPublishStatusFieldUpdateOperationsInput | $Enums.PublishStatus
@@ -536,9 +608,13 @@ export type ServiceCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   title?: Prisma.SortOrder
+  group?: Prisma.SortOrder
   shortDesc?: Prisma.SortOrder
   description?: Prisma.SortOrder
   scopeItems?: Prisma.SortOrder
+  processSteps?: Prisma.SortOrder
+  typicalProjects?: Prisma.SortOrder
+  audience?: Prisma.SortOrder
   iconKey?: Prisma.SortOrder
   coverId?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -558,8 +634,11 @@ export type ServiceMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   title?: Prisma.SortOrder
+  group?: Prisma.SortOrder
   shortDesc?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  typicalProjects?: Prisma.SortOrder
+  audience?: Prisma.SortOrder
   iconKey?: Prisma.SortOrder
   coverId?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -575,8 +654,11 @@ export type ServiceMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   title?: Prisma.SortOrder
+  group?: Prisma.SortOrder
   shortDesc?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  typicalProjects?: Prisma.SortOrder
+  audience?: Prisma.SortOrder
   iconKey?: Prisma.SortOrder
   coverId?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -601,7 +683,16 @@ export type ServiceCreatescopeItemsInput = {
   set: string[]
 }
 
+export type ServiceCreateprocessStepsInput = {
+  set: string[]
+}
+
 export type ServiceUpdatescopeItemsInput = {
+  set?: string[]
+  push?: string | string[]
+}
+
+export type ServiceUpdateprocessStepsInput = {
   set?: string[]
   push?: string | string[]
 }
@@ -670,9 +761,13 @@ export type ServiceCreateWithoutProjectsInput = {
   id?: string
   slug: string
   title: string
+  group?: string | null
   shortDesc: string
   description: string
   scopeItems?: Prisma.ServiceCreatescopeItemsInput | string[]
+  processSteps?: Prisma.ServiceCreateprocessStepsInput | string[]
+  typicalProjects?: string | null
+  audience?: string | null
   iconKey?: string | null
   coverId?: string | null
   status?: $Enums.PublishStatus
@@ -690,9 +785,13 @@ export type ServiceUncheckedCreateWithoutProjectsInput = {
   id?: string
   slug: string
   title: string
+  group?: string | null
   shortDesc: string
   description: string
   scopeItems?: Prisma.ServiceCreatescopeItemsInput | string[]
+  processSteps?: Prisma.ServiceCreateprocessStepsInput | string[]
+  typicalProjects?: string | null
+  audience?: string | null
   iconKey?: string | null
   coverId?: string | null
   status?: $Enums.PublishStatus
@@ -726,9 +825,13 @@ export type ServiceUpdateWithoutProjectsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
+  group?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shortDesc?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   scopeItems?: Prisma.ServiceUpdatescopeItemsInput | string[]
+  processSteps?: Prisma.ServiceUpdateprocessStepsInput | string[]
+  typicalProjects?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   iconKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPublishStatusFieldUpdateOperationsInput | $Enums.PublishStatus
@@ -746,9 +849,13 @@ export type ServiceUncheckedUpdateWithoutProjectsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
+  group?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shortDesc?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   scopeItems?: Prisma.ServiceUpdatescopeItemsInput | string[]
+  processSteps?: Prisma.ServiceUpdateprocessStepsInput | string[]
+  typicalProjects?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   iconKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPublishStatusFieldUpdateOperationsInput | $Enums.PublishStatus
@@ -766,9 +873,13 @@ export type ServiceCreateWithoutFaqsInput = {
   id?: string
   slug: string
   title: string
+  group?: string | null
   shortDesc: string
   description: string
   scopeItems?: Prisma.ServiceCreatescopeItemsInput | string[]
+  processSteps?: Prisma.ServiceCreateprocessStepsInput | string[]
+  typicalProjects?: string | null
+  audience?: string | null
   iconKey?: string | null
   coverId?: string | null
   status?: $Enums.PublishStatus
@@ -786,9 +897,13 @@ export type ServiceUncheckedCreateWithoutFaqsInput = {
   id?: string
   slug: string
   title: string
+  group?: string | null
   shortDesc: string
   description: string
   scopeItems?: Prisma.ServiceCreatescopeItemsInput | string[]
+  processSteps?: Prisma.ServiceCreateprocessStepsInput | string[]
+  typicalProjects?: string | null
+  audience?: string | null
   iconKey?: string | null
   coverId?: string | null
   status?: $Enums.PublishStatus
@@ -822,9 +937,13 @@ export type ServiceUpdateWithoutFaqsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
+  group?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shortDesc?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   scopeItems?: Prisma.ServiceUpdatescopeItemsInput | string[]
+  processSteps?: Prisma.ServiceUpdateprocessStepsInput | string[]
+  typicalProjects?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   iconKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPublishStatusFieldUpdateOperationsInput | $Enums.PublishStatus
@@ -842,9 +961,13 @@ export type ServiceUncheckedUpdateWithoutFaqsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
+  group?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shortDesc?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   scopeItems?: Prisma.ServiceUpdatescopeItemsInput | string[]
+  processSteps?: Prisma.ServiceUpdateprocessStepsInput | string[]
+  typicalProjects?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   iconKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPublishStatusFieldUpdateOperationsInput | $Enums.PublishStatus
@@ -862,9 +985,13 @@ export type ServiceCreateWithoutEstimatorInput = {
   id?: string
   slug: string
   title: string
+  group?: string | null
   shortDesc: string
   description: string
   scopeItems?: Prisma.ServiceCreatescopeItemsInput | string[]
+  processSteps?: Prisma.ServiceCreateprocessStepsInput | string[]
+  typicalProjects?: string | null
+  audience?: string | null
   iconKey?: string | null
   coverId?: string | null
   status?: $Enums.PublishStatus
@@ -882,9 +1009,13 @@ export type ServiceUncheckedCreateWithoutEstimatorInput = {
   id?: string
   slug: string
   title: string
+  group?: string | null
   shortDesc: string
   description: string
   scopeItems?: Prisma.ServiceCreatescopeItemsInput | string[]
+  processSteps?: Prisma.ServiceCreateprocessStepsInput | string[]
+  typicalProjects?: string | null
+  audience?: string | null
   iconKey?: string | null
   coverId?: string | null
   status?: $Enums.PublishStatus
@@ -918,9 +1049,13 @@ export type ServiceUpdateWithoutEstimatorInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
+  group?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shortDesc?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   scopeItems?: Prisma.ServiceUpdatescopeItemsInput | string[]
+  processSteps?: Prisma.ServiceUpdateprocessStepsInput | string[]
+  typicalProjects?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   iconKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPublishStatusFieldUpdateOperationsInput | $Enums.PublishStatus
@@ -938,9 +1073,13 @@ export type ServiceUncheckedUpdateWithoutEstimatorInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
+  group?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   shortDesc?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   scopeItems?: Prisma.ServiceUpdatescopeItemsInput | string[]
+  processSteps?: Prisma.ServiceUpdateprocessStepsInput | string[]
+  typicalProjects?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  audience?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   iconKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   coverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPublishStatusFieldUpdateOperationsInput | $Enums.PublishStatus
@@ -998,9 +1137,13 @@ export type ServiceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   id?: boolean
   slug?: boolean
   title?: boolean
+  group?: boolean
   shortDesc?: boolean
   description?: boolean
   scopeItems?: boolean
+  processSteps?: boolean
+  typicalProjects?: boolean
+  audience?: boolean
   iconKey?: boolean
   coverId?: boolean
   status?: boolean
@@ -1020,9 +1163,13 @@ export type ServiceSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   id?: boolean
   slug?: boolean
   title?: boolean
+  group?: boolean
   shortDesc?: boolean
   description?: boolean
   scopeItems?: boolean
+  processSteps?: boolean
+  typicalProjects?: boolean
+  audience?: boolean
   iconKey?: boolean
   coverId?: boolean
   status?: boolean
@@ -1038,9 +1185,13 @@ export type ServiceSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   id?: boolean
   slug?: boolean
   title?: boolean
+  group?: boolean
   shortDesc?: boolean
   description?: boolean
   scopeItems?: boolean
+  processSteps?: boolean
+  typicalProjects?: boolean
+  audience?: boolean
   iconKey?: boolean
   coverId?: boolean
   status?: boolean
@@ -1056,9 +1207,13 @@ export type ServiceSelectScalar = {
   id?: boolean
   slug?: boolean
   title?: boolean
+  group?: boolean
   shortDesc?: boolean
   description?: boolean
   scopeItems?: boolean
+  processSteps?: boolean
+  typicalProjects?: boolean
+  audience?: boolean
   iconKey?: boolean
   coverId?: boolean
   status?: boolean
@@ -1070,7 +1225,7 @@ export type ServiceSelectScalar = {
   updatedAt?: boolean
 }
 
-export type ServiceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "title" | "shortDesc" | "description" | "scopeItems" | "iconKey" | "coverId" | "status" | "isFeatured" | "sortOrder" | "seoTitle" | "seoDesc" | "createdAt" | "updatedAt", ExtArgs["result"]["service"]>
+export type ServiceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "title" | "group" | "shortDesc" | "description" | "scopeItems" | "processSteps" | "typicalProjects" | "audience" | "iconKey" | "coverId" | "status" | "isFeatured" | "sortOrder" | "seoTitle" | "seoDesc" | "createdAt" | "updatedAt", ExtArgs["result"]["service"]>
 export type ServiceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   projects?: boolean | Prisma.Service$projectsArgs<ExtArgs>
   faqs?: boolean | Prisma.Service$faqsArgs<ExtArgs>
@@ -1091,9 +1246,13 @@ export type $ServicePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     id: string
     slug: string
     title: string
+    group: string | null
     shortDesc: string
     description: string
     scopeItems: string[]
+    processSteps: string[]
+    typicalProjects: string | null
+    audience: string | null
     iconKey: string | null
     coverId: string | null
     status: $Enums.PublishStatus
@@ -1532,9 +1691,13 @@ export interface ServiceFieldRefs {
   readonly id: Prisma.FieldRef<"Service", 'String'>
   readonly slug: Prisma.FieldRef<"Service", 'String'>
   readonly title: Prisma.FieldRef<"Service", 'String'>
+  readonly group: Prisma.FieldRef<"Service", 'String'>
   readonly shortDesc: Prisma.FieldRef<"Service", 'String'>
   readonly description: Prisma.FieldRef<"Service", 'String'>
   readonly scopeItems: Prisma.FieldRef<"Service", 'String[]'>
+  readonly processSteps: Prisma.FieldRef<"Service", 'String[]'>
+  readonly typicalProjects: Prisma.FieldRef<"Service", 'String'>
+  readonly audience: Prisma.FieldRef<"Service", 'String'>
   readonly iconKey: Prisma.FieldRef<"Service", 'String'>
   readonly coverId: Prisma.FieldRef<"Service", 'String'>
   readonly status: Prisma.FieldRef<"Service", 'PublishStatus'>

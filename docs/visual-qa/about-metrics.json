@@ -1,0 +1,68 @@
+[
+  {
+    "route": "/about",
+    "viewport": 360,
+    "status": 200,
+    "documentWidth": 360,
+    "bodyWidth": 360,
+    "pageHeight": 8602,
+    "h1Count": 1,
+    "horizontalOverflow": false,
+    "layoutShift": 0
+  },
+  {
+    "route": "/about",
+    "viewport": 390,
+    "status": 200,
+    "documentWidth": 390,
+    "bodyWidth": 390,
+    "pageHeight": 8647,
+    "h1Count": 1,
+    "horizontalOverflow": false,
+    "layoutShift": 0
+  },
+  {
+    "route": "/about",
+    "viewport": 768,
+    "status": 200,
+    "documentWidth": 768,
+    "bodyWidth": 768,
+    "pageHeight": 6072,
+    "h1Count": 1,
+    "horizontalOverflow": false,
+    "layoutShift": 0
+  },
+  {
+    "route": "/about",
+    "viewport": 1024,
+    "status": 200,
+    "documentWidth": 1024,
+    "bodyWidth": 1024,
+    "pageHeight": 4828,
+    "h1Count": 1,
+    "horizontalOverflow": false,
+    "layoutShift": 0
+  },
+  {
+    "route": "/about",
+    "viewport": 1280,
+    "status": 200,
+    "documentWidth": 1280,
+    "bodyWidth": 1280,
+    "pageHeight": 5252,
+    "h1Count": 1,
+    "horizontalOverflow": false,
+    "layoutShift": 0
+  },
+  {
+    "route": "/about",
+    "viewport": 1536,
+    "status": 200,
+    "documentWidth": 1536,
+    "bodyWidth": 1536,
+    "pageHeight": 1790,
+    "h1Count": 1,
+    "horizontalOverflow": false,
+    "layoutShift": 0
+  }
+]

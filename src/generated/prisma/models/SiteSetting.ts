@@ -41,6 +41,7 @@ export type SiteSettingMinAggregateOutputType = {
   email: string | null
   whatsappNumber: string | null
   whatsappMessage: string | null
+  responseTimeText: string | null
   address: string | null
   mapEmbedUrl: string | null
   brochureMediaId: string | null
@@ -56,6 +57,7 @@ export type SiteSettingMaxAggregateOutputType = {
   email: string | null
   whatsappNumber: string | null
   whatsappMessage: string | null
+  responseTimeText: string | null
   address: string | null
   mapEmbedUrl: string | null
   brochureMediaId: string | null
@@ -72,6 +74,7 @@ export type SiteSettingCountAggregateOutputType = {
   email: number
   whatsappNumber: number
   whatsappMessage: number
+  responseTimeText: number
   address: number
   mapEmbedUrl: number
   businessHours: number
@@ -101,6 +104,7 @@ export type SiteSettingMinAggregateInputType = {
   email?: true
   whatsappNumber?: true
   whatsappMessage?: true
+  responseTimeText?: true
   address?: true
   mapEmbedUrl?: true
   brochureMediaId?: true
@@ -116,6 +120,7 @@ export type SiteSettingMaxAggregateInputType = {
   email?: true
   whatsappNumber?: true
   whatsappMessage?: true
+  responseTimeText?: true
   address?: true
   mapEmbedUrl?: true
   brochureMediaId?: true
@@ -132,6 +137,7 @@ export type SiteSettingCountAggregateInputType = {
   email?: true
   whatsappNumber?: true
   whatsappMessage?: true
+  responseTimeText?: true
   address?: true
   mapEmbedUrl?: true
   businessHours?: true
@@ -239,6 +245,7 @@ export type SiteSettingGroupByOutputType = {
   email: string | null
   whatsappNumber: string | null
   whatsappMessage: string | null
+  responseTimeText: string | null
   address: string | null
   mapEmbedUrl: string | null
   businessHours: runtime.JsonValue | null
@@ -282,6 +289,7 @@ export type SiteSettingWhereInput = {
   email?: Prisma.StringNullableFilter<"SiteSetting"> | string | null
   whatsappNumber?: Prisma.StringNullableFilter<"SiteSetting"> | string | null
   whatsappMessage?: Prisma.StringNullableFilter<"SiteSetting"> | string | null
+  responseTimeText?: Prisma.StringNullableFilter<"SiteSetting"> | string | null
   address?: Prisma.StringNullableFilter<"SiteSetting"> | string | null
   mapEmbedUrl?: Prisma.StringNullableFilter<"SiteSetting"> | string | null
   businessHours?: Prisma.JsonNullableFilter<"SiteSetting">
@@ -302,6 +310,7 @@ export type SiteSettingOrderByWithRelationInput = {
   email?: Prisma.SortOrderInput | Prisma.SortOrder
   whatsappNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   whatsappMessage?: Prisma.SortOrderInput | Prisma.SortOrder
+  responseTimeText?: Prisma.SortOrderInput | Prisma.SortOrder
   address?: Prisma.SortOrderInput | Prisma.SortOrder
   mapEmbedUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   businessHours?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -325,6 +334,7 @@ export type SiteSettingWhereUniqueInput = Prisma.AtLeast<{
   email?: Prisma.StringNullableFilter<"SiteSetting"> | string | null
   whatsappNumber?: Prisma.StringNullableFilter<"SiteSetting"> | string | null
   whatsappMessage?: Prisma.StringNullableFilter<"SiteSetting"> | string | null
+  responseTimeText?: Prisma.StringNullableFilter<"SiteSetting"> | string | null
   address?: Prisma.StringNullableFilter<"SiteSetting"> | string | null
   mapEmbedUrl?: Prisma.StringNullableFilter<"SiteSetting"> | string | null
   businessHours?: Prisma.JsonNullableFilter<"SiteSetting">
@@ -345,6 +355,7 @@ export type SiteSettingOrderByWithAggregationInput = {
   email?: Prisma.SortOrderInput | Prisma.SortOrder
   whatsappNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   whatsappMessage?: Prisma.SortOrderInput | Prisma.SortOrder
+  responseTimeText?: Prisma.SortOrderInput | Prisma.SortOrder
   address?: Prisma.SortOrderInput | Prisma.SortOrder
   mapEmbedUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   businessHours?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -373,6 +384,7 @@ export type SiteSettingScalarWhereWithAggregatesInput = {
   email?: Prisma.StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
   whatsappNumber?: Prisma.StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
   whatsappMessage?: Prisma.StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
+  responseTimeText?: Prisma.StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
   address?: Prisma.StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
   mapEmbedUrl?: Prisma.StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
   businessHours?: Prisma.JsonNullableWithAggregatesFilter<"SiteSetting">
@@ -393,6 +405,7 @@ export type SiteSettingCreateInput = {
   email?: string | null
   whatsappNumber?: string | null
   whatsappMessage?: string | null
+  responseTimeText?: string | null
   address?: string | null
   mapEmbedUrl?: string | null
   businessHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -413,6 +426,7 @@ export type SiteSettingUncheckedCreateInput = {
   email?: string | null
   whatsappNumber?: string | null
   whatsappMessage?: string | null
+  responseTimeText?: string | null
   address?: string | null
   mapEmbedUrl?: string | null
   businessHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -433,6 +447,7 @@ export type SiteSettingUpdateInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  responseTimeText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mapEmbedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   businessHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -453,6 +468,7 @@ export type SiteSettingUncheckedUpdateInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  responseTimeText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mapEmbedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   businessHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -473,6 +489,7 @@ export type SiteSettingCreateManyInput = {
   email?: string | null
   whatsappNumber?: string | null
   whatsappMessage?: string | null
+  responseTimeText?: string | null
   address?: string | null
   mapEmbedUrl?: string | null
   businessHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -493,6 +510,7 @@ export type SiteSettingUpdateManyMutationInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  responseTimeText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mapEmbedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   businessHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -513,6 +531,7 @@ export type SiteSettingUncheckedUpdateManyInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   whatsappMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  responseTimeText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mapEmbedUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   businessHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -533,6 +552,7 @@ export type SiteSettingCountOrderByAggregateInput = {
   email?: Prisma.SortOrder
   whatsappNumber?: Prisma.SortOrder
   whatsappMessage?: Prisma.SortOrder
+  responseTimeText?: Prisma.SortOrder
   address?: Prisma.SortOrder
   mapEmbedUrl?: Prisma.SortOrder
   businessHours?: Prisma.SortOrder
@@ -556,6 +576,7 @@ export type SiteSettingMaxOrderByAggregateInput = {
   email?: Prisma.SortOrder
   whatsappNumber?: Prisma.SortOrder
   whatsappMessage?: Prisma.SortOrder
+  responseTimeText?: Prisma.SortOrder
   address?: Prisma.SortOrder
   mapEmbedUrl?: Prisma.SortOrder
   brochureMediaId?: Prisma.SortOrder
@@ -571,6 +592,7 @@ export type SiteSettingMinOrderByAggregateInput = {
   email?: Prisma.SortOrder
   whatsappNumber?: Prisma.SortOrder
   whatsappMessage?: Prisma.SortOrder
+  responseTimeText?: Prisma.SortOrder
   address?: Prisma.SortOrder
   mapEmbedUrl?: Prisma.SortOrder
   brochureMediaId?: Prisma.SortOrder
@@ -611,6 +633,7 @@ export type SiteSettingSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   email?: boolean
   whatsappNumber?: boolean
   whatsappMessage?: boolean
+  responseTimeText?: boolean
   address?: boolean
   mapEmbedUrl?: boolean
   businessHours?: boolean
@@ -631,6 +654,7 @@ export type SiteSettingSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   email?: boolean
   whatsappNumber?: boolean
   whatsappMessage?: boolean
+  responseTimeText?: boolean
   address?: boolean
   mapEmbedUrl?: boolean
   businessHours?: boolean
@@ -651,6 +675,7 @@ export type SiteSettingSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   email?: boolean
   whatsappNumber?: boolean
   whatsappMessage?: boolean
+  responseTimeText?: boolean
   address?: boolean
   mapEmbedUrl?: boolean
   businessHours?: boolean
@@ -671,6 +696,7 @@ export type SiteSettingSelectScalar = {
   email?: boolean
   whatsappNumber?: boolean
   whatsappMessage?: boolean
+  responseTimeText?: boolean
   address?: boolean
   mapEmbedUrl?: boolean
   businessHours?: boolean
@@ -683,7 +709,7 @@ export type SiteSettingSelectScalar = {
   updatedAt?: boolean
 }
 
-export type SiteSettingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "businessName" | "tagline" | "phones" | "email" | "whatsappNumber" | "whatsappMessage" | "address" | "mapEmbedUrl" | "businessHours" | "socials" | "credentials" | "brochureMediaId" | "notifyEmails" | "foundedYear" | "createdAt" | "updatedAt", ExtArgs["result"]["siteSetting"]>
+export type SiteSettingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "businessName" | "tagline" | "phones" | "email" | "whatsappNumber" | "whatsappMessage" | "responseTimeText" | "address" | "mapEmbedUrl" | "businessHours" | "socials" | "credentials" | "brochureMediaId" | "notifyEmails" | "foundedYear" | "createdAt" | "updatedAt", ExtArgs["result"]["siteSetting"]>
 
 export type $SiteSettingPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "SiteSetting"
@@ -696,6 +722,7 @@ export type $SiteSettingPayload<ExtArgs extends runtime.Types.Extensions.Interna
     email: string | null
     whatsappNumber: string | null
     whatsappMessage: string | null
+    responseTimeText: string | null
     address: string | null
     mapEmbedUrl: string | null
     businessHours: runtime.JsonValue | null
@@ -1136,6 +1163,7 @@ export interface SiteSettingFieldRefs {
   readonly email: Prisma.FieldRef<"SiteSetting", 'String'>
   readonly whatsappNumber: Prisma.FieldRef<"SiteSetting", 'String'>
   readonly whatsappMessage: Prisma.FieldRef<"SiteSetting", 'String'>
+  readonly responseTimeText: Prisma.FieldRef<"SiteSetting", 'String'>
   readonly address: Prisma.FieldRef<"SiteSetting", 'String'>
   readonly mapEmbedUrl: Prisma.FieldRef<"SiteSetting", 'String'>
   readonly businessHours: Prisma.FieldRef<"SiteSetting", 'Json'>

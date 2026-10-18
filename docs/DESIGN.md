@@ -1,47 +1,75 @@
 # DESIGN SYSTEM
 
-Goal: a premium, trustworthy, engineering-led look. Not flashy. Confident typography, strong photography,
-generous whitespace, purposeful motion. The brand reads as "serious engineers who deliver on time".
+Goal: a premium, trustworthy, engineering-led look with the spacious color rhythm of the reviewed reference site, while keeping Vakratund's own content, logo, photography and voice.
 
 ## 1. Brand
 - Name: **Vakratund Construction** · Tagline: **"Quality is our first priority"** · Est. 2003
 - Personality: reliable, precise, experienced, approachable.
-- Logo: `TODO(client)`. Until supplied, use a text wordmark (see Typography) with a small orange accent mark.
-
-## Visual direction
-
-Use an editorial, engineering-led visual language: confident oversized Sora headlines, clear section-to-section rhythm, generous whitespace, and large, real project photography. Keep layouts crisp and purposeful rather than decorative. The Sphere reference informs the scale and pacing only; Vakratund retains its own warm amber, charcoal and neutral palette, its Sora/Inter typography, and original project imagery. Do not reproduce the reference site's purple/mint colors, collage composition, graphics, copy, or brand assets.
-
-- Lead with one clear headline and one strong, approved image; let each section have a single visual focus.
-- Establish hierarchy with large headlines and compact uppercase eyebrow labels, not extra font families or ornamental effects.
-- Alternate page background (`bg`), warm contrast band (`surface-alt`) and occasional charcoal feature sections. Use white `surface` for cards and content that needs separation.
-- Keep section spacing generous but responsive; use tighter rhythm for related controls, data and admin content.
-- Prefer crisp cards with a clear image/content boundary, fine tokenized border, 16px radius and restrained shadow. Use larger 24px radius only for feature panels; avoid stacking borders and shadows on every surface.
-- Use `narrow`, `default`, `wide` and `full-bleed` container variants to give editorial text, standard content, galleries and hero imagery the right measure.
+- `ACCENT_SET: REFERENCE`. Lavender/indigo and mint are structural inspiration only; the existing construction orange remains only as the tiny logo-mark signature cue.
+- Do not copy the reference site's text, imagery, logo, icons, code, page composition or distinctive collage.
 
 ## 2. Color tokens (CSS variables in `globals.css`, mapped in Tailwind theme)
-The PDF uses an amber-orange title and a warm beige band; we keep that DNA and add a dark charcoal for premium contrast.
 
-| Token | Light | Dark | Use |
-|---|---|---|---|
-| `--bg` | `#FBF8F2` | `#0F0D0B` | page background |
-| `--surface` | `#FFFFFF` | `#1A1714` | cards |
-| `--surface-alt` | `#F3ECDD` | `#241F1A` | alternating sections (beige band echo) |
-| `--ink` | `#17130F` | `#F5EFE4` | primary text |
-| `--ink-muted` | `#5B5249` | `#B8AD9E` | secondary text |
-| `--line` | `#E4DAC8` | `#3A332B` | borders |
-| `--brand` | `#F59A0C` | `#FFA826` | primary accent / buttons |
-| `--brand-ink` | `#1A1208` | `#1A1208` | text on brand (contrast ≥ 7:1) |
-| `--brand-deep` | `#B86A00` | `#FFB84D` | brand text/links on light bg (AA) |
-| `--charcoal` | `#14110F` | `#14110F` | hero/footers |
-| `--success` `--warning` `--danger` | `#1F8A4C` `#B7791F` `#C0392B` | lighter variants | status |
-| `--whatsapp` `--whatsapp-dark` `--whatsapp-text` | `#25D366` `#128C7E` `#137A3A` | WhatsApp actions, pressed state, and readable text on white |
+The live palette follows the reference's observed white → cool tint → dark editorial → pastel CTA rhythm. Values are adapted for Vakratund and recorded with the browser review in [DESIGN_REFERENCE.md](DESIGN_REFERENCE.md).
 
-Rules:
-- **Never** use `--brand` as text color on white (fails contrast). Use `--brand-deep` for text, `--brand` for fills with `--brand-ink` text.
-- Check every pair for WCAG AA (4.5:1 body, 3:1 large text/UI).
-- WhatsApp green is the sole brand-color exception to the no-hard-coded-hex rule. Use the `whatsapp` theme tokens; `--whatsapp-text` has at least 4.5:1 contrast on white. WhatsApp links must remain visibly labeled when an icon is present.
-- Light theme is default; dark theme supported via `prefers-color-scheme` + manual toggle (admin first, public optional).
+| Token | Value | Use |
+|---|---|---|
+| `--bg` | `#FFFFFF` | page and card canvas |
+| `--tint` | `#F0F1F8` | soft lavender alternate section |
+| `--dark` | `#1B1A2B` | dark editorial sections and footer |
+| `--ink` | `#1B1A2B` | primary text |
+| `--ink-muted` | `#5D5C67` | secondary text |
+| `--line` | `#E7E7EA` | borders and dividers |
+| `--accent` | `#8B7CF6` | primary action and highlight |
+| `--accent-ink` | `#17152E` | text on lavender accent |
+| `--accent-2` | `#9BF0CF` | secondary action and mint highlight |
+| `--accent-2-ink` | `#173A32` | text on mint accent |
+| `--glow-1` | `#F7C8DE` | pink glow |
+| `--glow-2` | `#F8D7B6` | peach glow |
+| `--glow-3` | `#BFEEDD` | mint glow |
+| `--brand-signature` | `#D87400` | logo mark dot only in this accent set |
+
+`bg-glow-radial` uses the soft glow colors. `bg-cta-gradient` and `.section-gradient` use lavender → pale pink → mint. The old warm-construction values are removed; compatibility class names such as `bg-brand` resolve to the new semantic tokens so existing page markup does not need a layout rewrite.
+
+### Section recipes
+
+| Utility | Background | Text | Muted text | Border | Link |
+|---|---|---|---|---|---|
+| `.section-light` | `--bg` | `--ink` | `--ink-muted` | `--line` | `--brand-deep` |
+| `.section-tint` | `--tint` | `--ink` | `--ink-muted` | `--line` | `--brand-deep` |
+| `.section-dark` | `--dark` | white | `#C6C5D0` | 22% white | `--accent-2` |
+| `.section-gradient` | `--cta-gradient` | `--dark` | 76% `--dark` | 22% `--dark` | `--dark` |
+
+Use light for the main canvas, tint for proof/process bands, dark for an occasional editorial feature or footer, and gradient for one focused conversion moment. `GlowBlob` is absolute, decorative and `aria-hidden`; it uses a blurred radial gradient and transform-only ambient motion, disabled under reduced motion. The admin uses these tokens in a flat, neutral mode with no gradients, glow blobs or animations.
+
+### Contrast reference
+
+Ratios below use the final light-theme hex tokens and WCAG 2 relative luminance. Normal text passes at 4.5:1; large text and UI pass at 3:1.
+
+| Text / background pair | Ratio | Result |
+|---|---:|---|
+| `--ink` / `--bg` | 17.08:1 | Pass |
+| `--ink` / `--tint` | 15.17:1 | Pass |
+| `--ink-muted` / `--bg` | 6.58:1 | Pass |
+| `--ink-muted` / `--tint` | 5.84:1 | Pass |
+| `--brand-deep` / `--bg` | 6.10:1 | Pass |
+| `--brand-deep` / `--tint` | 5.41:1 | Pass |
+| white / `--dark` | 17.08:1 | Pass |
+| `--accent-ink` / `--accent` | 5.33:1 | Pass |
+| `--accent-2-ink` / `--accent-2` | 9.34:1 | Pass |
+| `--charcoal` / WhatsApp green `#25D366` | 8.61:1 | Pass |
+| `--dark` / `--glow-1` | 11.61:1 | Pass |
+| `--dark` / `--glow-2` | 12.52:1 | Pass |
+| `--dark` / `--glow-3` | 13.41:1 | Pass |
+
+### Button rules
+
+- `primary`: `--accent` fill with `--accent-ink` text.
+- `secondary`: `--accent-2` fill with `--accent-2-ink` text.
+- `dark`: `--dark` fill with white text.
+- `outline-on-light`: accent border/text on light or tinted sections.
+- `outline-on-dark`: white border/text; hover shifts to mint.
+- All buttons are pill-shaped, at least 44px high, use the shared contrast-safe focus ring, lift 1–2px on public hover and nudge the arrow. Admin retains focus visibility but disables lift and transitions.
 
 ## 3. Typography (`next/font`, self-hosted)
 - Headings: **Sora** (600/700) — confident weights, tight negative tracking, engineered feel.
@@ -59,23 +87,23 @@ Rules:
   | body / small / caption | `16–18px` / `14px` / `12px` | Body, metadata and compact labels |
 
 - Headings use tighter tracking as size increases (hero about `-0.055em`, display `-0.045em`, section headings about `-0.035em`) and line-height from `0.95` to `1.15`. Body line-height is `1.6`; max line length is `68ch`.
-- Use the `.eyebrow` style for short uppercase section labels: compact, semibold, tracked, and colored with the text-safe `brand-deep` token. Do not use it for sentences or as the only accessible name of a section.
+- Use the `.eyebrow` style for short uppercase section labels: compact, semibold, tracked, and colored with the text-safe `brand-deep` token on light sections. Dark and gradient recipes override it with their section link color. Do not use it for sentences or as the only accessible name of a section.
 - Minimum body size 16px on mobile.
 
 ## 4. Layout, spacing, radius, elevation
 - Containers: `narrow` (48rem / 768px, editorial copy), `default` (77.5rem / 1240px), `wide` (90rem / 1440px), and `full-bleed` (viewport width for hero/media). Padded variants use `16px` mobile / `24px` tablet / `32px` desktop.
 - Spacing scale: 4-pt (4, 8, 12, 16, 24, 32, 48, 64, 96, 128). Section utilities: `section-space-compact` (48→80px), `section-space` (64→112px), and `section-space-generous` (80→128px), fluid between breakpoints. Use compact for adjacent/detail sections, default for primary sections and generous for a hero or major editorial break.
-- Section rhythm: page background `bg-bg` → selected `bg-surface-alt` bands → occasional `bg-charcoal` feature → return to `bg-bg`. Keep this sequence varied but avoid alternating every small section mechanically.
+- Section rhythm: `.section-light` → `.section-tint` → occasional `.section-dark` → `.section-light` → one `.section-gradient` conversion moment. Keep this sequence varied but avoid alternating every small section mechanically.
 - Grid: 4 cols mobile, 8 tablet, 12 desktop.
-- Cards: `surface` background, `line` border, `16px` radius, restrained `shadow-soft`; use tokenized hover elevation only where the card is interactive. Media cards prioritize a large, consistent crop (usually 4:3) with text on a clean surface; avoid placing essential copy over busy photos.
-- Radius: `8px` inputs/buttons, `16px` cards, `24px` large feature panels, `999px` pills.
+- Cards: `bg`, `line` border, 28–32px radius, restrained `shadow-soft`; large feature cards use 36px. Use tokenized hover elevation only where the card is interactive. Media cards prioritize a large, consistent crop (usually 4:3) with text on a clean surface; avoid placing essential copy over busy photos.
+- Radius: controls and buttons are fully rounded pills, cards are 32px, large feature panels are 36px.
 - Shadows: subtle (`0 1px 2px / 0 8px 24px` at low alpha); interactive hover lifts 2–4px.
 - Breakpoints (Tailwind default): `sm 640`, `md 768`, `lg 1024`, `xl 1280`, `2xl 1536`. **Design mobile first.**
 
 ## 5. Components (in `src/components/ui`, built once, reused everywhere)
 Button (primary/secondary/ghost/link, sizes, loading), IconButton, Input, Textarea, Select, Checkbox, Radio, Switch, Slider (estimator), FormField (label + hint + error), Badge, Card, Tabs, Accordion (FAQ), Dialog/Sheet, Tooltip, Toast, Skeleton, EmptyState, ErrorState, Pagination, Breadcrumbs, Stat, SectionHeading, Container, Lightbox, BeforeAfterSlider, Stepper (estimator), DataTable (admin), ConfirmDialog.
 
-States required on all interactive components: default, hover, focus-visible (2px outline `--brand-deep` + offset), active, disabled, loading, error.
+States required on all interactive components: default, hover, focus-visible (2px contrast-safe outline + offset), active, disabled, loading, error.
 
 ## 6. Page blueprints
 

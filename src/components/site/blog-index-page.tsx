@@ -96,40 +96,9 @@ export function BlogIndexPage({
         title="Construction and project insights"
         description="Practical articles on construction, structural repair, project management and related work."
       />
-      <section className="bg-surface-alt">
+      <section className="section-tint">
         <Container className="section-space-generous">
-          <form
-            method="get"
-            action="/blog"
-            className="mb-12 flex flex-col gap-3 rounded-card border bg-surface p-4 sm:flex-row sm:items-end"
-          >
-            <label className="text-sm font-semibold text-ink">
-              Category
-              <select
-                name="category"
-                defaultValue={categorySlug ?? ""}
-                className="mt-1 min-h-11 w-full rounded-control border bg-surface px-3 text-base font-normal text-ink sm:min-w-64"
-              >
-                <option value="">All categories</option>
-                {categories.map((category) => (
-                  <option key={category.id} value={category.slug}>
-                    {category.name}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <Button type="submit" variant="secondary">
-              Filter
-            </Button>
-            {categorySlug ? (
-              <Link
-                href="/blog"
-                className="inline-flex min-h-11 items-center justify-center rounded-control px-4 text-sm font-semibold text-brand-deep hover:underline"
-              >
-                Clear
-              </Link>
-            ) : null}
-          </form>
+          <div className="mb-12 flex flex-wrap items-center gap-2" aria-label="Blog categories"><span className="mr-1 text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">Explore</span><Link href="/blog" aria-current={!categorySlug ? "page" : undefined} className={`inline-flex min-h-10 items-center rounded-pill border px-4 text-sm font-semibold ${!categorySlug ? "border-dark bg-dark text-white" : "border-line bg-bg text-ink hover:bg-tint"}`}>All insights</Link>{categories.map((category) => <Link key={category.id} href={`/blog?category=${encodeURIComponent(category.slug)}`} aria-current={category.slug === categorySlug ? "page" : undefined} className={`inline-flex min-h-10 items-center rounded-pill border px-4 text-sm font-semibold ${category.slug === categorySlug ? "border-accent bg-accent/15 text-accent-ink" : "border-line bg-bg text-ink hover:bg-tint"}`}>{category.name}</Link>)}</div>
           <SectionHeading
             eyebrow="Published articles"
             title={
@@ -165,13 +134,16 @@ export function BlogIndexPage({
                 }
               />
             ) : (
+              <>
+              {result.page === 1 && !categorySlug && result.items[0] ? <Reveal><div className="mb-8"><BlogCard post={result.items[0]} featured /></div></Reveal> : null}
               <RevealGroup className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {result.items.map((post) => (
+                {result.items.slice(result.page === 1 && !categorySlug ? 1 : 0).map((post) => (
                   <Reveal key={post.id}>
                     <BlogCard post={post} />
                   </Reveal>
                 ))}
               </RevealGroup>
+              </>
             )}
           </div>
           <BlogPagination

@@ -7,7 +7,7 @@ import { ScrollProgress } from "@/components/motion/scroll-progress";
 import { GlobalCtas } from "./global-ctas";
 import { AnalyticsConsent } from "./analytics-consent";
 import { AttributionCapture } from "./attribution-capture";
-import { SiteFooter } from "./site-footer";
+import { SiteFooterReference as SiteFooter } from "./site-footer-reference";
 import { SiteHeader } from "./site-header";
 
 export async function SiteShell({ children, settings: providedSettings, services: providedServices, overlayHeader = false }: { children: ReactNode; settings?: ResolvedSiteSettings; services?: Awaited<ReturnType<typeof getPublishedServices>>; overlayHeader?: boolean }) {
@@ -24,7 +24,7 @@ export async function SiteShell({ children, settings: providedSettings, services
       <AnalyticsConsent gaId={process.env.NEXT_PUBLIC_GA_ID?.trim() || undefined} />
       <a href="#main-content" className="fixed left-4 top-4 z-[60] -translate-y-24 rounded-control bg-brand px-4 py-3 font-semibold text-brand-ink shadow-raised transition-transform focus:translate-y-0">Skip to content</a>
       <SiteHeader settings={settings} services={services} overlayAtTop={overlayHeader} />
-      <main id="main-content" tabIndex={-1} className={overlayHeader ? "site-home-main site-page-load min-h-screen" : "site-page-load min-h-screen pt-20"}>{children}</main>
+      <main id="main-content" tabIndex={-1} className={overlayHeader ? "site-home-main site-page-load min-h-screen pb-20 md:pb-0" : "site-page-load min-h-screen pt-20 pb-20 md:pb-0"}>{children}</main>
       <SiteFooter settings={settings} services={services} />
       <GlobalCtas settings={settings} />
     </div>

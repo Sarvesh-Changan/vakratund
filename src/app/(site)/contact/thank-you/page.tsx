@@ -19,5 +19,5 @@ export default async function ContactThankYou({ searchParams }: { searchParams: 
   if (!reference || !publicReferenceSchema(reference)) notFound();
   const [lead, settings] = await Promise.all([getPublicLeadByReference(reference, "CONTACT"), getPublicSettings().catch(() => null)]);
   if (!lead) notFound();
-  return <LeadThankYou settings={resolveSiteSettings(settings)} eyebrow="Enquiry received" title="Thank you for getting in touch." description="Your enquiry has been saved. Our team will review it and follow up about the next useful step." breadcrumbs={[{ name: "Home", item: "/" }, { name: "Contact", item: "/contact" }, { name: "Enquiry received", item: "/contact/thank-you" }]} />;
+  return <LeadThankYou reference={lead.publicId} settings={resolveSiteSettings(settings)} eyebrow="Enquiry received" title="Thank you for getting in touch." description="Your enquiry has been saved. Our team will review it and follow up about the next useful step." breadcrumbs={[{ name: "Home", item: "/" }, { name: "Contact", item: "/contact" }, { name: "Enquiry received", item: "/contact/thank-you" }]} />;
 }

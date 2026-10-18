@@ -8,6 +8,7 @@ export type ResolvedSiteSettings = {
   email: string;
   whatsappNumber: string;
   whatsappMessage: string;
+  responseTimeText: string;
   address: string;
   mapEmbedUrl: string;
   businessHours: BusinessHours | null;
@@ -25,6 +26,7 @@ export const fallbackSiteSettings: ResolvedSiteSettings = {
   // TODO(client): confirm the WhatsApp Business number before launch.
   whatsappNumber: "+919821502956",
   whatsappMessage: "Hello Vakratund Construction, I would like to discuss a project.",
+  responseTimeText: "Share your requirement and we will review the next useful step.",
   address: "Thane and Mumbai, Maharashtra",
   mapEmbedUrl: "",
   businessHours: null,
@@ -44,6 +46,7 @@ export function resolveSiteSettings(settings: PublicSiteSettings | null): Resolv
     email: settings?.email || fallbackSiteSettings.email,
     whatsappNumber: settings?.whatsappNumber || settings?.phones[0] || fallbackSiteSettings.whatsappNumber,
     whatsappMessage: settings?.whatsappMessage || fallbackSiteSettings.whatsappMessage,
+    responseTimeText: settings?.responseTimeText || fallbackSiteSettings.responseTimeText,
     address: settings?.address || fallbackSiteSettings.address,
     mapEmbedUrl: settings?.mapEmbedUrl || fallbackSiteSettings.mapEmbedUrl,
     businessHours: settings?.businessHours ?? fallbackSiteSettings.businessHours,

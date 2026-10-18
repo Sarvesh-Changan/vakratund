@@ -50,9 +50,9 @@ const publicItemSelect = {
   sortOrder: true,
 } satisfies Prisma.GalleryItemSelect;
 
-async function readPublishedGallery(categorySlug?: string, designType?: GalleryDesignType): Promise<PublishedGalleryItem[]> {
+async function readPublishedGallery(categorySlug?: string, designType?: GalleryDesignType, mediaType?: GalleryMediaType): Promise<PublishedGalleryItem[]> {
   const rows = await prisma.galleryItem.findMany({
-    where: { isPublished: true, ...(categorySlug ? { category: { is: { slug: categorySlug } } } : {}), ...(designType ? { designType } : {}) },
+    where: { isPublished: true, ...(categorySlug ? { category: { is: { slug: categorySlug } } } : {}), ...(designType ? { designType } : {}), ...(mediaType ? { mediaType } : {}) },
     orderBy: [{ category: { sortOrder: "asc" } }, { sortOrder: "asc" }, { createdAt: "asc" }],
     take: 1000,
     select: publicItemSelect,
@@ -60,9 +60,9 @@ async function readPublishedGallery(categorySlug?: string, designType?: GalleryD
   return rows;
 }
 
-export function getPublishedGallery(categorySlug?: string, designType?: GalleryDesignType): Promise<PublishedGalleryItem[]> {
+export function getPublishedGallery(categorySlug?: string, designType?: GalleryDesignType, mediaType?: GalleryMediaType): Promise<PublishedGalleryItem[]> {
   const tags = ["gallery", ...(categorySlug ? [`gallery:category:${categorySlug}`] : [])];
-  return unstable_cache(() => readPublishedGallery(categorySlug, designType), ["published-gallery", categorySlug ?? "all", designType ?? "all"], { tags, revalidate: 3600 })();
+  return unstable_cache(() => readPublishedGallery(categorySlug, designType, mediaType), ["published-gallery", categorySlug ?? "all", designType ?? "all", mediaType ?? "all"], { tags, revalidate: 3600 })();
 }
 
 async function readGalleryLandingData(designType?: GalleryDesignType): Promise<GalleryLandingData> {

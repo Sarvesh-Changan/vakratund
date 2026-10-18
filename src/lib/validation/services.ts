@@ -16,6 +16,8 @@ export const SERVICE_ICON_KEYS = [
   "ShieldCheck",
 ] as const;
 
+export const SERVICE_GROUPS = ["Construction", "Repair and rehabilitation", "Waterproofing and finishing", "Infrastructure", "Fabrication"] as const;
+
 const plainText = (max: number) => z.string().trim().min(1).max(max).refine((value) => !/[<>]/.test(value), "HTML is not allowed.");
 const optionalPlainText = (max: number) => plainText(max).optional().or(z.literal(""));
 const slug = z.preprocess(
@@ -26,9 +28,13 @@ const slug = z.preprocess(
 const serviceFields = {
   title: plainText(120),
   slug,
+  group: optionalPlainText(80),
   shortDesc: plainText(300),
   description: z.string().trim().min(1).max(20_000),
   scopeItems: z.array(plainText(180)).min(1).max(20),
+  processSteps: z.array(plainText(160)).max(8),
+  typicalProjects: optionalPlainText(240),
+  audience: optionalPlainText(240),
   iconKey: z.enum(SERVICE_ICON_KEYS).nullable(),
   coverId: z.string().cuid().nullable(),
   isFeatured: z.boolean(),

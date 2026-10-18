@@ -1,0 +1,68 @@
+[
+  {
+    "route": "/faqs",
+    "viewport": 360,
+    "status": 200,
+    "documentWidth": 360,
+    "bodyWidth": 360,
+    "pageHeight": 2624,
+    "h1Count": 1,
+    "horizontalOverflow": false,
+    "layoutShift": 0
+  },
+  {
+    "route": "/faqs",
+    "viewport": 390,
+    "status": 200,
+    "documentWidth": 390,
+    "bodyWidth": 390,
+    "pageHeight": 2625,
+    "h1Count": 1,
+    "horizontalOverflow": false,
+    "layoutShift": 0
+  },
+  {
+    "route": "/faqs",
+    "viewport": 768,
+    "status": 200,
+    "documentWidth": 768,
+    "bodyWidth": 768,
+    "pageHeight": 1920,
+    "h1Count": 1,
+    "horizontalOverflow": false,
+    "layoutShift": 0
+  },
+  {
+    "route": "/faqs",
+    "viewport": 1024,
+    "status": 200,
+    "documentWidth": 1024,
+    "bodyWidth": 1024,
+    "pageHeight": 1817,
+    "h1Count": 1,
+    "horizontalOverflow": false,
+    "layoutShift": 0
+  },
+  {
+    "route": "/faqs",
+    "viewport": 1280,
+    "status": 200,
+    "documentWidth": 1280,
+    "bodyWidth": 1280,
+    "pageHeight": 1905,
+    "h1Count": 1,
+    "horizontalOverflow": false,
+    "layoutShift": 0
+  },
+  {
+    "route": "/faqs",
+    "viewport": 1536,
+    "status": 200,
+    "documentWidth": 1536,
+    "bodyWidth": 1536,
+    "pageHeight": 1606,
+    "h1Count": 1,
+    "horizontalOverflow": false,
+    "layoutShift": 0
+  }
+]

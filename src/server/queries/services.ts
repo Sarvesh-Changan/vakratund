@@ -10,9 +10,13 @@ export type PublishedService = {
   id: string;
   slug: string;
   title: string;
+  group: string | null;
   shortDesc: string;
   description: string;
   scopeItems: string[];
+  processSteps: string[];
+  typicalProjects: string | null;
+  audience: string | null;
   iconKey: string | null;
   isFeatured: boolean;
   sortOrder: number;
@@ -26,9 +30,13 @@ const publicServiceSelect = {
   id: true,
   slug: true,
   title: true,
+  group: true,
   shortDesc: true,
   description: true,
   scopeItems: true,
+  processSteps: true,
+  typicalProjects: true,
+  audience: true,
   iconKey: true,
   coverId: true,
   isFeatured: true,

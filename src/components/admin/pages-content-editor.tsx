@@ -20,6 +20,7 @@ const sections = [
   { pageKey: "home", sectionKey: "cta" },
   { pageKey: "about", sectionKey: "story" },
   { pageKey: "about", sectionKey: "mission" },
+  { pageKey: "about", sectionKey: "journey" },
 ] as const;
 
 const defaults: Record<string, Record<string, unknown>> = {
@@ -36,6 +37,7 @@ const defaults: Record<string, Record<string, unknown>> = {
   "home:cta": { title: "", description: "", primaryCta: "Get Free Quote", primaryHref: "/estimate", secondaryCta: "", secondaryHref: "", callCta: "Call Now", whatsappCta: "Chat on WhatsApp" },
   "about:story": { title: "Our story", body: "" },
   "about:mission": { title: "Our mission", body: "" },
+  "about:journey": { eyebrow: "Since 2003", title: "Our journey", milestones: [] },
 };
 
 function TextField({ label, value, onChange, area = false, hint }: { label: string; value: string; onChange: (value: string) => void; area?: boolean; hint?: string }) {
@@ -69,6 +71,7 @@ export function PagesContentEditor({ initial, assets = [], phoneHref = "/contact
       const items = Array.isArray(content.items) ? content.items as { label: string; value: string }[] : [];
       const steps = Array.isArray(content.steps) ? content.steps as { title: string; description: string }[] : [];
       const trustChips = Array.isArray(content.trustChips) ? content.trustChips as string[] : [];
+      const milestones = Array.isArray(content.milestones) ? content.milestones as { year: number; title: string; description: string }[] : [];
       return <section key={`${row.pageKey}:${row.sectionKey}`} className="space-y-4 rounded-panel border bg-white p-5">
         <div className="flex items-center justify-between"><h2 className="font-display text-xl capitalize">{row.pageKey} / {row.sectionKey}</h2><label className="flex gap-2 text-sm"><input type="checkbox" checked={row.isVisible} onChange={(event) => setRows((all) => all.map((item, itemIndex) => itemIndex === index ? { ...item, isVisible: event.target.checked } : item))} /> Visible</label></div>
         {row.sectionKey === "hero" ? <>
@@ -86,7 +89,8 @@ export function PagesContentEditor({ initial, assets = [], phoneHref = "/contact
         {row.sectionKey === "specialty" ? <div className="grid gap-3 sm:grid-cols-2"><TextField label="Eyebrow" value={String(content.eyebrow ?? "")} onChange={(value) => update(index, { eyebrow: value })} /><TextField label="Title" value={String(content.title ?? "")} onChange={(value) => update(index, { title: value })} /><TextField label="Description" value={String(content.description ?? "")} onChange={(value) => update(index, { description: value })} area /><TextField label="CTA label" value={String(content.ctaLabel ?? "")} onChange={(value) => update(index, { ctaLabel: value })} /><TextField label="CTA URL" value={String(content.ctaHref ?? "/contact?type=inspection")} onChange={(value) => update(index, { ctaHref: value })} /></div> : null}
         {["insights", "faq"].includes(row.sectionKey) ? <div className="grid gap-3 sm:grid-cols-2"><TextField label="Eyebrow" value={String(content.eyebrow ?? "")} onChange={(value) => update(index, { eyebrow: value })} /><TextField label="Section title" value={String(content.title ?? "")} onChange={(value) => update(index, { title: value })} /><TextField label="View all link label" value={String(content.viewAllLabel ?? "")} onChange={(value) => update(index, { viewAllLabel: value })} /></div> : null}
         {row.sectionKey === "estimator" ? <div className="grid gap-3 sm:grid-cols-2"><TextField label="Eyebrow" value={String(content.eyebrow ?? "")} onChange={(value) => update(index, { eyebrow: value })} /><TextField label="Title" value={String(content.title ?? "")} onChange={(value) => update(index, { title: value })} /><TextField label="Description" value={String(content.description ?? "")} onChange={(value) => update(index, { description: value })} area /><TextField label="CTA label" value={String(content.ctaLabel ?? "")} onChange={(value) => update(index, { ctaLabel: value })} /></div> : null}
-        {row.pageKey === "about" ? <div className="grid gap-3"><TextField label="Title" value={String(content.title ?? "")} onChange={(value) => update(index, { title: value })} /><TextField label="Body" value={String(content.body ?? "")} onChange={(value) => update(index, { body: value })} area /></div> : null}
+        {row.pageKey === "about" && ["story", "mission"].includes(row.sectionKey) ? <div className="grid gap-3"><TextField label="Title" value={String(content.title ?? "")} onChange={(value) => update(index, { title: value })} /><TextField label="Body" value={String(content.body ?? "")} onChange={(value) => update(index, { body: value })} area /></div> : null}
+        {row.pageKey === "about" && row.sectionKey === "journey" ? <div className="grid gap-3"><TextField label="Eyebrow" value={String(content.eyebrow ?? "")} onChange={(value) => update(index, { eyebrow: value })} /><TextField label="Title" value={String(content.title ?? "")} onChange={(value) => update(index, { title: value })} /><TextField label="Milestones (year:title:description per line)" value={milestones.map((milestone) => `${milestone.year}:${milestone.title}:${milestone.description ?? ""}`).join("\n")} onChange={(value) => update(index, { milestones: value.split("\n").filter(Boolean).map((line) => { const parts = line.split(":"); return { year: Number((parts.shift() ?? "").trim()), title: (parts.shift() ?? "").trim(), description: parts.join(":").trim() }; }) })} area hint="Leave blank when there are no approved milestones. Do not add unverified dates or claims." /></div> : null}
         {row.sectionKey === "cta" ? <div className="grid gap-3 sm:grid-cols-2"><TextField label="Title" value={String(content.title ?? "")} onChange={(value) => update(index, { title: value })} /><TextField label="Description" value={String(content.description ?? "")} onChange={(value) => update(index, { description: value })} area /><TextField label="Get quote CTA" value={String(content.primaryCta ?? "")} onChange={(value) => update(index, { primaryCta: value })} /><TextField label="Quote URL" value={String(content.primaryHref ?? "/estimate")} onChange={(value) => update(index, { primaryHref: value })} /><TextField label="Call CTA" value={String(content.callCta ?? "Call Now")} onChange={(value) => update(index, { callCta: value })} /><TextField label="WhatsApp CTA" value={String(content.whatsappCta ?? "Chat on WhatsApp")} onChange={(value) => update(index, { whatsappCta: value })} /></div> : null}
         <button type="button" onClick={() => void save(index)} className="rounded-control bg-brand px-4 py-2 font-semibold">Save section</button>
       </section>;

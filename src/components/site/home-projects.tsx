@@ -3,38 +3,23 @@ import Link from "next/link";
 import { HoverCard } from "@/components/motion";
 import type { HomeProjectsSection } from "@/server/queries/home";
 import type { PublishedProject } from "@/server/queries/projects";
-import { Badge, Card, Container, Reveal, SectionHeading } from "@/components/ui";
+import { Container, Reveal, SectionHeading } from "@/components/ui";
 import { CloudImage } from "@/components/cloud-image";
 
 function projectStatus(status: PublishedProject["status"]): { label: string; variant: "success" | "warning" } {
   return status === "COMPLETED" ? { label: "Completed", variant: "success" } : { label: "Ongoing", variant: "warning" };
 }
 
-function projectMetric(project: PublishedProject): string | null {
-  if (project.areaSqft) return `~${project.areaSqft.toLocaleString("en-IN")} sq.ft.`;
-  return project.floorsText;
-}
-
 export function HomeProjects({ projects, section }: { projects: PublishedProject[]; section: HomeProjectsSection }) {
-  if (projects.length === 0) return null;
-  return <section className="bg-surface-alt"><Container className="section-space-generous">
+  if (projects.length === 0) return <section className="section-tint"><Container className="section-space-generous"><div className="mx-auto max-w-2xl text-center"><p className="eyebrow">Our work</p><h2 className="mt-3 font-heading text-h2 font-semibold tracking-tight">{section.title}</h2>{section.description ? <p className="mt-4 text-lg leading-8 text-ink-muted">{section.description}</p> : null}<div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row"><Link href="/projects" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-control bg-accent px-5 font-bold text-accent-ink">View projects <ArrowUpRight size={18} aria-hidden="true" /></Link><Link href="/contact" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-control border border-line px-5 font-semibold text-ink">Contact us <ArrowUpRight size={18} aria-hidden="true" /></Link></div></div></Container></section>;
+  const [featured, ...otherProjects] = projects;
+  if (!featured) return null;
+  const cover = featured.media.find((media) => media.isCover && media.kind === "IMAGE") ?? featured.media.find((media) => media.kind === "IMAGE");
+  const status = projectStatus(featured.status);
+  const metrics = [featured.areaSqft ? `~${featured.areaSqft.toLocaleString("en-IN")} sq.ft.` : null, featured.floorsText, status.label].filter((value): value is string => Boolean(value));
+  return <section className="section-tint"><Container className="section-space-generous">
     <SectionHeading eyebrow={section.eyebrow || undefined} title={section.title} description={section.description || undefined} action={<Link href="/projects" className="inline-flex min-h-11 items-center gap-2 self-start rounded-control font-semibold text-brand-deep hover:underline">{section.viewAllLabel}<ArrowUpRight size={17} aria-hidden="true" /></Link>} />
-    <div className="mt-10 grid gap-6 md:grid-cols-2 lg:mt-14 lg:grid-cols-3">{projects.map((project) => {
-      const cover = project.media.find((media) => media.isCover && media.kind === "IMAGE") ?? project.media.find((media) => media.kind === "IMAGE");
-      const status = projectStatus(project.status);
-      const metric = projectMetric(project);
-      return <Reveal key={project.id}><HoverCard className="h-full rounded-card">
-        <Card className="group relative h-full overflow-hidden p-0 shadow-soft">
-          <div className="relative aspect-[4/3] overflow-hidden bg-charcoal">{cover ? <CloudImage src={cover.url} alt={cover.alt} fill sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw" className="object-cover" data-hover-image /> : <div className="home-blueprint-pattern absolute inset-0 bg-gradient-to-br from-charcoal via-charcoal to-brand-deep/35" aria-hidden="true" />}</div>
-          <div className="p-6 sm:p-7">
-            <div className="flex items-center justify-between gap-3">{project.service?.title ? <p className="eyebrow text-brand-deep">{project.service.title}</p> : <span />}{project.year ? <span className="text-xs text-ink-muted">{project.year}</span> : null}<Badge variant={status.variant}>{status.label}</Badge></div>
-            {metric ? <p className="mt-4 font-heading text-2xl font-semibold tracking-tight text-ink sm:text-3xl">{metric}</p> : null}
-            <h3 className="mt-3 font-heading text-h3 font-semibold"><Link href={`/projects/${project.slug}`} className="after:absolute after:inset-0">{project.title}</Link></h3>
-            <p className="mt-3 line-clamp-3 text-sm leading-7 text-ink-muted">{project.summary}</p>
-            <div className="mt-5 flex justify-end text-xs font-medium text-ink-muted"><ArrowUpRight data-hover-arrow size={20} className="text-brand-deep" aria-hidden="true" /></div>
-          </div>
-        </Card>
-      </HoverCard></Reveal>;
-    })}</div>
+    <Reveal className="mt-10 lg:mt-14"><HoverCard className="group relative overflow-hidden rounded-[2.25rem] bg-dark"><Link href={`/projects/${featured.slug}`} className="absolute inset-0 z-10" aria-label={`View project: ${featured.title}`} /><div className="relative min-h-[34rem] overflow-hidden bg-dark sm:min-h-[42rem]">{cover ? <CloudImage src={cover.url} alt={cover.alt} fill priority sizes="(min-width: 1024px) 80vw, 100vw" className="object-cover transition-transform duration-700 group-hover:scale-105" /> : <div className="home-blueprint-pattern absolute inset-0 bg-gradient-to-br from-dark via-dark to-accent/35" aria-hidden="true"><span className="absolute inset-0 flex items-center justify-center font-heading text-[clamp(5rem,18vw,14rem)] font-bold text-white/10">{featured.areaSqft?.toLocaleString("en-IN") ?? featured.year ?? "—"}</span></div>}<div className="absolute inset-0 bg-gradient-to-t from-dark via-dark/30 to-transparent" /><div className="absolute inset-x-5 bottom-5 flex flex-col gap-5 sm:inset-x-8 sm:bottom-8 lg:flex-row lg:items-end lg:justify-between"><div className="max-w-2xl text-white"><p className="eyebrow text-accent-2">{featured.service?.title ?? section.eyebrow ?? "Featured project"}</p><h3 className="mt-3 font-heading text-3xl font-semibold tracking-tight sm:text-5xl">{featured.title}</h3><p className="mt-3 max-w-xl text-sm leading-7 text-white/75 sm:text-base">{featured.summary}</p></div><div className="flex items-end justify-between gap-4"><div className="flex flex-wrap gap-2">{metrics.map((metric) => <span key={metric} className="rounded-control border border-white/20 bg-white/15 px-3 py-2 text-xs font-semibold text-white backdrop-blur-xl">{metric}</span>)}</div><span className="relative z-20 flex size-14 shrink-0 items-center justify-center rounded-full bg-accent text-accent-ink shadow-raised transition-transform group-hover:rotate-45"><ArrowUpRight size={22} aria-hidden="true" /></span></div></div></div></HoverCard></Reveal>
+    {otherProjects.length ? <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">{otherProjects.map((project) => <Reveal key={project.id}><article className="rounded-card border border-line bg-bg p-5"><p className="eyebrow">{project.service?.title ?? "Project"}</p><h3 className="mt-2 font-heading text-xl font-semibold"><Link href={`/projects/${project.slug}`} className="hover:text-accent-ink">{project.title}</Link></h3><p className="mt-2 line-clamp-2 text-sm leading-6 text-ink-muted">{project.summary}</p></article></Reveal>)}</div> : null}
   </Container></section>;
 }

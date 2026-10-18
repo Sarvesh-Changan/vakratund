@@ -4,7 +4,26 @@
 
 ## Scope and method
 
-Reviewed the [Sphere Digital Recruitment homepage](https://www.spheredigitalrecruitment.com/) on 14 October 2026 in Chromium at 1440 × 900 and 390 × 844 CSS pixels. Typography, colors, dimensions, image formats and animation declarations were read from the rendered page; responsive behavior was checked at both widths and the header was checked after scrolling. Hex values below are conversions of the computed RGB colors. Easing/implementation descriptions are marked as likely where source inspection was not part of this review. Screenshots are provided as visual evidence; numbered markers are annotations added for this report.
+Re-read the [Sphere Digital Recruitment homepage](https://www.spheredigitalrecruitment.com/) on 16 October 2026 in Chromium at 1440 × 900 and 390 × 844 CSS pixels. The desktop and mobile passes checked the rendered page, section transitions, hero/header treatment, card surfaces, closing CTA and footer; the desktop header was also checked after scrolling. Hex values below are conversions of the computed RGB colors. Easing/implementation descriptions are marked as likely where source inspection was not part of this review. Screenshots are provided as visual evidence; numbered markers are annotations added for this report.
+
+### Browser sampling pass — 17 October 2026
+
+The reference was reopened at 1440px desktop and 390px mobile. The rendered rhythm stayed consistent: white page fields, a cool lavender-tint band, a deep dark editorial field, then a pastel closing CTA and dark footer. These are sampled approximations and are adapted for Vakratund rather than copied as a token sheet.
+
+| Role | Sampled / adapted value | Notes |
+|---|---|---|
+| Page white | `#FFFFFF` | dominant light field |
+| Tinted section | `#F0F1F8` | screenshot estimate `#EFEDFB` has the same role |
+| Dark section | `#1B1B1F` | adapted to `--dark: #1B1A2B` |
+| Primary accent | `#9787FA` | adapted to `--accent: #8B7CF6` |
+| Secondary accent | `#89F0CA` | adapted to `--accent-2: #9BF0CF` |
+| Heading text | `#1B1B1F` | adapted to `--ink: #1B1A2B` |
+| Muted text | approximately `#5D5C67` | selected for AA on white and tint |
+| Border / neutral control | `#E7E7E8` | adapted to `--line: #E7E7EA` |
+| Glow 1 / 2 / 3 | pink / peach / mint | `#F7C8DE`, `#F8D7B6`, `#BFEEDD` |
+| CTA gradient | lavender → pale pink → mint | `.section-gradient` / `bg-cta-gradient` |
+
+Desktop keeps broad flat fields and generous whitespace. Mobile retains the same sequence, recrops the hero, stacks columns and makes content rails touch-friendly. The implementation does not import the reference's copy, photos, logo, icons, source code or exact composition.
 
 ### Screenshots
 
@@ -45,7 +64,25 @@ Observed computed palette (reference-site colors only):
 | Hero image overlay | `rgba(0,0,0,.5)` | Darkens the photo collage for white text |
 | CTA field | gradient, purple → pale pink → mint | Full-width closing conversion panel |
 
-The page alternates white and cool pale-lavender surfaces, then inserts a charcoal editorial block and ends with a high-saturation pastel gradient. Images provide most of the visual color. Do not bring these purple/mint values into the project palette: [DESIGN.md](DESIGN.md) specifies warm off-white, beige, charcoal and amber for Vakratund.
+### Current page-background rhythm
+
+The live page does not use a single background color throughout. Its visible sequence is:
+
+1. A darkened, full-bleed photo field for the hero, with the fixed header floating above it.
+2. A long white proposition/intro area with dark near-black text.
+3. A pale lavender-gray band (`#F0F1F8`) for industry, job and metric-led content.
+4. White image-led case-study and service areas, where photos supply most of the color.
+5. A near-black editorial/leadership feature (`#1B1B1F`) with white type and high-contrast statistics.
+6. A return to white or pale neutral metric/insight sections.
+7. A saturated purple–pink–mint gradient closing CTA, followed by a dark footer with grouped links and contact details.
+
+On mobile, the same sequence remains intact: the hero is re-cropped, multi-column areas stack, and rails become touch-friendly horizontal groups. The pale band and closing gradient are not removed to simplify the page. This is the strongest reference lesson for Vakratund: vary the background field by story purpose, instead of repeating one dark surface or one orange band.
+
+### Accent and text usage
+
+Purple is used as a focused action/highlight color, not as a page-wide fill: it appears in key buttons, one highlighted hero word, selected controls and the opening side of the closing gradient. Mint is the secondary action/highlight color and appears mainly in the closing gradient and selected supporting controls. A neutral gray (`#E7E7E8`) is used for compact utility controls. The dominant text is near-black (`#1B1B1F`) on light surfaces; hero/dark editorial text is white; muted copy is materially lower contrast but remains visually subordinate. Images, rather than color accents, carry most of the saturation in the case-study areas.
+
+Vakratund borrows the focus and restraint of this accent usage through `ACCENT_SET: REFERENCE`. The existing construction orange is retained only as the small logo-mark signature token; it is not used for page bands or repeated buttons. Images provide most of the visual color.
 
 ## 3. Layout and image treatment
 
@@ -53,8 +90,9 @@ The page alternates white and cool pale-lavender surfaces, then inserts a charco
 - **Grid:** editorial two-column compositions recur, pairing a large statement or graphic with imagery. Content tiles and featured work use horizontal rails/carousels; job and insight lists are cards. At 390px these layouts stack or become swipeable rails rather than shrinking desktop columns.
 - **Vertical rhythm:** broad blocks with generous whitespace. At desktop, the sampled section labels were roughly 400–650px apart in document flow; mobile sections become longer due to stacked content, and the full document measured about 9,884px at 390px versus about 9,200px at 1440px. These heights depend on dynamic content and are not design tokens.
 - **Corners:** featured case-study image/card measured around 15px radius; pill buttons and chips are strongly rounded (around 20px or fully pill-shaped). The hero collage uses rounded image tiles and a broad rounded lower edge. The overall system favors soft corners, not square-edged construction detail.
-- **Borders/shadows:** cards rely more on surface contrast and image framing than visible borders. Some buttons/cards use light shadow or no obvious shadow; controls can use a solid white plate. Avoid treating every tile as a bordered card.
-- **Images:** editorial people and client/culture photography, with mixed tile sizes and crops. Hero is a dark, full-bleed collage of rounded photo tiles behind centered type. Feature cards use large edge-to-edge image crops with text and translucent metric overlays. Sampled sources included AVIF and WebP, plus SVG/JPG/PNG; image sources had responsive size variants. The hero's photo grid is the site's main visual signature and should not be recreated for Vakratund.
+- **Borders/shadows:** cards rely more on surface contrast and image framing than visible borders. Some buttons/cards use a light shadow or no obvious shadow; controls can use a solid white plate. The dominant card recipe is a rounded image crop plus a compact label/metric treatment, not a boxed panel with multiple nested borders. Avoid treating every tile as a bordered card.
+- **Gradients:** the distinctive gradient is reserved for the full-width closing conversion field, moving from purple through pale pink into mint. A gradient also highlights a hero word/button state, but the broad page fields remain flat white, pale lavender-gray or charcoal.
+- **Images:** editorial people and client/culture photography use mixed tile sizes and crops. The hero is a dark, full-bleed collage of rounded photo tiles behind centered type. Feature cards use large edge-to-edge image crops with text and translucent metric overlays. Sampled sources included AVIF and WebP, plus SVG/JPG/PNG; image sources had responsive size variants. The hero's photo grid is the site's main visual signature and should not be recreated for Vakratund. Vakratund's adaptation should use one approved project image per focal section, consistent crops, and a restrained dark readability overlay rather than a collage.
 
 ## 4. Home-page section blueprint
 
@@ -134,10 +172,16 @@ With reduced motion emulated, the sampled infinite 96s and 60s animations still 
 9. Keep a persistent, clear “Get Free Quote” or “Request Site Inspection” action; on mobile ensure it does not obscure form fields or the bottom action bar.
 10. Use section contrast intentionally—Vakratund's warm beige/white and charcoal from its token system—and reserve motion for small, purposeful transitions that honor reduced motion.
 
+## Recommendation from the theme review
+
+Recommend **ACCENT_SET: REFERENCE**. It captures the reference site's strongest structural lesson—white/light breathing room, a cool alternate band, one substantial dark editorial field, image-led cards and a gradient-led conversion moment—without importing its recruitment imagery, copy, logo, icons or code. Vakratund's orange remains a tiny signature mark, while lavender and mint are used as restrained, accessible interface accents.
+
+The prior A/B/C comparison remains available at `/design-system/themes` for review, but the selected reference palette is now the live token set. Keep the reference-inspired values scoped to Vakratund's own components and content.
+
 ### What we must not copy
 
 - No Sphere wording, taglines, recruitment messaging, section copy, logos, client marks, job data, photography, graphics or icons.
-- No purple/mint palette or their distinctive gradient; retain Vakratund's amber/charcoal/warm-neutral brand tokens.
+- No copied reference palette as branding, text, imagery or identity; use the adapted lavender/mint tokens only as Vakratund interface styling. Keep the orange signature mark intact.
 - No recreation of the exact image-tile hero collage, orbit graphic, client-logo strip, page composition or card styling as a pixel-level clone.
 - No unverified project counts, area totals, claims, customer names or testimonials for Vakratund. Use only approved facts from `CONTENT.md` and client permissions.
 - No continuous marquees, rotating diagrams, parallax or auto-moving carousels by default; avoid motion that adds little to construction-service discovery, and always respect reduced-motion preferences.

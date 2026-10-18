@@ -4,13 +4,14 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { CloudImage } from "@/components/cloud-image";
 import {
-  HoverCard,
   MaskImage,
   Parallax,
   Reveal,
   RevealGroup,
 } from "@/components/motion";
 import { ProjectEnquiryCta } from "@/components/site/project-enquiry-cta";
+import { ProjectBeforeAfter } from "@/components/site/project-before-after";
+import { ProjectMediaLightbox } from "@/components/site/project-media-lightbox";
 import { BreadcrumbJsonLd, CreativeWorkJsonLd } from "@/components/seo/json-ld";
 import {
   Badge,
@@ -70,6 +71,9 @@ export default async function ProjectRoute({
   const project = await getPublishedProject(slug).catch(() => null);
   if (!project) notFound();
   const images = project.media.filter((media) => media.kind === "IMAGE");
+  const before = project.media.find((media) => media.isBefore && media.kind === "IMAGE");
+  const after = project.media.find((media) => media.isAfter && media.kind === "IMAGE");
+  const relatedProjects = (await getPublishedProjects()).filter((item) => item.slug !== project.slug && (item.service?.slug === project.service?.slug || item.locationText === project.locationText)).slice(0, 3);
   const breadcrumbs = [
     { name: "Home", item: "/" },
     { name: "Projects", item: "/projects" },
@@ -91,7 +95,9 @@ export default async function ProjectRoute({
         }}
       />
       <BreadcrumbJsonLd items={breadcrumbs} />
-      <section className="bg-charcoal pt-28 text-white sm:pt-32">
+      <section className="section-dark relative overflow-hidden pt-28 sm:pt-32">
+        {images[0] ? <div className="absolute inset-0 -z-10 opacity-25"><Parallax className="absolute inset-[-5%]" speed={0.08}><CloudImage src={images[0].url} alt="" fill sizes="100vw" priority className="object-cover" /></Parallax></div> : <div className="home-blueprint-pattern absolute inset-0 -z-10 opacity-30" aria-hidden="true" />}
+        <div className="absolute inset-0 -z-10 bg-dark/85" aria-hidden="true" />
         <Container className="section-space-compact">
           <Reveal>
             <Breadcrumbs
@@ -134,12 +140,12 @@ export default async function ProjectRoute({
                     </Parallax>
                   </div>
                 </MaskImage>
-              ) : null}
+              ) : <div className="home-blueprint-pattern flex aspect-[4/3] items-center justify-center rounded-panel border border-white/10 bg-dark/50" aria-label="Project image coming soon"><span className="font-heading text-[clamp(5rem,16vw,12rem)] font-bold tracking-[-0.08em] text-white/15">{project.year ?? "—"}</span></div>}
             </div>
           </Reveal>
         </Container>
       </section>
-      <Container className="py-14 lg:py-24">
+      <Container className="section-light py-14 lg:py-24">
         <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-start lg:gap-16">
           <article className="min-w-0">
             <Link
@@ -148,7 +154,7 @@ export default async function ProjectRoute({
             >
               <ArrowLeft size={16} aria-hidden="true" /> Back to projects
             </Link>
-            <section className="mt-10 rounded-panel border bg-surface p-5 lg:sticky lg:top-28">
+            <section className="mt-10 rounded-panel border border-line bg-tint p-5 lg:sticky lg:top-28">
               <SectionHeading
                 eyebrow="Project facts"
                 title="Scope and delivery"
@@ -164,6 +170,7 @@ export default async function ProjectRoute({
                   ],
                   ["Floors", project.floorsText],
                   ["Scope", project.scopeText],
+                  ["Status", project.status === "COMPLETED" ? "Completed" : "Ongoing"],
                   ["Year", project.year?.toString()],
                 ]
                   .filter((entry): entry is [string, string] =>
@@ -179,6 +186,7 @@ export default async function ProjectRoute({
                     </div>
                   ))}
               </dl>
+              {project.status === "ONGOING" && project.progressPct !== null ? <div className="mt-6 border-t border-line pt-5"><div className="flex justify-between gap-3 text-sm font-semibold"><span>Progress</span><span>{Math.max(0, Math.min(100, project.progressPct))}%</span></div><div className="mt-2 h-2 overflow-hidden rounded-pill bg-bg"><div className="h-full rounded-pill bg-accent" style={{ width: `${Math.max(0, Math.min(100, project.progressPct))}%` }} /></div></div> : null}
             </section>
             {project.description ? (
               <MarkdownRenderer
@@ -186,31 +194,11 @@ export default async function ProjectRoute({
                 className="prose prose-slate mt-12 max-w-none leading-8 text-ink-muted prose-headings:font-heading prose-headings:text-ink prose-a:text-brand-deep"
               />
             ) : null}
-            {images.length > 1 ? (
+            {before && after ? <section className="mt-14"><SectionHeading eyebrow="Transformation" title="Before and after" /><div className="mt-8"><ProjectBeforeAfter before={before} after={after} /></div></section> : null}
+            {images.length > 0 ? (
               <section className="mt-14">
                 <SectionHeading eyebrow="Gallery" title="Project images" />
-                <RevealGroup className="mt-8 grid gap-4 sm:grid-cols-2">
-                  {images.slice(1).map((image) => (
-                    <Reveal key={image.id}>
-                      <HoverCard className="rounded-card">
-                        <figure className="overflow-hidden rounded-card bg-surface-alt">
-                          <MaskImage>
-                            <div className="relative aspect-[4/3]">
-                              <CloudImage
-                                src={image.url}
-                                alt={image.alt}
-                                fill
-                                sizes="(min-width: 768px) 40vw, 100vw"
-                                data-hover-image
-                                className="object-cover"
-                              />
-                            </div>
-                          </MaskImage>
-                        </figure>
-                      </HoverCard>
-                    </Reveal>
-                  ))}
-                </RevealGroup>
+                <div className="mt-8"><ProjectMediaLightbox images={images} /></div>
               </section>
             ) : null}
           </article>
@@ -233,6 +221,7 @@ export default async function ProjectRoute({
           </aside>
         </div>
       </Container>
+      {relatedProjects.length > 0 ? <section className="section-tint"><Container className="section-space"><SectionHeading eyebrow="Continue exploring" title="Related projects" /><RevealGroup className="mt-8 grid gap-5 md:grid-cols-3">{relatedProjects.map((item) => <Reveal key={item.id}><Link href={`/projects/${item.slug}`} className="group block rounded-card border border-line bg-bg p-5 shadow-soft focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"><p className="eyebrow">{item.service?.title ?? "Project"}</p><h2 className="mt-3 font-heading text-xl font-semibold">{item.title}</h2><p className="mt-2 line-clamp-2 text-sm leading-6 text-ink-muted">{item.summary}</p><span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-accent-ink">View project <span className="transition-transform group-hover:translate-x-1" aria-hidden="true">↗</span></span></Link></Reveal>)}</RevealGroup></Container></section> : null}
     </>
   );
 }

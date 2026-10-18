@@ -209,9 +209,13 @@ model Service {
   id           String           @id @default(cuid())
   slug         String           @unique
   title        String
+  group        String?
   shortDesc    String
   description  String
   scopeItems   String[]
+  processSteps String[]         @default([])
+  typicalProjects String?
+  audience     String?
   iconKey      String?
   coverId      String?
   status       PublishStatus    @default(PUBLISHED)
@@ -441,6 +445,7 @@ model SiteSetting {
   email          String?
   whatsappNumber String?
   whatsappMessage String?
+  responseTimeText String?
   address        String?
   mapEmbedUrl    String?
   businessHours  Json?

@@ -9,7 +9,7 @@ import { pageSectionSchemas } from "@/lib/validation/pages";
 import { getPublishedFaqs } from "@/server/queries/faqs";
 import { getFeaturedGallery } from "@/server/queries/gallery";
 import { getPublishedBlogPostsPage } from "@/server/queries/blog";
-import { getPublishedProjects } from "@/server/queries/projects";
+import { getPublishedProjectCount, getPublishedProjects } from "@/server/queries/projects";
 import { getPublicSettings } from "@/server/queries/settings";
 import { getPublishedServices, type PublishedService } from "@/server/queries/services";
 import { getVisibleTeamMembers } from "@/server/queries/team";
@@ -54,6 +54,7 @@ export type HomePageData = {
   cta: HomeCta | null;
   services: Awaited<ReturnType<typeof getPublishedServices>>;
   featuredProjects: Awaited<ReturnType<typeof getPublishedProjects>>;
+  publishedProjectCount: number;
   featuredGallery: Awaited<ReturnType<typeof getFeaturedGallery>>;
   structuralService: PublishedService | null;
   testimonials: Awaited<ReturnType<typeof getPublishedTestimonials>>;
@@ -141,7 +142,7 @@ export function normalizeHomeCta(value: Prisma.JsonValue): HomeCta | null {
 
 function fallbackHero(settings: ResolvedSiteSettings): HomeHero {
   const phone = settings.phones[0] ?? "";
-  return { eyebrow: "", title: "", description: "", trustChips: [], primaryCta: "Get Free Quote", primaryHref: "/estimate", secondaryCta: "Call Now", secondaryHref: phone ? `tel:${phone}` : "/contact", backgroundImageId: null };
+  return { eyebrow: "Project Management Consultant & Turnkey Project Developers", title: "Building trust since 2003", description: "Civil engineering services for project management, repairs and rehabilitation of RCC structures, and construction of new buildings.", trustChips: ["MSME registered", "Insured workforce", "Since 2003"], primaryCta: "Get Free Quote", primaryHref: "/estimate", secondaryCta: "Call Now", secondaryHref: phone ? `tel:${phone}` : "/contact", backgroundImageId: null };
 }
 
 function fallbackProjectsSection(): HomeProjectsSection {
@@ -150,16 +151,17 @@ function fallbackProjectsSection(): HomeProjectsSection {
 
 function fallbackHomePageData(): HomePageData {
   const settings = resolveSiteSettings(null);
-  return { settings, hero: fallbackHero(settings), heroVisible: true, heroImage: null, stats: null, servicesSection: null, servicesVisible: false, projectsSection: fallbackProjectsSection(), projectsVisible: true, whySection: null, whyVisible: false, process: null, specialtySection: null, specialtyVisible: false, insightsSection: null, insightsVisible: false, latestInsights: [], faqSection: null, faqVisible: false, estimatorSection: null, estimatorVisible: false, cta: null, services: [], featuredProjects: [], featuredGallery: [], structuralService: null, testimonials: [], faqs: [], team: [] };
+  return { settings, hero: fallbackHero(settings), heroVisible: true, heroImage: null, stats: null, servicesSection: null, servicesVisible: false, projectsSection: fallbackProjectsSection(), projectsVisible: true, whySection: null, whyVisible: false, process: null, specialtySection: null, specialtyVisible: false, insightsSection: null, insightsVisible: false, latestInsights: [], faqSection: null, faqVisible: false, estimatorSection: null, estimatorVisible: false, cta: null, services: [], featuredProjects: [], featuredGallery: [], publishedProjectCount: 0, structuralService: null, testimonials: [], faqs: [], team: [] };
 }
 
 async function readHomePageData(): Promise<HomePageData> {
   try {
-    const [settingsRow, sections, services, featuredProjects, featuredGallery, testimonials, faqs, team, latestBlogPage] = await Promise.all([
+    const [settingsRow, sections, services, featuredProjects, publishedProjectCount, featuredGallery, testimonials, faqs, team, latestBlogPage] = await Promise.all([
       getPublicSettings(),
       prisma.pageSection.findMany({ where: { pageKey: "home" }, orderBy: { sortOrder: "asc" }, select: { sectionKey: true, content: true, isVisible: true } }),
       getPublishedServices(),
       getPublishedProjects({ isFeatured: true }),
+      getPublishedProjectCount(),
       getFeaturedGallery(),
       getPublishedTestimonials(),
       getPublishedFaqs(),
@@ -168,7 +170,8 @@ async function readHomePageData(): Promise<HomePageData> {
     ]);
     const settings = resolveSiteSettings(settingsRow);
     const heroSection = sections.find((section) => section.sectionKey === "hero");
-    const hero = heroSection ? normalizeHomeHero(heroSection.content, settings.phones[0] ?? "") ?? fallbackHero(settings) : fallbackHero(settings);
+    const parsedHero = heroSection ? normalizeHomeHero(heroSection.content, settings.phones[0] ?? "") : null;
+    const hero = parsedHero?.title?.trim() ? parsedHero : fallbackHero(settings);
     const statsSection = sections.find((section) => section.sectionKey === "stats");
     const servicesSection = sections.find((section) => section.sectionKey === "services");
     const projectsSection = sections.find((section) => section.sectionKey === "projects");
@@ -206,6 +209,7 @@ async function readHomePageData(): Promise<HomePageData> {
       cta: ctaSection?.isVisible ? normalizeHomeCta(ctaSection.content) : null,
       services,
       featuredProjects,
+      publishedProjectCount,
       featuredGallery,
       structuralService: services.find((service) => service.slug === "structural-repairs-rehabilitation") ?? null,
       testimonials,

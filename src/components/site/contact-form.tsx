@@ -40,6 +40,8 @@ export function ContactForm({ projectPrefill = "", projectSlug = "" }: ContactFo
     setSubmitted(true);
   };
 
+  if (submitted) return <div className="rounded-card border border-accent/40 bg-accent/10 p-6" role="status"><p className="eyebrow">Enquiry received</p><h3 className="mt-2 font-heading text-2xl font-semibold text-ink">Thank you for reaching out.</h3><p className="mt-3 leading-7 text-ink-muted">Your details have been saved. Our team will review your requirement and follow up with the next useful step.</p><Link href="/projects" className="mt-5 inline-flex min-h-11 items-center rounded-pill bg-dark px-5 font-semibold text-white">Explore projects <span className="ml-2" aria-hidden="true">{"\u2197"}</span></Link></div>;
+
   return (
     <form className="space-y-5" onSubmit={handleSubmit(onSubmit)} noValidate>
       <div className="grid gap-5 sm:grid-cols-2">

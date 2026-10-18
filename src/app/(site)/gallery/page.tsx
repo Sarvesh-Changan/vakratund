@@ -10,7 +10,7 @@ import {
   getGalleryLandingData,
   getPublishedGallery,
 } from "@/server/queries/gallery";
-import type { GalleryDesignType } from "@/generated/prisma/client";
+import type { GalleryDesignType, GalleryMediaType } from "@/generated/prisma/client";
 import { PageHero } from "@/components/site/page-hero";
 
 export const metadata: Metadata = {
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 };
 
 type GalleryPageProps = {
-  searchParams: Promise<{ category?: string; design?: string }>;
+  searchParams: Promise<{ category?: string; design?: string; media?: string }>;
 };
 
 export default async function GalleryPage({ searchParams }: GalleryPageProps) {
@@ -29,11 +29,13 @@ export default async function GalleryPage({ searchParams }: GalleryPageProps) {
     params.design === "INTERIOR" || params.design === "EXTERIOR"
       ? params.design
       : undefined;
-  const landing = await getGalleryLandingData(designType);
+  const mediaType: GalleryMediaType | undefined =
+    params.media === "IMAGE" || params.media === "VIDEO" ? params.media : undefined;
+  const landing = await getGalleryLandingData(designType).catch(() => ({ categories: [], items: [] }));
   const selectedCategory = landing.categories.find(
     (category) => category.slug === params.category,
   );
-  const items = await getPublishedGallery(selectedCategory?.slug, designType);
+  const items = await getPublishedGallery(selectedCategory?.slug, designType, mediaType).catch(() => []);
   const breadcrumbs = [
     { name: "Home", item: "/" },
     { name: "Gallery", item: "/gallery" },
@@ -51,7 +53,7 @@ export default async function GalleryPage({ searchParams }: GalleryPageProps) {
         title="Construction gallery"
         description="Browse selected interior and exterior construction, repair and rehabilitation work."
       />
-      <section className="bg-surface-alt">
+      <section className="section-tint">
         <Container className="section-space-generous">
           {landing.categories.length > 0 ? (
             <section className="mb-16" aria-label="Gallery categories">
@@ -60,7 +62,7 @@ export default async function GalleryPage({ searchParams }: GalleryPageProps) {
                   <Reveal key={category.id}>
                     <HoverCard className="rounded-card">
                       <Link
-                        href={`/gallery?category=${encodeURIComponent(category.slug)}${designType ? `&design=${designType}` : ""}`}
+                        href={`/gallery?category=${encodeURIComponent(category.slug)}${designType ? `&design=${designType}` : ""}${mediaType ? `&media=${mediaType}` : ""}`}
                         className="group relative block overflow-hidden rounded-card bg-surface focus-visible:outline-2 focus-visible:outline-brand-deep focus-visible:outline-offset-2"
                       >
                         <MaskImage>
@@ -96,6 +98,10 @@ export default async function GalleryPage({ searchParams }: GalleryPageProps) {
                 >
                   {selectedCategory?.name ?? "All published work"}
                 </h2>
+                <div className="mt-5 flex flex-wrap gap-2" aria-label="Gallery quick filters">
+                  {[{ label: "All design", value: "all" }, { label: "Interior", value: "INTERIOR" }, { label: "Exterior", value: "EXTERIOR" }].map((chip) => <Link key={chip.value} href={`/gallery?${selectedCategory ? `category=${encodeURIComponent(selectedCategory.slug)}&` : ""}${chip.value === "all" ? "" : `design=${chip.value}&`}${mediaType ? `media=${mediaType}` : ""}`} aria-current={(chip.value === "all" ? !designType : chip.value === designType) ? "page" : undefined} className={`inline-flex min-h-10 items-center rounded-pill border px-4 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 ${(chip.value === "all" ? !designType : chip.value === designType) ? "border-dark bg-dark text-white" : "border-line bg-bg text-ink hover:bg-tint"}`}>{chip.label}</Link>)}
+                  {[{ label: "All media", value: "all" }, { label: "Images", value: "IMAGE" }, { label: "Video", value: "VIDEO" }].map((chip) => <Link key={chip.value} href={`/gallery?${selectedCategory ? `category=${encodeURIComponent(selectedCategory.slug)}&` : ""}${designType ? `design=${designType}&` : ""}${chip.value === "all" ? "" : `media=${chip.value}`}`} aria-current={(chip.value === "all" ? !mediaType : chip.value === mediaType) ? "page" : undefined} className={`inline-flex min-h-10 items-center rounded-pill border px-4 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 ${(chip.value === "all" ? !mediaType : chip.value === mediaType) ? "border-accent bg-accent/15 text-accent-ink" : "border-line bg-bg text-ink hover:bg-tint"}`}>{chip.label}</Link>)}
+                </div>
               </div>
               <form method="get" className="flex flex-wrap items-end gap-3">
                 <label className="text-sm font-semibold">
@@ -111,6 +117,14 @@ export default async function GalleryPage({ searchParams }: GalleryPageProps) {
                         {category.name}
                       </option>
                     ))}
+                  </select>
+                </label>
+                <label className="text-sm font-semibold">
+                  Media
+                  <select name="media" defaultValue={mediaType ?? "all"} className="mt-1 block min-h-11 rounded-control border bg-surface px-3">
+                    <option value="all">Images and video</option>
+                    <option value="IMAGE">Images</option>
+                    <option value="VIDEO">Video</option>
                   </select>
                 </label>
                 <label className="text-sm font-semibold">

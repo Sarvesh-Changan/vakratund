@@ -29,6 +29,8 @@ import {
 } from "@/components/ui";
 import { submitQuote } from "@/app/(site)/estimate/actions";
 import { getLeadTracking } from "./attribution";
+import { ServiceIcon } from "./service-icon";
+import { CountUp } from "@/components/motion";
 
 const steps = [
   { label: "Service" },
@@ -156,14 +158,15 @@ function EstimateSummary({
   return (
     <Card
       aria-live="polite"
-      className="border-brand/30 bg-surface shadow-raised"
+      className="border-accent/30 bg-bg shadow-raised"
     >
-      <p className="text-sm font-semibold uppercase tracking-[0.14em] text-brand-deep">
+      <p className="eyebrow text-accent-ink">
         {config.name}
       </p>
       {result.low !== null && result.high !== null ? (
         <>
-          <p className="mt-3 font-heading text-3xl font-bold">
+          <p className="mt-3 font-heading text-3xl font-bold text-accent-ink sm:text-4xl"><CountUp value={result.low} prefix="₹" /> <span aria-hidden="true">–</span> <CountUp value={result.high} prefix="₹" /></p>
+          <p className="sr-only">
             {currency.format(result.low)} – {currency.format(result.high)}
           </p>
           <p className="mt-2 text-sm text-ink-muted">Indicative range</p>
@@ -535,9 +538,10 @@ export function EstimateFlow({
                     type="button"
                     key={item.slug}
                     onClick={() => selectService(item.slug)}
-                    className={`min-h-28 rounded-card border p-5 text-left transition-colors hover:bg-surface-alt focus-visible:outline-2 focus-visible:outline-brand-deep focus-visible:outline-offset-2 ${item.slug === config.slug ? "border-brand bg-brand/10" : "bg-surface"}`}
+                    className={`group min-h-32 rounded-card border p-5 text-left shadow-soft transition-[background-color,border-color,box-shadow,transform] hover:-translate-y-1 hover:bg-tint hover:shadow-raised focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 ${item.slug === config.slug ? "border-accent bg-accent/10 shadow-raised" : "border-line bg-bg"}`}
                   >
-                    <span className="font-heading text-lg font-semibold">
+                    <span className="flex size-12 items-center justify-center rounded-full bg-accent/15 text-accent-ink transition-transform group-hover:scale-105"><ServiceIcon iconKey={item.slug.includes("water") ? "Droplets" : item.slug.includes("paint") ? "Paintbrush" : item.slug.includes("repair") ? "Wrench" : item.slug.includes("interior") ? "PanelsTopLeft" : "Building2"} size={24} /></span>
+                    <span className="mt-4 block font-heading text-lg font-semibold">
                       {item.name}
                     </span>
                     <span className="mt-2 block text-sm text-ink-muted">
@@ -724,6 +728,10 @@ export function EstimateFlow({
                 Share your details and our team can follow up about this
                 project.
               </p>
+              <div className="mt-5 rounded-card border border-accent/25 bg-accent/10 p-4 text-sm leading-6 text-ink-muted">
+                <p className="font-semibold text-ink">Your details stay with our team.</p>
+                <p className="mt-1">We use them only to respond to this enquiry and plan the next useful conversation.</p>
+              </div>
               {submitted ? (
                 <Card className="mt-8 border-success/40 bg-success/10">
                   <h2 className="font-heading text-xl font-bold">

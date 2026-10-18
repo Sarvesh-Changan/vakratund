@@ -25,9 +25,13 @@ import { createService, updateService } from "@/app/(admin)/admin/(protected)/se
 const validInput = {
   title: "Building Construction",
   slug: "",
+  group: "",
   shortDesc: "Construction service.",
   description: "A Markdown description.",
   scopeItems: ["RCC works"],
+  processSteps: [],
+  typicalProjects: "",
+  audience: "",
   iconKey: "Building2",
   coverId: null,
   isFeatured: false,

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { CheckCircle2 } from "lucide-react";
 
 import { AnalyticsConversion } from "@/components/site/analytics-conversion";
 import { ContactLink, TrackedWhatsAppLink } from "@/components/site/contact-link";
@@ -37,6 +38,7 @@ export default async function EstimateThankYouPage({ searchParams }: { searchPar
       <AnalyticsConversion events={["generate_lead", "estimate_completed"]} reference={quote.publicId} />
       <div className="mx-auto max-w-3xl">
         <Breadcrumbs items={breadcrumbs.map((item) => ({ label: item.name, href: item.item }))} />
+        <CheckCircle2 className="success-check mt-8 text-success" size={48} aria-hidden="true" />
         <p className="text-sm font-bold uppercase tracking-[0.16em] text-brand-deep">Enquiry received</p>
         <h1 className="mt-4 font-heading text-4xl font-bold sm:text-5xl">Thank you for getting in touch.</h1>
         <p className="mt-5 text-lg leading-8 text-ink-muted">Your reference is <strong className="text-ink">{quote.publicId}</strong>. Please keep it handy when speaking with our team.</p>

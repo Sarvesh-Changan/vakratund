@@ -10,6 +10,7 @@ import { ContactLink, TrackedWhatsAppLink } from "./contact-link";
 import { ContactForm } from "./contact-form";
 import type { ResolvedSiteSettings } from "@/config/site";
 import { WhatsAppIcon } from "@/components/ui/whatsapp-icon";
+import { ContactCopyButton } from "./contact-copy-button";
 
 const breadcrumbs = [
   { name: "Home", item: "/" },
@@ -29,7 +30,7 @@ export function ContactPage({
   return (
     <>
       <BreadcrumbJsonLd items={breadcrumbs} />
-      <section className="bg-charcoal pt-32 text-white sm:pt-36">
+      <section className="section-dark pt-28 text-white sm:pt-32">
         <Container className="section-space-compact">
           <Reveal>
             <Breadcrumbs
@@ -51,7 +52,7 @@ export function ContactPage({
         </Container>
       </section>
 
-      <Container className="py-16 lg:py-24">
+      <section className="section-light"><Container className="section-space-generous">
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(20rem,0.72fr)] lg:items-start lg:gap-12">
           <Reveal>
             <Card className="p-6 sm:p-8">
@@ -83,14 +84,7 @@ export function ContactPage({
                           size={18}
                           aria-hidden="true"
                         />
-                        <ContactLink
-                          href={phoneHref(phone)}
-                          eventType="CALL"
-                          context="contact-page-phone"
-                          className="font-semibold text-brand-deep underline-offset-4 hover:underline"
-                        >
-                          {phone}
-                        </ContactLink>
+                        <div className="flex min-w-0 flex-1 items-center justify-between gap-3"><ContactLink href={phoneHref(phone)} eventType="CALL" context="contact-page-phone" className="font-semibold text-accent-ink underline-offset-4 hover:underline">{phone}</ContactLink><ContactCopyButton value={phone} label="phone number" /></div>
                       </li>
                     ))}
                     {whatsappHref(settings, { pageTitle: "Contact page" }) ? (
@@ -115,12 +109,7 @@ export function ContactPage({
                           size={18}
                           aria-hidden="true"
                         />
-                        <a
-                          href={`mailto:${settings.email}`}
-                          className="font-semibold text-brand-deep underline-offset-4 hover:underline"
-                        >
-                          {settings.email}
-                        </a>
+                        <div className="flex min-w-0 flex-1 items-center justify-between gap-3"><a href={`mailto:${settings.email}`} className="break-all font-semibold text-accent-ink underline-offset-4 hover:underline">{settings.email}</a><ContactCopyButton value={settings.email} label="email address" /></div>
                       </li>
                     ) : null}
                     <li className="flex gap-3">
@@ -161,7 +150,7 @@ export function ContactPage({
                       ))}
                     </dl>
                   ) : (
-                    <p className="mt-4 text-sm text-ink-muted">
+                  <p className="mt-4 text-sm text-ink-muted">
                       Hours are available on request. Please call or message us.
                     </p>
                   )}
@@ -208,7 +197,8 @@ export function ContactPage({
             )}
           </div>
         </section>
-      </Container>
+        <div className="mt-8 grid gap-4 rounded-card border border-line bg-tint p-5 sm:grid-cols-2"><div><p className="eyebrow">What happens next</p><p className="mt-2 text-sm leading-6 text-ink-muted">{settings.responseTimeText}</p></div><div className="sm:border-l sm:border-line sm:pl-5"><p className="eyebrow">Privacy first</p><p className="mt-2 text-sm leading-6 text-ink-muted">Your details are used only to respond to this enquiry. Read our <Link href="/privacy" className="font-semibold text-accent-ink underline-offset-4 hover:underline">Privacy Policy</Link>.</p></div></div>
+      </Container></section>
     </>
   );
 }

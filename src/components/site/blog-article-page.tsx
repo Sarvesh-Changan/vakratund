@@ -13,6 +13,7 @@ import type { ResolvedSiteSettings } from "@/config/site";
 import type { PublishedBlogPost } from "@/server/queries/blog";
 import { buildWhatsAppShareHref } from "@/lib/contact/whatsapp";
 import { WhatsAppIcon } from "@/components/ui/whatsapp-icon";
+import { ReadingProgress } from "./reading-progress";
 
 const breadcrumbsFor = (post: PublishedBlogPost) =>
   [
@@ -64,6 +65,7 @@ export function BlogArticlePage({
   const authorName = post.author?.name ?? settings.businessName;
   return (
     <>
+      <ReadingProgress />
       <ArticleJsonLd
         article={{
           headline: post.title,
@@ -77,7 +79,7 @@ export function BlogArticlePage({
       />
       <BreadcrumbJsonLd items={breadcrumbs} />
       <article>
-        <header className="bg-charcoal pt-28 text-white sm:pt-32">
+        <header className="section-dark pt-28 text-white sm:pt-32">
           <Container className="section-space-compact">
             <Reveal>
               <Breadcrumbs
@@ -127,7 +129,7 @@ export function BlogArticlePage({
             </Reveal>
           </Container>
         </header>
-        <Container className="section-space">
+        <Container className="section-light section-space">
           <div className="grid gap-12 lg:grid-cols-[minmax(0,68ch)_16rem] lg:items-start lg:justify-between lg:gap-16">
             <div className="min-w-0">
               <Link
@@ -143,6 +145,7 @@ export function BlogArticlePage({
               />
             </div>
             <aside className="space-y-6 lg:sticky lg:top-28">
+              <div className="rounded-card border border-line bg-tint p-5"><p className="eyebrow">Written by</p><div className="mt-4 flex items-center gap-3"><span className="flex size-12 items-center justify-center rounded-full bg-cta-gradient font-heading font-bold text-dark" aria-hidden="true">{authorName.split(/\s+/).map((part) => part[0]).join("").slice(0, 2)}</span><div><p className="font-semibold text-ink">{authorName}</p><p className="text-sm text-ink-muted">Vakratund Construction</p></div></div></div>
               <div>
                 <p className="text-sm font-semibold uppercase tracking-[0.12em] text-brand-deep">
                   Contents
@@ -220,7 +223,7 @@ export function BlogArticlePage({
           </div>
           {relatedPosts.length > 0 ? (
             <section
-              className="mt-20 border-t border-line pt-16"
+              className="section-tint mt-20 rounded-panel border border-line p-6 pt-12 sm:p-10"
               aria-labelledby="related-posts-heading"
             >
               <SectionHeading eyebrow="Keep reading" title="Related articles" />
@@ -237,6 +240,7 @@ export function BlogArticlePage({
             </section>
           ) : null}
         </Container>
+        <section className="section-gradient"><Container className="section-space text-center"><p className="eyebrow">Plan the next step</p><h2 className="mx-auto mt-3 max-w-2xl font-heading text-h2 font-semibold">Have a construction question of your own?</h2><p className="mx-auto mt-4 max-w-xl text-lg leading-8 text-dark/75">Share the context with our team and start a practical conversation.</p><Link href="/contact" className="mt-7 inline-flex min-h-12 items-center rounded-pill bg-dark px-6 font-semibold text-white transition-transform hover:-translate-y-0.5">Talk to the team <span className="ml-2" aria-hidden="true">{"\u2197"}</span></Link></Container></section>
       </article>
     </>
   );

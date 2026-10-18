@@ -16,10 +16,11 @@ const homeEstimatorSchema = z.object({ eyebrow: text(80), title: text(160), desc
 const processSchema = z.object({ eyebrow: optionalText(80), title: text(120), steps: z.array(z.object({ title: text(80), description: optionalText(240) }).strict()).min(1).max(8) }).strict();
 const ctaSchema = z.object({ title: text(160), description: optionalText(500), primaryCta: text(80), primaryHref: href, secondaryCta: optionalText(80), secondaryHref: href.optional().or(z.literal("")), callCta: optionalText(80), whatsappCta: optionalText(80) }).strict();
 const textSectionSchema = z.object({ title: text(160), body: text(20_000) }).strict();
+const aboutJourneySchema = z.object({ eyebrow: optionalText(80), title: text(120), milestones: z.array(z.object({ year: z.number().int().min(1900).max(2200), title: text(120), description: optionalText(240) }).strict()).max(12) }).strict();
 
 export const pageSectionSchemas = {
   home: { hero: heroSchema, stats: statsSchema, services: homeServicesSchema, projects: homeProjectsSchema, why: homeWhySchema, process: processSchema, specialty: homeSpecialtySchema, insights: homeInsightsSchema, faq: homeFaqSchema, estimator: homeEstimatorSchema, cta: ctaSchema },
-  about: { story: textSectionSchema, mission: textSectionSchema },
+  about: { story: textSectionSchema, mission: textSectionSchema, journey: aboutJourneySchema },
   legal: { privacy: textSectionSchema, terms: textSectionSchema },
 } as const;
 
@@ -37,6 +38,7 @@ export const pageSectionInputSchema = z.discriminatedUnion("sectionKey", [
   z.object({ pageKey: z.literal("home"), sectionKey: z.literal("cta"), content: ctaSchema, isVisible: z.boolean() }).strict(),
   z.object({ pageKey: z.literal("about"), sectionKey: z.literal("story"), content: textSectionSchema, isVisible: z.boolean() }).strict(),
   z.object({ pageKey: z.literal("about"), sectionKey: z.literal("mission"), content: textSectionSchema, isVisible: z.boolean() }).strict(),
+  z.object({ pageKey: z.literal("about"), sectionKey: z.literal("journey"), content: aboutJourneySchema, isVisible: z.boolean() }).strict(),
   z.object({ pageKey: z.literal("legal"), sectionKey: z.literal("privacy"), content: textSectionSchema, isVisible: z.boolean() }).strict(),
   z.object({ pageKey: z.literal("legal"), sectionKey: z.literal("terms"), content: textSectionSchema, isVisible: z.boolean() }).strict(),
 ]);

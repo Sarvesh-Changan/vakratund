@@ -12,9 +12,13 @@ import { createService, ServiceSlugConflictError } from "@/server/services/servi
 const input = {
   title: "Building Construction",
   slug: undefined,
+  group: "",
   shortDesc: "Construction service.",
   description: "A Markdown description.",
   scopeItems: ["RCC works"],
+  processSteps: [],
+  typicalProjects: "",
+  audience: "",
   iconKey: "Building2" as const,
   coverId: null,
   isFeatured: false,

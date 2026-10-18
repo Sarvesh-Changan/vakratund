@@ -19,5 +19,5 @@ export default async function ProjectEnquiryThankYou({ searchParams }: { searchP
   if (!reference || !publicReferenceSchema(reference)) notFound();
   const [lead, settings] = await Promise.all([getPublicLeadByReference(reference, "PROJECT_ENQUIRY"), getPublicSettings().catch(() => null)]);
   if (!lead) notFound();
-  return <LeadThankYou settings={resolveSiteSettings(settings)} eyebrow="Project enquiry received" title="Thank you for sharing the project." description="Your project enquiry has been saved. Our team will review the published project details and follow up with the right next step." breadcrumbs={[{ name: "Home", item: "/" }, { name: "Project enquiry", item: "/project-enquiry/thank-you" }]} />;
+  return <LeadThankYou reference={lead.publicId} settings={resolveSiteSettings(settings)} eyebrow="Project enquiry received" title="Thank you for sharing the project." description="Your project enquiry has been saved. Our team will review the published project details and follow up with the right next step." breadcrumbs={[{ name: "Home", item: "/" }, { name: "Project enquiry", item: "/project-enquiry/thank-you" }]} />;
 }
