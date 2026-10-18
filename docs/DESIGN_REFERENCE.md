@@ -73,7 +73,7 @@ The live page does not use a single background color throughout. Its visible seq
 3. A pale lavender-gray band (`#F0F1F8`) for industry, job and metric-led content.
 4. White image-led case-study and service areas, where photos supply most of the color.
 5. A near-black editorial/leadership feature (`#1B1B1F`) with white type and high-contrast statistics.
-6. A return to white or pale neutral metric/insight sections.
+6. A return to white or pale neutral metric sections.
 7. A saturated purple–pink–mint gradient closing CTA, followed by a dark footer with grouped links and contact details.
 
 On mobile, the same sequence remains intact: the hero is re-cropped, multi-column areas stack, and rails become touch-friendly horizontal groups. The pale band and closing gradient are not removed to simplify the page. This is the strongest reference lesson for Vakratund: vary the background field by story purpose, instead of repeating one dark surface or one orange band.
@@ -87,7 +87,7 @@ Vakratund borrows the focus and restraint of this accent usage through `ACCENT_S
 ## 3. Layout and image treatment
 
 - **Container:** visually broad but not uniformly full bleed. At 1440px, some large headings occupy about 877px and others about 652px; hero collage reaches almost the full 1440px width. These are observed content widths, not a claim that every section shares one max-width container. Desktop side gutters on ordinary content appear around 55–70px.
-- **Grid:** editorial two-column compositions recur, pairing a large statement or graphic with imagery. Content tiles and featured work use horizontal rails/carousels; job and insight lists are cards. At 390px these layouts stack or become swipeable rails rather than shrinking desktop columns.
+- **Grid:** editorial two-column compositions recur, pairing a large statement or graphic with imagery. Content tiles and featured work use horizontal rails/carousels; job and project lists are cards. At 390px these layouts stack or become swipeable rails rather than shrinking desktop columns.
 - **Vertical rhythm:** broad blocks with generous whitespace. At desktop, the sampled section labels were roughly 400–650px apart in document flow; mobile sections become longer due to stacked content, and the full document measured about 9,884px at 390px versus about 9,200px at 1440px. These heights depend on dynamic content and are not design tokens.
 - **Corners:** featured case-study image/card measured around 15px radius; pill buttons and chips are strongly rounded (around 20px or fully pill-shaped). The hero collage uses rounded image tiles and a broad rounded lower edge. The overall system favors soft corners, not square-edged construction detail.
 - **Borders/shadows:** cards rely more on surface contrast and image framing than visible borders. Some buttons/cards use a light shadow or no obvious shadow; controls can use a solid white plate. The dominant card recipe is a rounded image crop plus a compact label/metric treatment, not a boxed panel with multiple nested borders. Avoid treating every tile as a bordered card.
@@ -109,7 +109,6 @@ Visual order and purpose, from top to bottom:
 9. **Services overview** — editorial introduction with image and a compact accordion/list of service categories.
 10. **Dark editorial / leadership feature** — large image and statement with supporting narrative, followed by supporting statistics and a hiring action.
 11. **Recent performance numbers** — a distinct light metric band with one CTA.
-12. **Latest insights** — editorial cards/rail and link to the broader insight collection.
 13. **Closing conversion panel** — full-width gradient field and two clear audience actions.
 14. **Footer** — grouped navigation, social links, contact details, legal links and copyright.
 

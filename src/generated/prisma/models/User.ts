@@ -235,7 +235,6 @@ export type UserWhereInput = {
   activityLogs?: Prisma.ActivityLogListRelationFilter
   assignedLeads?: Prisma.LeadListRelationFilter
   leadNotes?: Prisma.LeadNoteListRelationFilter
-  blogPosts?: Prisma.BlogPostListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -255,7 +254,6 @@ export type UserOrderByWithRelationInput = {
   activityLogs?: Prisma.ActivityLogOrderByRelationAggregateInput
   assignedLeads?: Prisma.LeadOrderByRelationAggregateInput
   leadNotes?: Prisma.LeadNoteOrderByRelationAggregateInput
-  blogPosts?: Prisma.BlogPostOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -278,7 +276,6 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   activityLogs?: Prisma.ActivityLogListRelationFilter
   assignedLeads?: Prisma.LeadListRelationFilter
   leadNotes?: Prisma.LeadNoteListRelationFilter
-  blogPosts?: Prisma.BlogPostListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -332,7 +329,6 @@ export type UserCreateInput = {
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutAssignedToInput
   leadNotes?: Prisma.LeadNoteCreateNestedManyWithoutAuthorInput
-  blogPosts?: Prisma.BlogPostCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -352,7 +348,6 @@ export type UserUncheckedCreateInput = {
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
   assignedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutAssignedToInput
   leadNotes?: Prisma.LeadNoteUncheckedCreateNestedManyWithoutAuthorInput
-  blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUpdateInput = {
@@ -372,7 +367,6 @@ export type UserUpdateInput = {
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutAssignedToNestedInput
   leadNotes?: Prisma.LeadNoteUpdateManyWithoutAuthorNestedInput
-  blogPosts?: Prisma.BlogPostUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -392,7 +386,6 @@ export type UserUncheckedUpdateInput = {
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
   assignedLeads?: Prisma.LeadUncheckedUpdateManyWithoutAssignedToNestedInput
   leadNotes?: Prisma.LeadNoteUncheckedUpdateManyWithoutAuthorNestedInput
-  blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -557,22 +550,6 @@ export type UserUpdateOneWithoutActivityLogsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutActivityLogsInput, Prisma.UserUpdateWithoutActivityLogsInput>, Prisma.UserUncheckedUpdateWithoutActivityLogsInput>
 }
 
-export type UserCreateNestedOneWithoutBlogPostsInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutBlogPostsInput, Prisma.UserUncheckedCreateWithoutBlogPostsInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutBlogPostsInput
-  connect?: Prisma.UserWhereUniqueInput
-}
-
-export type UserUpdateOneWithoutBlogPostsNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutBlogPostsInput, Prisma.UserUncheckedCreateWithoutBlogPostsInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutBlogPostsInput
-  upsert?: Prisma.UserUpsertWithoutBlogPostsInput
-  disconnect?: Prisma.UserWhereInput | boolean
-  delete?: Prisma.UserWhereInput | boolean
-  connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutBlogPostsInput, Prisma.UserUpdateWithoutBlogPostsInput>, Prisma.UserUncheckedUpdateWithoutBlogPostsInput>
-}
-
 export type UserCreateNestedOneWithoutAssignedLeadsInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutAssignedLeadsInput, Prisma.UserUncheckedCreateWithoutAssignedLeadsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutAssignedLeadsInput
@@ -621,7 +598,6 @@ export type UserCreateWithoutSessionsInput = {
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutAssignedToInput
   leadNotes?: Prisma.LeadNoteCreateNestedManyWithoutAuthorInput
-  blogPosts?: Prisma.BlogPostCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -640,7 +616,6 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
   assignedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutAssignedToInput
   leadNotes?: Prisma.LeadNoteUncheckedCreateNestedManyWithoutAuthorInput
-  blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -675,7 +650,6 @@ export type UserUpdateWithoutSessionsInput = {
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutAssignedToNestedInput
   leadNotes?: Prisma.LeadNoteUpdateManyWithoutAuthorNestedInput
-  blogPosts?: Prisma.BlogPostUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -694,7 +668,6 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
   assignedLeads?: Prisma.LeadUncheckedUpdateManyWithoutAssignedToNestedInput
   leadNotes?: Prisma.LeadNoteUncheckedUpdateManyWithoutAuthorNestedInput
-  blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserCreateWithoutAccountsInput = {
@@ -713,7 +686,6 @@ export type UserCreateWithoutAccountsInput = {
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutAssignedToInput
   leadNotes?: Prisma.LeadNoteCreateNestedManyWithoutAuthorInput
-  blogPosts?: Prisma.BlogPostCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUncheckedCreateWithoutAccountsInput = {
@@ -732,7 +704,6 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
   assignedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutAssignedToInput
   leadNotes?: Prisma.LeadNoteUncheckedCreateNestedManyWithoutAuthorInput
-  blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type UserCreateOrConnectWithoutAccountsInput = {
@@ -767,7 +738,6 @@ export type UserUpdateWithoutAccountsInput = {
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutAssignedToNestedInput
   leadNotes?: Prisma.LeadNoteUpdateManyWithoutAuthorNestedInput
-  blogPosts?: Prisma.BlogPostUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -786,7 +756,6 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
   assignedLeads?: Prisma.LeadUncheckedUpdateManyWithoutAssignedToNestedInput
   leadNotes?: Prisma.LeadNoteUncheckedUpdateManyWithoutAuthorNestedInput
-  blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserCreateWithoutActivityLogsInput = {
@@ -805,7 +774,6 @@ export type UserCreateWithoutActivityLogsInput = {
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutAssignedToInput
   leadNotes?: Prisma.LeadNoteCreateNestedManyWithoutAuthorInput
-  blogPosts?: Prisma.BlogPostCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUncheckedCreateWithoutActivityLogsInput = {
@@ -824,7 +792,6 @@ export type UserUncheckedCreateWithoutActivityLogsInput = {
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   assignedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutAssignedToInput
   leadNotes?: Prisma.LeadNoteUncheckedCreateNestedManyWithoutAuthorInput
-  blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type UserCreateOrConnectWithoutActivityLogsInput = {
@@ -859,7 +826,6 @@ export type UserUpdateWithoutActivityLogsInput = {
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutAssignedToNestedInput
   leadNotes?: Prisma.LeadNoteUpdateManyWithoutAuthorNestedInput
-  blogPosts?: Prisma.BlogPostUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutActivityLogsInput = {
@@ -876,99 +842,6 @@ export type UserUncheckedUpdateWithoutActivityLogsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  assignedLeads?: Prisma.LeadUncheckedUpdateManyWithoutAssignedToNestedInput
-  leadNotes?: Prisma.LeadNoteUncheckedUpdateManyWithoutAuthorNestedInput
-  blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutAuthorNestedInput
-}
-
-export type UserCreateWithoutBlogPostsInput = {
-  id?: string
-  name: string
-  email: string
-  emailVerified?: boolean
-  image?: string | null
-  role?: $Enums.Role
-  isActive?: boolean
-  mustChangePassword?: boolean
-  lastLoginAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
-  assignedLeads?: Prisma.LeadCreateNestedManyWithoutAssignedToInput
-  leadNotes?: Prisma.LeadNoteCreateNestedManyWithoutAuthorInput
-}
-
-export type UserUncheckedCreateWithoutBlogPostsInput = {
-  id?: string
-  name: string
-  email: string
-  emailVerified?: boolean
-  image?: string | null
-  role?: $Enums.Role
-  isActive?: boolean
-  mustChangePassword?: boolean
-  lastLoginAt?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
-  assignedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutAssignedToInput
-  leadNotes?: Prisma.LeadNoteUncheckedCreateNestedManyWithoutAuthorInput
-}
-
-export type UserCreateOrConnectWithoutBlogPostsInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutBlogPostsInput, Prisma.UserUncheckedCreateWithoutBlogPostsInput>
-}
-
-export type UserUpsertWithoutBlogPostsInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutBlogPostsInput, Prisma.UserUncheckedUpdateWithoutBlogPostsInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutBlogPostsInput, Prisma.UserUncheckedCreateWithoutBlogPostsInput>
-  where?: Prisma.UserWhereInput
-}
-
-export type UserUpdateToOneWithWhereWithoutBlogPostsInput = {
-  where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutBlogPostsInput, Prisma.UserUncheckedUpdateWithoutBlogPostsInput>
-}
-
-export type UserUpdateWithoutBlogPostsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
-  assignedLeads?: Prisma.LeadUpdateManyWithoutAssignedToNestedInput
-  leadNotes?: Prisma.LeadNoteUpdateManyWithoutAuthorNestedInput
-}
-
-export type UserUncheckedUpdateWithoutBlogPostsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
   assignedLeads?: Prisma.LeadUncheckedUpdateManyWithoutAssignedToNestedInput
   leadNotes?: Prisma.LeadNoteUncheckedUpdateManyWithoutAuthorNestedInput
 }
@@ -989,7 +862,6 @@ export type UserCreateWithoutAssignedLeadsInput = {
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
   leadNotes?: Prisma.LeadNoteCreateNestedManyWithoutAuthorInput
-  blogPosts?: Prisma.BlogPostCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUncheckedCreateWithoutAssignedLeadsInput = {
@@ -1008,7 +880,6 @@ export type UserUncheckedCreateWithoutAssignedLeadsInput = {
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
   leadNotes?: Prisma.LeadNoteUncheckedCreateNestedManyWithoutAuthorInput
-  blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type UserCreateOrConnectWithoutAssignedLeadsInput = {
@@ -1043,7 +914,6 @@ export type UserUpdateWithoutAssignedLeadsInput = {
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
   leadNotes?: Prisma.LeadNoteUpdateManyWithoutAuthorNestedInput
-  blogPosts?: Prisma.BlogPostUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAssignedLeadsInput = {
@@ -1062,7 +932,6 @@ export type UserUncheckedUpdateWithoutAssignedLeadsInput = {
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
   leadNotes?: Prisma.LeadNoteUncheckedUpdateManyWithoutAuthorNestedInput
-  blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserCreateWithoutLeadNotesInput = {
@@ -1081,7 +950,6 @@ export type UserCreateWithoutLeadNotesInput = {
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   activityLogs?: Prisma.ActivityLogCreateNestedManyWithoutUserInput
   assignedLeads?: Prisma.LeadCreateNestedManyWithoutAssignedToInput
-  blogPosts?: Prisma.BlogPostCreateNestedManyWithoutAuthorInput
 }
 
 export type UserUncheckedCreateWithoutLeadNotesInput = {
@@ -1100,7 +968,6 @@ export type UserUncheckedCreateWithoutLeadNotesInput = {
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   activityLogs?: Prisma.ActivityLogUncheckedCreateNestedManyWithoutUserInput
   assignedLeads?: Prisma.LeadUncheckedCreateNestedManyWithoutAssignedToInput
-  blogPosts?: Prisma.BlogPostUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type UserCreateOrConnectWithoutLeadNotesInput = {
@@ -1135,7 +1002,6 @@ export type UserUpdateWithoutLeadNotesInput = {
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   activityLogs?: Prisma.ActivityLogUpdateManyWithoutUserNestedInput
   assignedLeads?: Prisma.LeadUpdateManyWithoutAssignedToNestedInput
-  blogPosts?: Prisma.BlogPostUpdateManyWithoutAuthorNestedInput
 }
 
 export type UserUncheckedUpdateWithoutLeadNotesInput = {
@@ -1154,7 +1020,6 @@ export type UserUncheckedUpdateWithoutLeadNotesInput = {
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   activityLogs?: Prisma.ActivityLogUncheckedUpdateManyWithoutUserNestedInput
   assignedLeads?: Prisma.LeadUncheckedUpdateManyWithoutAssignedToNestedInput
-  blogPosts?: Prisma.BlogPostUncheckedUpdateManyWithoutAuthorNestedInput
 }
 
 
@@ -1168,7 +1033,6 @@ export type UserCountOutputType = {
   activityLogs: number
   assignedLeads: number
   leadNotes: number
-  blogPosts: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1177,7 +1041,6 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   activityLogs?: boolean | UserCountOutputTypeCountActivityLogsArgs
   assignedLeads?: boolean | UserCountOutputTypeCountAssignedLeadsArgs
   leadNotes?: boolean | UserCountOutputTypeCountLeadNotesArgs
-  blogPosts?: boolean | UserCountOutputTypeCountBlogPostsArgs
 }
 
 /**
@@ -1225,13 +1088,6 @@ export type UserCountOutputTypeCountLeadNotesArgs<ExtArgs extends runtime.Types.
   where?: Prisma.LeadNoteWhereInput
 }
 
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountBlogPostsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.BlogPostWhereInput
-}
-
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1250,7 +1106,6 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   activityLogs?: boolean | Prisma.User$activityLogsArgs<ExtArgs>
   assignedLeads?: boolean | Prisma.User$assignedLeadsArgs<ExtArgs>
   leadNotes?: boolean | Prisma.User$leadNotesArgs<ExtArgs>
-  blogPosts?: boolean | Prisma.User$blogPostsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -1303,7 +1158,6 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   activityLogs?: boolean | Prisma.User$activityLogsArgs<ExtArgs>
   assignedLeads?: boolean | Prisma.User$assignedLeadsArgs<ExtArgs>
   leadNotes?: boolean | Prisma.User$leadNotesArgs<ExtArgs>
-  blogPosts?: boolean | Prisma.User$blogPostsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1317,7 +1171,6 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     activityLogs: Prisma.$ActivityLogPayload<ExtArgs>[]
     assignedLeads: Prisma.$LeadPayload<ExtArgs>[]
     leadNotes: Prisma.$LeadNotePayload<ExtArgs>[]
-    blogPosts: Prisma.$BlogPostPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1730,7 +1583,6 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   activityLogs<T extends Prisma.User$activityLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$activityLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ActivityLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   assignedLeads<T extends Prisma.User$assignedLeadsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$assignedLeadsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   leadNotes<T extends Prisma.User$leadNotesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$leadNotesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeadNotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  blogPosts<T extends Prisma.User$blogPostsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$blogPostsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BlogPostPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2281,30 +2133,6 @@ export type User$leadNotesArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   distinct?: Prisma.LeadNoteScalarFieldEnum | Prisma.LeadNoteScalarFieldEnum[]
-}
-
-/**
- * User.blogPosts
- */
-export type User$blogPostsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the BlogPost
-   */
-  select?: Prisma.BlogPostSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the BlogPost
-   */
-  omit?: Prisma.BlogPostOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.BlogPostInclude<ExtArgs> | null
-  where?: Prisma.BlogPostWhereInput
-  orderBy?: Prisma.BlogPostOrderByWithRelationInput | Prisma.BlogPostOrderByWithRelationInput[]
-  cursor?: Prisma.BlogPostWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.BlogPostScalarFieldEnum | Prisma.BlogPostScalarFieldEnum[]
 }
 
 /**

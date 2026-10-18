@@ -27,7 +27,6 @@ erDiagram
   Project ||--o{ ProjectMedia : has
   MediaAsset ||--o{ ProjectMedia : used_in
   Project ||--o{ Testimonial : "may have"
-  BlogCategory ||--o{ BlogPost : groups
   EstimatorService ||--o{ EstimatorField : has
   EstimatorField ||--o{ FieldOption : has
   EstimatorService ||--o{ PricingRule : has
@@ -81,7 +80,6 @@ model User {
   activityLogs  ActivityLog[]
   assignedLeads Lead[]       @relation("LeadAssignee")
   leadNotes     LeadNote[]
-  blogPosts     BlogPost[]   @relation("PostAuthor")
 
   @@index([role, isActive])
 }
@@ -282,35 +280,6 @@ model TeamMember {
   isVisible     Boolean  @default(true)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
-}
-
-model BlogCategory {
-  id    String     @id @default(cuid())
-  slug  String     @unique
-  name  String
-  posts BlogPost[]
-}
-
-model BlogPost {
-  id           String        @id @default(cuid())
-  slug         String        @unique
-  title        String
-  excerpt      String
-  content      String                    // Markdown, sanitized on render
-  coverId      String?
-  categoryId   String?
-  authorId     String?
-  status       PublishStatus @default(DRAFT)
-  publishedAt  DateTime?                 // supports scheduled publishing
-  readingMins  Int?
-  seoTitle     String?
-  seoDesc      String?
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  category     BlogCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
-  author       User?         @relation("PostAuthor", fields: [authorId], references: [id], onDelete: SetNull)
-  @@index([status, publishedAt])
-  @@index([categoryId])
 }
 
 model PageSection {
@@ -560,7 +529,7 @@ model Quote {
 1. A `Quote` always has a `Lead`; never create a quote without lead capture.
 2. `MediaAsset` cannot be deleted while referenced (Restrict) — admin UI must show usage.
 3. `EstimatorService.version` increments whenever any field/option/rule under it changes (done in the service layer inside a transaction).
-4. A published `Project`/`Service`/`BlogPost` requires: title, slug, summary/excerpt, at least one image (except blog).
+4. A published `Project`/`Service` requires: title, slug, summary/excerpt, and at least one image.
 5. Phone numbers are normalized to E.164 (`+91XXXXXXXXXX`) before storing.
 6. Lead duplicates: when a lead with the same phone exists within 30 days, set `isDuplicate = true` (still store).
 7. Admin deletes of leads are soft deletes (`deletedAt`). Hard purge only via documented retention job.

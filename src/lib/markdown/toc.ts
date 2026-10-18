@@ -1,10 +1,10 @@
-export type BlogHeading = { id: string; text: string; level: 2 | 3 };
+export type Heading = { id: string; text: string; level: 2 | 3 };
 
 function slugify(value: string): string {
   return value.toLowerCase().trim().replace(/[^a-z0-9\s-]/g, "").replace(/\s+/g, "-").replace(/-+/g, "-") || "section";
 }
 
-export function extractBlogHeadings(content: string): BlogHeading[] {
+export function extractHeadings(content: string): Heading[] {
   const used = new Map<string, number>();
   return content.split(/\r?\n/).flatMap((line) => {
     const match = /^(#{2,3})\s+(.+?)\s*$/.exec(line);

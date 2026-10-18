@@ -35,8 +35,8 @@ export default async function AdminDashboardPage() {
 
   if (data.kind === "content") return <div className="space-y-8">
     <PageHeader eyebrow="Administration" title="Dashboard" description="A focused view of the publishing workspace." />
-    <div className="grid gap-4 sm:grid-cols-2"><Stat label="Published content" value={data.publishedCount} detail="Services, projects, and posts" /><Stat label="Draft content" value={data.draftCount} detail="Items awaiting review" /></div>
-    <div className="flex flex-wrap gap-3"><QuickAction href="/admin/services" label="Manage services" /><QuickAction href="/admin/projects" label="Manage projects" /><QuickAction href="/admin/blog" label="Manage blog" /></div>
+    <div className="grid gap-4 sm:grid-cols-2"><Stat label="Published content" value={data.publishedCount} detail="Services and projects" /><Stat label="Draft content" value={data.draftCount} detail="Items awaiting review" /></div>
+    <div className="flex flex-wrap gap-3"><QuickAction href="/admin/services" label="Manage services" /><QuickAction href="/admin/projects" label="Manage projects" /></div>
     {data.publishedCount + data.draftCount === 0 ? <EmptyState title="No content yet" description="Published and draft content statistics will appear here once editorial records exist." /> : null}
   </div>;
 

@@ -96,16 +96,14 @@ export async function getLeadDashboardData(db: typeof prisma = prisma): Promise<
 }
 
 export async function getContentDashboardData(db: typeof prisma = prisma): Promise<ContentDashboardData> {
-  const [publishedServices, publishedProjects, publishedPosts, draftServices, draftProjects, draftPosts] = await Promise.all([
+  const [publishedServices, publishedProjects, draftServices, draftProjects] = await Promise.all([
     db.service.count({ where: { status: "PUBLISHED" } }),
     db.project.count({ where: { publishStatus: "PUBLISHED" } }),
-    db.blogPost.count({ where: { status: "PUBLISHED" } }),
     db.service.count({ where: { status: "DRAFT" } }),
     db.project.count({ where: { publishStatus: "DRAFT" } }),
-    db.blogPost.count({ where: { status: "DRAFT" } }),
   ]);
 
-  return { kind: "content", publishedCount: publishedServices + publishedProjects + publishedPosts, draftCount: draftServices + draftProjects + draftPosts };
+  return { kind: "content", publishedCount: publishedServices + publishedProjects, draftCount: draftServices + draftProjects };
 }
 
 export async function getDashboardData(role: Role, db: typeof prisma = prisma): Promise<DashboardData> {

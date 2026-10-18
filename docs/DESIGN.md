@@ -132,9 +132,6 @@ Stepper layout: 1 Service → 2 Details → 3 Estimate result → 4 Contact. Sti
 ### Contact
 Two-column: form + info card (phones as `tel:` links, WhatsApp button, email, address, hours) and map below.
 
-### Blog
-Editorial layout, readable measure (68ch), ToC on desktop, share links, related posts.
-
 ### Global mobile bar
 Fixed bottom bar: **Call · WhatsApp · Get Quote**; hides on scroll down, shows on scroll up; must not cover form fields (add bottom padding to page).
 
@@ -166,7 +163,7 @@ Plain, specific, professional. Use numbers and facts (years, sqft, storeys). Avo
 ## 11. Admin UI
 - Clean, dense, utilitarian; left sidebar (collapses to drawer on mobile), top bar with user menu.
 - Dashboard cards + charts; tables with search/filter/sort/pagination, bulk actions where useful.
-- Forms: sticky save bar, dirty-state warning, inline validation, autosave drafts for blog.
+- Forms: sticky save bar, dirty-state warning, and inline validation.
 - Every list: loading skeleton, empty state with primary action, error state with retry.
 - Destructive actions use ConfirmDialog with explicit wording.
 - Mobile-usable lead management (client will check leads on phone).

@@ -233,15 +233,15 @@ Done when: CRUD works with role checks (EDITOR allowed), validation errors show 
 ```text
 PHASE 7c — Testimonials, FAQs (general + per service) and Team modules using the CMS recipe. Include ordering, publish status, optional project link for testimonials, photo for team via MediaPicker.
 ```
-**7d — Blog**
+**7d — Removed**
 ```text
-PHASE 7d — Blog module: posts (Markdown editor with live preview, autosave draft locally with restore prompt), categories CRUD, cover image, author, scheduled publish (publishedAt in future = hidden until due), reading time auto-calc, SEO fields. Public queries must only return PUBLISHED with publishedAt <= now.
+PHASE 7d — The retired editorial module and its public and admin surfaces are intentionally removed. Do not recreate these routes, models, permissions, upload sections, or cache tags.
 ```
 **7e — Pages/content, SEO, Settings, Users**
 ```text
 PHASE 7e — Remaining admin modules.
 1. Pages/Content: edit PageSection blocks for home (hero, stats, cta, process) and about (story, mission) using per-section Zod schemas and purpose-built forms (not a raw JSON editor); visibility toggles; no HTML injection.
-2. SEO: PageSeo editor for static paths (/, /about, /services, /projects, /gallery, /blog, /faqs, /contact, /estimate) with title/description/OG image/canonical/noindex; sitemap & robots preview.
+2. SEO: PageSeo editor for static paths (/, /about, /services, /projects, /gallery, /faqs, /contact, /estimate) with title/description/OG image/canonical/noindex; sitemap & robots preview.
 3. Settings (singleton): business name, tagline, phones (multiple), email, WhatsApp number + default message, address, map embed URL (validate allowlisted domain), hours, social links, credentials (label/value), brochure PDF via MediaPicker, lead notification emails.
 4. Users (SUPER_ADMIN only): create/invite, edit role, deactivate/reactivate, revoke sessions, reset password; guard last SUPER_ADMIN.
 5. All changes logged to ActivityLog with sanitized diffs; all revalidate relevant tags.
@@ -295,19 +295,18 @@ Done when: pages render from DB, filters work without full reload where appropri
 
 ---
 
-## Phase 11 — About, Testimonials, Blog, FAQs, Contact, legal
+## Phase 11 — About, Testimonials, FAQs, Contact, legal
 **Prompt**
 ```text
 PHASE 11 — Remaining public pages.
 1. /about: story, mission, team (4 members), credentials, experience stats, CTA. Use copy from docs/CONTENT.md via PageSection/Settings.
 2. /testimonials; show a friendly empty state if none are published.
-3. /blog (category filter, pagination) and /blog/[slug] (ToC, reading time, related posts, Article JSON-LD, share links, sanitized Markdown).
-4. /faqs grouped by service/general with Accordion + FAQPage JSON-LD.
-5. /contact: form (name, phone, email optional, location, message, consent) — UI only now; submission is implemented in Phase 15. Contact info card from Settings, map embed (allowlisted), WhatsApp and tel: links.
-6. /privacy and /terms pages with editable Markdown content (stored as PageSection or Settings) and sensible defaults; mark `TODO(client/legal)` for review by a lawyer.
+3. /faqs grouped by service/general with Accordion + FAQPage JSON-LD.
+4. /contact: form (name, phone, email optional, location, message, consent) — UI only now; submission is implemented in Phase 15. Contact info card from Settings, map embed (allowlisted), WhatsApp and tel: links.
+5. /privacy and /terms pages with editable Markdown content (stored as PageSection or Settings) and sensible defaults; mark `TODO(client/legal)` for review by a lawyer.
 Done when: all pages are reachable from navigation, responsive, SEO metadata present, no console errors.
 ```
-**Commit:** `feat(site): about, blog, faqs, contact, legal pages`
+**Commit:** `feat(site): about, faqs, contact, legal pages`
 
 ---
 
@@ -407,9 +406,9 @@ Done when: submitting a test lead sends the admin and visitor emails (sandbox or
 ```text
 PHASE 17 — SEO pass.
 1. Audit every public page for: unique title/description, canonical, OG/Twitter, heading hierarchy (one h1), internal links, alt text, breadcrumbs.
-2. JSON-LD: GeneralContractor/LocalBusiness (name, phones, address, areaServed Thane/Mumbai, openingHours, sameAs from socials, foundingDate 2003), Service, BreadcrumbList, FAQPage, Article, and CreativeWork for projects. Validate JSON-LD syntax with a unit test (parse + required fields).
+2. JSON-LD: GeneralContractor/LocalBusiness (name, phones, address, areaServed Thane/Mumbai, openingHours, sameAs from socials, foundingDate 2003), Service, BreadcrumbList, FAQPage, and CreativeWork for projects. Validate JSON-LD syntax with a unit test (parse + required fields).
 3. sitemap.ts includes only published, indexable URLs with lastModified; robots.ts disallows /admin, /api, thank-you pages; admin and thank-you pages have noindex.
-4. Create 3 SEO landing sections/pages editable from admin (e.g., "Structural audit in Thane", "Terrace waterproofing in Thane", "Society redevelopment PMC in Thane") using the existing Service/Blog infrastructure (no duplicate content; unique copy placeholders marked TODO(client)).
+4. Create 3 SEO landing sections/pages editable from admin (e.g., "Structural audit in Thane", "Terrace waterproofing in Thane", "Society redevelopment PMC in Thane") using the existing Service infrastructure (no duplicate content; unique copy placeholders marked TODO(client)).
 5. Add redirects config for known legacy URLs (TODO(client) list of old URLs).
 6. Output a docs/SEO_CHECKLIST.md with post-launch tasks (Search Console, GBP, sitemap submission, reviews).
 Done when: Rich Results Test–valid JSON-LD (verify manually), sitemap valid, no duplicate titles.
@@ -442,7 +441,7 @@ Done when: all automated security tests pass and the checklist has no unchecked 
 **Prompt**
 ```text
 PHASE 19 — Performance and accessibility pass.
-1. Run a production build locally; measure Lighthouse (mobile) for /, /services/[slug], /projects/[slug], /blog/[slug], /estimate, /contact. Fix issues to reach: Performance ≥ 90, Accessibility ≥ 95, Best Practices ≥ 95, SEO ≥ 95; LCP < 2.5s, CLS < 0.1, INP < 200ms.
+1. Run a production build locally; measure Lighthouse (mobile) for /, /services/[slug], /projects/[slug], /estimate, /contact. Fix issues to reach: Performance ≥ 90, Accessibility ≥ 95, Best Practices ≥ 95, SEO ≥ 95; LCP < 2.5s, CLS < 0.1, INP < 200ms.
 2. Review bundle with the Next.js analyzer; remove unnecessary client components; dynamic import heavy/admin-only libs; ensure fonts and images are optimized; check `sizes` on every next/image.
 3. Add @axe-core/playwright tests for key pages (no serious/critical violations); fix issues.
 4. Verify reduced-motion behavior, keyboard-only navigation, focus order and focus restoration in dialogs/lightbox.
@@ -477,7 +476,7 @@ PHASE 21 — Production readiness.
 1. Finalize env handling: confirm src/lib/env.ts fails fast in production for missing required vars; update .env.example and docs/RUNBOOK.md.
 2. Add deployment scripts/docs: `prisma migrate deploy` strategy (CI or Vercel build command using DIRECT_URL), idempotent production seed (insert-only defaults; never overwrite client edits), first SUPER_ADMIN creation procedure.
 3. Add Vercel config (vercel.json only if necessary), image domains, caching headers for static assets, and redirects for legacy URLs.
-4. Add health/monitoring: /api/health (basic) and /api/health?deep=1 (SUPER_ADMIN only); optional Sentry integration behind env flag with PII scrubbing; Vercel Analytics/Speed Insights toggles.
+4. Add health/monitoring: /api/health (basic) and /api/health?deep=1 (SUPER_ADMIN only); optional Sentry integration behind env flag with PII scrubbing; optional Vercel performance telemetry.
 5. Create docs/DEPLOYMENT.md: step-by-step for Neon production branch, Vercel project, env vars (Production vs Preview), domain + DNS, SSL, Gmail SMTP app password, Cloudinary settings, rollback.
 6. Final cleanup: remove dev-only pages from production (/design-system), remove unused deps/files, ensure no console.log of sensitive data.
 Done when: a production build passes and docs/DEPLOYMENT.md can be followed by someone new.
@@ -502,7 +501,7 @@ Using docs/DEPLOYMENT.md, produce a personalized go-live checklist for me with e
 ```
 
 **Production smoke test checklist (you):**
-- [ ] Home/Services/Projects/Blog load fast on mobile data
+- [ ] Home/Services/Projects load fast on mobile data
 - [ ] Estimate flow works; Lead+Quote visible in admin; emails received
 - [ ] Contact form, brochure request, WhatsApp and call links work
 - [ ] Admin login/logout, edit a service → public page updates
@@ -518,7 +517,7 @@ Using docs/DEPLOYMENT.md, produce a personalized go-live checklist for me with e
 ```text
 PHASE 23 — Handover materials.
 Create:
-1. docs/CLIENT_GUIDE.md — plain-language admin manual with step-by-step instructions and screenshots placeholders for: logging in, changing password, editing Home/About text, adding a project with photos, adding a blog post, managing testimonials/FAQs, uploading gallery images, editing estimator prices/options (and the "test sandbox"), handling leads (status flow), exporting leads, editing contact info/social links/WhatsApp, SEO basics, adding users/roles, what to do if something breaks.
+1. docs/CLIENT_GUIDE.md — plain-language admin manual with screenshots placeholders for: logging in, changing password, editing Home/About text, adding a project with photos, managing testimonials/FAQs, uploading gallery images, editing estimator prices/options (and the "test sandbox"), handling leads (status flow), exporting leads, editing contact info/social links/WhatsApp, SEO basics, adding users/roles, what to do if something breaks.
 2. docs/CONTENT_CHECKLIST.md — everything the client must provide or approve (the TODO(client) list), grouped by priority.
 3. docs/MAINTENANCE.md — monthly tasks: dependency updates, backups/export, security review, performance check, content freshness, lead data retention.
 4. A 10-minute training agenda (docs/TRAINING_AGENDA.md).

@@ -8,7 +8,7 @@ The public route matrix was captured with Playwright against the production buil
 | --- | ---: | ---: | ---: | ---: | ---: |
 | Public pages | 15 | 90 | 90/90 | 0/90 | 0.000 |
 
-Routes included `/`, `/about`, `/services`, `/services/building-construction`, `/projects`, `/projects/residential-commercial-building-kharkar-ali`, `/gallery`, `/testimonials`, `/blog`, `/contact`, `/estimate`, `/faqs`, `/privacy`, `/terms` and `/download/company-profile`. Each route had one H1 in the captured document. Browser CLS is an automated local observation from the Playwright `layout-shift` API; it is not a Lighthouse score.
+Routes included `/`, `/about`, `/services`, `/services/building-construction`, `/projects`, `/projects/residential-commercial-building-kharkar-ali`, `/gallery`, `/testimonials`, `/contact`, `/estimate`, `/faqs`, `/privacy`, `/terms` and `/download/company-profile`. Each route had one H1 in the captured document. Browser CLS is an automated local observation from the Playwright `layout-shift` API; it is not a Lighthouse score.
 
 ### Visual and accessibility fixes from this sweep
 
@@ -58,7 +58,7 @@ Date: 2026-10-09
 
 ## Scope
 
-The public routes audited were `/`, a service detail route, a project detail route, `/blog`, `/estimate`, and `/contact`. The service and project paths used for the audit were the seeded slugs `structural-repairs-rehabilitation` and `residential-commercial-building-kharkar-ali`. The current local database did not return published records for those two detail slugs, so Lighthouse evaluated their not-found responses; publish the records and repeat the route-specific audit before launch.
+The public routes audited were `/`, a service detail route, a project detail route, `/estimate`, and `/contact`. The service and project paths used for the audit were the seeded slugs `structural-repairs-rehabilitation` and `residential-commercial-building-kharkar-ali`. The current local database did not return published records for those two detail slugs, so Lighthouse evaluated their not-found responses; publish the records and repeat the route-specific audit before launch.
 
 ## Lighthouse results
 
@@ -69,13 +69,12 @@ Lighthouse 12.8.2 was run against the production build on a mobile-sized Chrome 
 | `/` | 100 | 96 | 100 | 100 | 0.5s | 0 | 0ms |
 | `/services/structural-repairs-rehabilitation` | 100 | 96 | 100 | 63* | 1.4s | 0 | 0ms |
 | `/projects/residential-commercial-building-kharkar-ali` | 100 | 96 | 100 | 66* | 1.4s | 0 | 0ms |
-| `/blog` | 100 | 96 | 100 | 100 | 0.8s | 0 | 0ms |
 | `/estimate` | 100 | 100 | 96 | 100 | 1.1s | 0 | 0ms |
 | `/contact` | 100 | 96 | 100 | 100 | 1.0s | 0 | 0ms |
 
 \* The detail routes returned “not found” because no matching published record was available in the audit database. The route implementation supplies index-blocking metadata for that state. Re-run after publishing the service/project records; the public content paths are designed for indexable metadata when records exist.
 
-The first baseline run, before the public client-bundle and contrast fixes, reported Performance 46/45/0/40/48/51 for home/service/project/blog/estimate/contact respectively, with home LCP 4.8s and TBT 1,290ms. The baseline project route was a server error. The provided post-fix run shows the application and host are capable of meeting the performance and Web Vitals targets when measured without the local Chrome cleanup artifact.
+The first baseline run, before the public client-bundle and contrast fixes, reported low scores for the home, service, project, estimate and contact routes, with home LCP 4.8s and TBT 1,290ms. The baseline project route was a server error. The provided post-fix run shows the application and host are capable of meeting the performance and Web Vitals targets when measured without the local Chrome cleanup artifact.
 
 Lighthouse’s lab run reports TBT rather than field INP. The post-fix TBT was 0ms on the provided runs, and the Playwright interaction checks completed within the test budget; verify INP below 200ms with real-user monitoring after production traffic is available.
 
@@ -102,6 +101,6 @@ The service update action invalidates the `services` collection tag, both the ol
 
 ## Exceptions and manual follow-up
 
-- Publish at least one service, project and blog post in the production database, then rerun the exact detail-route Lighthouse and axe audits. The local audit database did not expose those records.
+- Publish at least one service and project in the production database, then rerun the exact detail-route Lighthouse and axe audits. The local audit database did not expose those records.
 - Run Lighthouse from a clean CI/production environment using the same mobile profile and record the canonical production hostname. The local Windows Chrome run emitted profile-lock `EBUSY` warnings under simulated throttling.
 - Add the final production domain, Google Analytics consent ID, Cloudinary media, map embed and social profile URLs through admin/client configuration before interpreting third-party and image metrics.

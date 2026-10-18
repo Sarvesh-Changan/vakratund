@@ -50,7 +50,6 @@ integrations, native apps. Keep data model extensible for them.
 | PUB-4 | Projects | Index with filters (service, status, year); detail page with gallery, scope, area, floors, location, status, optional client name (toggle), before/after pairs. |
 | PUB-5 | Gallery | Category-filtered grid, lazy-loaded, keyboard-accessible lightbox. |
 | PUB-6 | Testimonials | Cards with name, role/society, rating optional; shown on Home, About and relevant services. |
-| PUB-7 | Blog | Index, category filter, detail page with ToC, author, reading time, related posts, Article schema. |
 | PUB-8 | FAQs | Grouped by service/general; FAQPage schema. |
 | PUB-9 | Contact | Form, map embed, address, phones, email, WhatsApp, hours. |
 | PUB-10 | Estimator | See 5.2. |
@@ -90,7 +89,6 @@ integrations, native apps. Keep data model extensible for them.
 | ADM-4 | Projects | CRUD, drag-order, featured, publish/draft, media attach, SEO. |
 | ADM-5 | Services | CRUD, order, FAQs, SEO, icon/image. |
 | ADM-6 | Testimonials, FAQs, Team | CRUD, order, publish. |
-| ADM-7 | Blog | CRUD, Markdown editor with preview, categories, scheduled publish, SEO. |
 | ADM-8 | Gallery & Media | Cloudinary uploads (signed), library, alt text required, delete with usage check. |
 | ADM-9 | Pages/content | Edit Home hero, stats, About text, CTA copy via structured sections (no HTML injection). |
 | ADM-10 | SEO | Per-page and per-entity title/description/OG image/canonical/noindex; sitemap and robots preview. |
@@ -103,7 +101,7 @@ SUPER_ADMIN everything · ADMIN everything except user management · EDITOR cont
 
 ## 6. Non-functional requirements
 - **Performance:** SSG/ISR for public pages; image optimization via Cloudinary + `next/image`; JS budget per page < 170 KB gzipped on content pages.
-- **SEO:** metadata API, sitemap.xml, robots.txt, canonical URLs, JSON-LD (LocalBusiness/GeneralContractor, Service, BreadcrumbList, FAQPage, Article, Project as CreativeWork), clean slugs, OG images.
+- **SEO:** metadata API, sitemap.xml, robots.txt, canonical URLs, JSON-LD (LocalBusiness/GeneralContractor, Service, BreadcrumbList, FAQPage, Project as CreativeWork), clean slugs, OG images.
 - **Accessibility:** WCAG 2.2 AA; keyboard navigation; reduced-motion support; contrast checked.
 - **Responsive:** mobile-first; tested at 360, 390, 768, 1024, 1280, 1536 px.
 - **Security:** see `SECURITY.md`.

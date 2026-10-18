@@ -570,13 +570,6 @@ const locations: LocationSeed[] = [
   },
 ];
 
-const blogCategories = [
-  { slug: "construction", name: "Construction" },
-  { slug: "structural-repairs", name: "Structural Repairs" },
-  { slug: "waterproofing", name: "Waterproofing" },
-  { slug: "project-management", name: "Project Management" },
-] as const;
-
 const pageSections = [
   {
     id: "seed-section-home-hero",
@@ -662,16 +655,6 @@ const pageSections = [
     },
   },
   {
-    id: "seed-section-home-insights",
-    pageKey: "home",
-    sectionKey: "insights",
-    content: {
-      eyebrow: "From the blog",
-      title: "Latest insights",
-      viewAllLabel: "View all insights",
-    },
-  },
-  {
     id: "seed-section-home-faq",
     pageKey: "home",
     sectionKey: "faq",
@@ -753,12 +736,6 @@ const pageSeo = [
     title: "Projects",
     description:
       "Selected construction, turnkey, repair survey and rehabilitation projects.",
-  },
-  {
-    path: "/blog",
-    title: "Construction Insights",
-    description:
-      "Insights on construction, structural repairs, project management and waterproofing.",
   },
   {
     path: "/faqs",
@@ -1068,15 +1045,6 @@ async function main() {
     });
   }
 
-  setSeedStage("blog categories");
-  for (const category of blogCategories) {
-    await prisma.blogCategory.upsert({
-      where: { slug: category.slug },
-      create: category,
-      update: {},
-    });
-  }
-
   setSeedStage("gallery categories");
   const galleryCategories = [
     { name: "Waterproofing", slug: "waterproofing" },
@@ -1204,7 +1172,6 @@ async function main() {
     ["Faq", prisma.faq.count()],
     ["PageSection", prisma.pageSection.count()],
     ["PageSeo", prisma.pageSeo.count()],
-    ["BlogCategory", prisma.blogCategory.count()],
     ["LocationZone", prisma.locationZone.count()],
     ["EstimatorService", prisma.estimatorService.count()],
     ["EstimatorField", prisma.estimatorField.count()],

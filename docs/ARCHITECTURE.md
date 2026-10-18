@@ -38,14 +38,14 @@ flowchart LR
 ## 3. Rendering strategy
 | Route group | Strategy | Revalidation |
 |---|---|---|
-| Home, About, Services, Projects, Gallery, Blog, FAQs | Static + ISR (`revalidate` tags) | On admin save via `revalidateTag` / `revalidatePath` |
+| Home, About, Services, Projects, Gallery, FAQs | Static + ISR (`revalidate` tags) | On admin save via `revalidateTag` / `revalidatePath` |
 | Contact, Estimator, Download | Static shell + client forms + Server Actions | n/a |
 | Thank-you pages | Static, `noindex` | n/a |
 | Admin `/admin/**` | Dynamic, no cache, `noindex`, auth-gated | n/a |
 | `/api/**` | Dynamic route handlers | n/a |
 
-Tag convention: `services`, `service:{slug}`, `projects`, `project:{slug}`, `blog`, `post:{slug}`,
-`settings`, `faqs`, `testimonials`, `pages`, `estimator`.
+Tag convention: `services`, `service:{slug}`, `projects`, `project:{slug}`, `settings`, `faqs`,
+`testimonials`, `pages`, `estimator`.
 
 ## 4. Layering (strict)
 ```
@@ -75,12 +75,12 @@ Rules:
 │  ├─ app/
 │  │  ├─ (site)/              # public layout + pages
 │  │  │  ├─ page.tsx
-│  │  │  ├─ about/ services/[slug]/ projects/[slug]/ gallery/ blog/[slug]/ faqs/ contact/
+│  │  │  ├─ about/ services/[slug]/ projects/[slug]/ gallery/ faqs/ contact/
 │  │  │  ├─ estimate/ (page, thank-you)
 │  │  │  └─ download/company-profile/
 │  │  ├─ (admin)/admin/
 │  │  │  ├─ login/ (public)
-│  │  │  └─ (protected)/ dashboard leads quotes estimator projects services testimonials faqs blog gallery media pages seo settings users activity
+│  │  │  └─ (protected)/ dashboard leads quotes estimator projects services testimonials faqs gallery media pages seo settings users activity
 │  │  ├─ api/ health/ estimate/ leads/ upload/sign/ auth/[...all]/
 │  │  ├─ sitemap.ts robots.ts not-found.tsx error.tsx
 │  ├─ components/{ui,site,admin,forms,seo}/

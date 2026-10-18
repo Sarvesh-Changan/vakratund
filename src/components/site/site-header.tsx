@@ -118,7 +118,6 @@ export function SiteHeader({ settings, services, overlayAtTop = false }: { setti
             </div> : null}
           </div>
           <Link href="/projects" className={navLinkClass}>Projects</Link>
-          <Link href="/blog" className={navLinkClass}>Insights</Link>
           <Link href="/contact" className={navLinkClass}>Contact</Link>
         </nav>
 
@@ -138,7 +137,7 @@ export function SiteHeader({ settings, services, overlayAtTop = false }: { setti
       <div className={cn("fixed inset-0 z-40 overflow-y-auto overscroll-contain bg-dark px-5 pb-10 pt-24 text-white shadow-raised xl:hidden", menuOpen ? "site-mobile-navigation-open block" : "hidden")}>
         <div ref={menuPanelRef} id="mobile-navigation" role="dialog" aria-modal="true" aria-label="Main menu" className="mx-auto flex min-h-full max-w-2xl flex-col">
           <nav aria-label="Mobile navigation" className="flex flex-col">
-            {[{ label: "Home", href: "/" }, { label: "About", href: "/about" }, { label: "Projects", href: "/projects" }, { label: "Insights", href: "/blog" }, { label: "Contact", href: "/contact" }].map((item, index) => <Link key={item.href} href={item.href} style={{ animationDelay: `${index * 45}ms` }} className="site-mobile-menu-link border-b border-white/10 py-4 font-heading text-2xl font-semibold text-white" onClick={() => setMenuOpen(false)}>{item.label}</Link>)}
+            {[{ label: "Home", href: "/" }, { label: "About", href: "/about" }, { label: "Projects", href: "/projects" }, { label: "Contact", href: "/contact" }].map((item, index) => <Link key={item.href} href={item.href} style={{ animationDelay: `${index * 45}ms` }} className="site-mobile-menu-link border-b border-white/10 py-4 font-heading text-2xl font-semibold text-white" onClick={() => setMenuOpen(false)}>{item.label}</Link>)}
             <div className="site-mobile-menu-link border-b border-white/10 py-4" style={{ animationDelay: "225ms" }}>
               <h2 className="mb-3 text-xs font-bold uppercase tracking-[0.16em] text-brand">Services</h2>
               <ul className="grid gap-x-6 sm:grid-cols-2">{services.map((service, index) => <li key={service.slug}><Link href={`/services/${service.slug}`} style={{ animationDelay: `${(index + 6) * 45}ms` }} className="site-mobile-menu-link block py-2 text-base font-medium text-white/85 hover:text-brand" onClick={() => setMenuOpen(false)}>{service.title}</Link></li>)}</ul>

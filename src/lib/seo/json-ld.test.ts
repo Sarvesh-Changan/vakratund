@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { fallbackSiteSettings } from "@/config/site";
-import { buildArticleJsonLd, buildBreadcrumbListJsonLd, buildCreativeWorkJsonLd, buildFaqPageJsonLd, buildGeneralContractorJsonLd, buildServiceJsonLd, serializeJsonLd, type JsonLdValue } from "./json-ld";
+import { buildBreadcrumbListJsonLd, buildCreativeWorkJsonLd, buildFaqPageJsonLd, buildGeneralContractorJsonLd, buildServiceJsonLd, serializeJsonLd, type JsonLdValue } from "./json-ld";
 
 describe("JSON-LD builders", () => {
   it("builds LocalBusiness and GeneralContractor data from settings", () => {
@@ -32,11 +32,6 @@ describe("JSON-LD builders", () => {
     expect(data).toMatchObject({ "@type": "FAQPage", mainEntity: [{ "@type": "Question", name: "What is included?", acceptedAnswer: { text: "A site review." } }] });
   });
 
-  it("builds Article data with publication and author fields", () => {
-    const data = buildArticleJsonLd({ headline: "Repair planning", description: "A practical guide.", slug: "repair-planning", datePublished: "2026-01-01T00:00:00.000Z", authorName: "Engineer", publisherName: "Vakratund" }, "https://example.com");
-    expect(data).toMatchObject({ "@type": "Article", headline: "Repair planning", datePublished: "2026-01-01T00:00:00.000Z", author: { name: "Engineer" }, publisher: { name: "Vakratund" } });
-  });
-
   it("builds CreativeWork data without exposing an undisclosed client name", () => {
     const data = buildCreativeWorkJsonLd({ name: "Structural repair project", description: "Repair survey and execution.", slug: "structural-repair-project", location: "Thane, Maharashtra", serviceName: "Structural Repairs & Rehabilitation", clientName: null, year: 2026, creatorName: "M/s. Vakratund Construction" }, "https://example.com");
     expect(data).toMatchObject({ "@type": "CreativeWork", name: "Structural repair project", url: "https://example.com/projects/structural-repair-project", locationCreated: { name: "Thane, Maharashtra" } });
@@ -49,7 +44,6 @@ describe("JSON-LD builders", () => {
       { type: "BreadcrumbList", data: buildBreadcrumbListJsonLd([{ name: "Home", item: "/" }], "https://example.com"), required: ["@context", "@type", "itemListElement"] },
       { type: "Service", data: buildServiceJsonLd({ name: "Repairs", description: "Repair work.", slug: "repairs", providerName: "Vakratund" }, "https://example.com"), required: ["@context", "@type", "name", "description", "url", "provider", "areaServed"] },
       { type: "FAQPage", data: buildFaqPageJsonLd([{ question: "Question?", answer: "Answer." }]), required: ["@context", "@type", "mainEntity"] },
-      { type: "Article", data: buildArticleJsonLd({ headline: "Article", description: "Description", slug: "article", datePublished: "2026-01-01T00:00:00.000Z", authorName: "Author", publisherName: "Publisher" }, "https://example.com"), required: ["@context", "@type", "headline", "description", "datePublished", "author", "publisher"] },
       { type: "CreativeWork", data: buildCreativeWorkJsonLd({ name: "Project", description: "Description", slug: "project", creatorName: "Vakratund" }, "https://example.com"), required: ["@context", "@type", "name", "description", "url", "creator"] },
     ];
 

@@ -1,12 +1,12 @@
 import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
 import { Breadcrumbs, Container, EmptyState } from "@/components/ui";
-import { extractBlogHeadings } from "@/lib/blog/toc";
+import { extractHeadings } from "@/lib/markdown/toc";
 import { MarkdownRenderer } from "@/lib/markdown/renderer";
 
 type LegalPageProps = { title: string; eyebrow: string; content: string; breadcrumbs: Array<{ name: string; item: string }> };
 
 export function LegalPage({ title, eyebrow, content, breadcrumbs }: LegalPageProps) {
-  const headings = extractBlogHeadings(content);
+  const headings = extractHeadings(content);
 
   return (
     <>

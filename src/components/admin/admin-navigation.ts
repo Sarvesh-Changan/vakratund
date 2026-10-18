@@ -12,7 +12,6 @@ export const ADMIN_NAVIGATION: readonly AdminNavigationItem[] = [
   { label: "Testimonials", href: "/admin/testimonials", permissions: ["content:write"] },
   { label: "FAQs", href: "/admin/faqs", permissions: ["content:write"] },
   { label: "Team", href: "/admin/team", permissions: ["content:write"] },
-  { label: "Blog", href: "/admin/blog", permissions: ["content:write"] },
   { label: "Gallery", href: "/admin/gallery", permissions: ["media:write"] },
   { label: "Media", href: "/admin/media", permissions: ["media:write"] },
   { label: "Pages", href: "/admin/pages", permissions: ["content:write"] },

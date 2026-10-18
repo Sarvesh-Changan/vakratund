@@ -1,5 +1,9 @@
 # Runbook
 
+## Retired Cloudinary content
+
+Existing assets are not deleted automatically. If cleanup is approved, delete the `vakratund/blog` folder manually from the Cloudinary Media Library/dashboard after confirming that no retained records or backups need those assets.
+
 ## Secret configuration
 
 `BETTER_AUTH_SECRET` signs Better Auth sessions and `IP_HASH_SECRET` hashes IP addresses before they are stored in activity logs. Keep both values only in `.env.local` for local development and in the hosting provider's encrypted environment settings for deployment. Never commit them, print them, or place them in `NEXT_PUBLIC_` variables.

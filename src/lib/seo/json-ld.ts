@@ -12,15 +12,6 @@ export type ServiceJsonLdInput = {
   providerName: string;
 };
 export type FaqJsonLdItem = { question: string; answer: string };
-export type ArticleJsonLdInput = {
-  headline: string;
-  description: string;
-  slug: string;
-  datePublished: string;
-  authorName: string;
-  image?: string | null;
-  publisherName: string;
-};
 export type CreativeWorkJsonLdInput = {
   name: string;
   description: string;
@@ -124,21 +115,6 @@ export function buildFaqPageJsonLd(faqs: readonly FaqJsonLdItem[]): JsonLdValue 
       name: faq.question,
       acceptedAnswer: { "@type": "Answer", text: faq.answer },
     })),
-  };
-}
-
-export function buildArticleJsonLd(article: ArticleJsonLdInput, siteUrl = getSiteUrl()): JsonLdValue {
-  return {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    "@id": `${absoluteUrl(`/blog/${article.slug}`, siteUrl)}#article`,
-    headline: article.headline,
-    description: article.description,
-    datePublished: article.datePublished,
-    author: { "@type": "Person", name: article.authorName },
-    publisher: { "@type": "Organization", name: article.publisherName, "@id": `${siteUrl}/#business` },
-    mainEntityOfPage: { "@type": "WebPage", "@id": absoluteUrl(`/blog/${article.slug}`, siteUrl) },
-    ...(article.image ? { image: absoluteUrl(article.image, siteUrl) } : {}),
   };
 }
 

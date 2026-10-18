@@ -8,7 +8,7 @@
 A premium, SEO-friendly, lead-generating website for **M/s. Vakratund Construction**
 (civil engineering, PMC & turnkey developers, structural repair & rehabilitation, Thane/Mumbai,
 est. 2003), fully manageable by the client through an admin dashboard. It includes a
-database-driven cost estimator, lead pipeline, blog, portfolio, gallery and CMS.
+database-driven cost estimator, lead pipeline, portfolio, gallery and CMS.
 
 ## Read before coding (in this order)
 1. `docs/PRD.md` — what to build and acceptance criteria

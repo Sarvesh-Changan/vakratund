@@ -22,7 +22,6 @@ const routes = [
   { name: "project-kharkar-ali", path: "/projects/residential-commercial-building-kharkar-ali" },
   { name: "gallery", path: "/gallery" },
   { name: "testimonials", path: "/testimonials" },
-  { name: "blog", path: "/blog" },
   { name: "contact", path: "/contact" },
   { name: "estimate", path: "/estimate" },
   { name: "faqs", path: "/faqs" },

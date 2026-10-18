@@ -4,12 +4,6 @@ import { expect, test, type Page } from "@playwright/test";
 const servicePath = "/services/structural-repairs-rehabilitation";
 const projectPath = "/projects/residential-commercial-building-kharkar-ali";
 
-async function firstContentLink(page: Page, prefix: string) {
-  const link = page.locator(`a[href^="${prefix}/"]`).first();
-  if (await link.count() === 0) return null;
-  return (await link.getAttribute("href")) ?? null;
-}
-
 async function scan(page: Page, path: string) {
   const response = await page.goto(path, { waitUntil: "domcontentloaded" });
   expect(response?.status() ?? 500).toBeLessThan(500);
@@ -34,13 +28,6 @@ test.describe("public accessibility smoke", () => {
   test("key public pages have no serious accessibility violations", async ({ page }) => {
     for (const path of ["/", servicePath, projectPath, "/estimate", "/contact"]) await scan(page, path);
 
-    await page.goto("/blog", { waitUntil: "domcontentloaded" });
-    const blogPath = await firstContentLink(page, "/blog");
-    if (!blogPath) {
-      test.info().annotations.push({ type: "exception", description: "No published blog post exists in the current database; seed or publish one before the blog article audit." });
-      return;
-    }
-    await scan(page, blogPath);
   });
 
   test("mobile menu and estimate drawer restore keyboard focus", async ({ page }) => {

@@ -34,16 +34,13 @@ describe("dashboard aggregation service", () => {
   });
 
   it("aggregates editor content counts without loading content tables", async () => {
-    const count = vi.fn()
-      .mockResolvedValueOnce(2).mockResolvedValueOnce(3).mockResolvedValueOnce(4)
-      .mockResolvedValueOnce(5).mockResolvedValueOnce(6).mockResolvedValueOnce(7);
+    const count = vi.fn().mockResolvedValueOnce(2).mockResolvedValueOnce(3).mockResolvedValueOnce(5).mockResolvedValueOnce(6);
     const db = {
       service: { count },
       project: { count },
-      blogPost: { count },
     } as unknown as typeof prisma;
 
-    await expect(getContentDashboardData(db)).resolves.toEqual({ kind: "content", publishedCount: 9, draftCount: 18 });
-    expect(count).toHaveBeenCalledTimes(6);
+    await expect(getContentDashboardData(db)).resolves.toEqual({ kind: "content", publishedCount: 5, draftCount: 11 });
+    expect(count).toHaveBeenCalledTimes(4);
   });
 });

@@ -65,8 +65,6 @@ export const ModelName = {
   Testimonial: 'Testimonial',
   Faq: 'Faq',
   TeamMember: 'TeamMember',
-  BlogCategory: 'BlogCategory',
-  BlogPost: 'BlogPost',
   PageSection: 'PageSection',
   PageSeo: 'PageSeo',
   SiteSetting: 'SiteSetting',
@@ -349,38 +347,6 @@ export const TeamMemberScalarFieldEnum = {
 } as const
 
 export type TeamMemberScalarFieldEnum = (typeof TeamMemberScalarFieldEnum)[keyof typeof TeamMemberScalarFieldEnum]
-
-
-export const BlogCategoryScalarFieldEnum = {
-  id: 'id',
-  slug: 'slug',
-  name: 'name',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type BlogCategoryScalarFieldEnum = (typeof BlogCategoryScalarFieldEnum)[keyof typeof BlogCategoryScalarFieldEnum]
-
-
-export const BlogPostScalarFieldEnum = {
-  id: 'id',
-  slug: 'slug',
-  title: 'title',
-  excerpt: 'excerpt',
-  content: 'content',
-  coverId: 'coverId',
-  categoryId: 'categoryId',
-  authorId: 'authorId',
-  status: 'status',
-  publishedAt: 'publishedAt',
-  readingMins: 'readingMins',
-  seoTitle: 'seoTitle',
-  seoDesc: 'seoDesc',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type BlogPostScalarFieldEnum = (typeof BlogPostScalarFieldEnum)[keyof typeof BlogPostScalarFieldEnum]
 
 
 export const PageSectionScalarFieldEnum = {

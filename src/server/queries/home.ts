@@ -8,7 +8,6 @@ import { prisma } from "@/lib/db/client";
 import { pageSectionSchemas } from "@/lib/validation/pages";
 import { getPublishedFaqs } from "@/server/queries/faqs";
 import { getFeaturedGallery } from "@/server/queries/gallery";
-import { getPublishedBlogPostsPage } from "@/server/queries/blog";
 import { getPublishedProjectCount, getPublishedProjects } from "@/server/queries/projects";
 import { getPublicSettings } from "@/server/queries/settings";
 import { getPublishedServices, type PublishedService } from "@/server/queries/services";
@@ -22,7 +21,6 @@ export type HomeProjectsSection = z.infer<typeof pageSectionSchemas.home.project
 export type HomeWhySection = z.infer<typeof pageSectionSchemas.home.why>;
 export type HomeProcess = z.infer<typeof pageSectionSchemas.home.process>;
 export type HomeSpecialtySection = z.infer<typeof pageSectionSchemas.home.specialty>;
-export type HomeInsightsSection = z.infer<typeof pageSectionSchemas.home.insights>;
 export type HomeFaqSection = z.infer<typeof pageSectionSchemas.home.faq>;
 export type HomeEstimatorSection = z.infer<typeof pageSectionSchemas.home.estimator>;
 export type HomeCta = z.infer<typeof pageSectionSchemas.home.cta>;
@@ -44,9 +42,6 @@ export type HomePageData = {
   process: HomeProcess | null;
   specialtySection: HomeSpecialtySection | null;
   specialtyVisible: boolean;
-  insightsSection: HomeInsightsSection | null;
-  insightsVisible: boolean;
-  latestInsights: Awaited<ReturnType<typeof getPublishedBlogPostsPage>>["items"];
   faqSection: HomeFaqSection | null;
   faqVisible: boolean;
   estimatorSection: HomeEstimatorSection | null;
@@ -106,11 +101,6 @@ function normalizeHomeSpecialty(value: Prisma.JsonValue): HomeSpecialtySection |
   return result.success ? result.data : null;
 }
 
-function normalizeHomeInsights(value: Prisma.JsonValue): HomeInsightsSection | null {
-  const result = pageSectionSchemas.home.insights.safeParse(value);
-  return result.success ? result.data : null;
-}
-
 function normalizeHomeFaq(value: Prisma.JsonValue): HomeFaqSection | null {
   const result = pageSectionSchemas.home.faq.safeParse(value);
   return result.success ? result.data : null;
@@ -151,12 +141,12 @@ function fallbackProjectsSection(): HomeProjectsSection {
 
 function fallbackHomePageData(): HomePageData {
   const settings = resolveSiteSettings(null);
-  return { settings, hero: fallbackHero(settings), heroVisible: true, heroImage: null, stats: null, servicesSection: null, servicesVisible: false, projectsSection: fallbackProjectsSection(), projectsVisible: true, whySection: null, whyVisible: false, process: null, specialtySection: null, specialtyVisible: false, insightsSection: null, insightsVisible: false, latestInsights: [], faqSection: null, faqVisible: false, estimatorSection: null, estimatorVisible: false, cta: null, services: [], featuredProjects: [], featuredGallery: [], publishedProjectCount: 0, structuralService: null, testimonials: [], faqs: [], team: [] };
+  return { settings, hero: fallbackHero(settings), heroVisible: true, heroImage: null, stats: null, servicesSection: null, servicesVisible: false, projectsSection: fallbackProjectsSection(), projectsVisible: true, whySection: null, whyVisible: false, process: null, specialtySection: null, specialtyVisible: false, faqSection: null, faqVisible: false, estimatorSection: null, estimatorVisible: false, cta: null, services: [], featuredProjects: [], featuredGallery: [], publishedProjectCount: 0, structuralService: null, testimonials: [], faqs: [], team: [] };
 }
 
 async function readHomePageData(): Promise<HomePageData> {
   try {
-    const [settingsRow, sections, services, featuredProjects, publishedProjectCount, featuredGallery, testimonials, faqs, team, latestBlogPage] = await Promise.all([
+    const [settingsRow, sections, services, featuredProjects, publishedProjectCount, featuredGallery, testimonials, faqs, team] = await Promise.all([
       getPublicSettings(),
       prisma.pageSection.findMany({ where: { pageKey: "home" }, orderBy: { sortOrder: "asc" }, select: { sectionKey: true, content: true, isVisible: true } }),
       getPublishedServices(),
@@ -166,7 +156,6 @@ async function readHomePageData(): Promise<HomePageData> {
       getPublishedTestimonials(),
       getPublishedFaqs(),
       getVisibleTeamMembers(),
-      getPublishedBlogPostsPage(undefined, 1, 3),
     ]);
     const settings = resolveSiteSettings(settingsRow);
     const heroSection = sections.find((section) => section.sectionKey === "hero");
@@ -178,7 +167,6 @@ async function readHomePageData(): Promise<HomePageData> {
     const whySection = sections.find((section) => section.sectionKey === "why");
     const processSection = sections.find((section) => section.sectionKey === "process");
     const specialtySection = sections.find((section) => section.sectionKey === "specialty");
-    const insightsSection = sections.find((section) => section.sectionKey === "insights");
     const faqSection = sections.find((section) => section.sectionKey === "faq");
     const estimatorSection = sections.find((section) => section.sectionKey === "estimator");
     const ctaSection = sections.find((section) => section.sectionKey === "cta");
@@ -199,9 +187,6 @@ async function readHomePageData(): Promise<HomePageData> {
       process: processSection?.isVisible ? normalizeHomeProcess(processSection.content) : null,
       specialtySection: specialtySection?.isVisible ? normalizeHomeSpecialty(specialtySection.content) : null,
       specialtyVisible: specialtySection?.isVisible ?? false,
-      insightsSection: insightsSection?.isVisible ? normalizeHomeInsights(insightsSection.content) : null,
-      insightsVisible: insightsSection?.isVisible ?? false,
-      latestInsights: latestBlogPage.items,
       faqSection: faqSection?.isVisible ? normalizeHomeFaq(faqSection.content) : null,
       faqVisible: faqSection?.isVisible ?? false,
       estimatorSection: estimatorSection?.isVisible ? normalizeHomeEstimator(estimatorSection.content) : null,
@@ -222,4 +207,4 @@ async function readHomePageData(): Promise<HomePageData> {
   }
 }
 
-export const getHomePageData = unstable_cache(readHomePageData, ["home-page"], { tags: ["settings", "pages", "services", "projects", "gallery", "testimonials", "faqs", "team", "blog"], revalidate: 3600 });
+export const getHomePageData = unstable_cache(readHomePageData, ["home-page"], { tags: ["settings", "pages", "services", "projects", "gallery", "testimonials", "faqs", "team"], revalidate: 3600 });

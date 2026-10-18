@@ -11,7 +11,6 @@ import { HomeSocialProof } from "./home-social-proof";
 import { HomeStats } from "./home-stats";
 import { HomeWhy } from "./home-why";
 import { HomeSpecialty } from "./home-specialty";
-import { HomeInsights } from "./home-insights";
 import { HomeLeadership } from "./home-leadership";
 import { HomeWhereWeWork } from "./home-where-we-work";
 
@@ -29,7 +28,6 @@ export function HomePage({ data }: { data: HomePageData }) {
     <HomeSocialProof testimonials={data.testimonials} />
     {data.whyVisible ? <HomeWhy team={data.team} section={data.whySection} /> : null}
     <HomeLeadership settings={data.settings} team={data.team} quote={data.whySection?.quote} />
-    {data.insightsVisible ? <HomeInsights posts={data.latestInsights} section={data.insightsSection} /> : null}
     {data.estimatorVisible ? <HomeEstimatorTeaser section={data.estimatorSection} /> : null}
     {data.faqVisible ? <HomeFaq faqs={data.faqs} section={data.faqSection} /> : null}
     <HomeFinalCta cta={data.cta} settings={data.settings} />

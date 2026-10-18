@@ -10,7 +10,6 @@ const homeProjectsSchema = z.object({ eyebrow: optionalText(80), title: text(160
 const homeServicesSchema = z.object({ eyebrow: optionalText(80), title: text(160), description: optionalText(500), viewAllLabel: text(80), serviceLinkLabel: text(80) }).strict();
 const homeWhySchema = z.object({ eyebrow: optionalText(80), title: text(160), description: optionalText(500), quote: optionalText(1000) }).strict();
 const homeSpecialtySchema = z.object({ eyebrow: optionalText(80), title: text(160), description: optionalText(500), ctaLabel: text(80), ctaHref: href }).strict();
-const homeInsightsSchema = z.object({ eyebrow: optionalText(80), title: text(160), viewAllLabel: text(80) }).strict();
 const homeFaqSchema = z.object({ eyebrow: optionalText(80), title: text(160), viewAllLabel: text(80) }).strict();
 const homeEstimatorSchema = z.object({ eyebrow: text(80), title: text(160), description: text(500), ctaLabel: text(80) }).strict();
 const processSchema = z.object({ eyebrow: optionalText(80), title: text(120), steps: z.array(z.object({ title: text(80), description: optionalText(240) }).strict()).min(1).max(8) }).strict();
@@ -19,7 +18,7 @@ const textSectionSchema = z.object({ title: text(160), body: text(20_000) }).str
 const aboutJourneySchema = z.object({ eyebrow: optionalText(80), title: text(120), milestones: z.array(z.object({ year: z.number().int().min(1900).max(2200), title: text(120), description: optionalText(240) }).strict()).max(12) }).strict();
 
 export const pageSectionSchemas = {
-  home: { hero: heroSchema, stats: statsSchema, services: homeServicesSchema, projects: homeProjectsSchema, why: homeWhySchema, process: processSchema, specialty: homeSpecialtySchema, insights: homeInsightsSchema, faq: homeFaqSchema, estimator: homeEstimatorSchema, cta: ctaSchema },
+  home: { hero: heroSchema, stats: statsSchema, services: homeServicesSchema, projects: homeProjectsSchema, why: homeWhySchema, process: processSchema, specialty: homeSpecialtySchema, faq: homeFaqSchema, estimator: homeEstimatorSchema, cta: ctaSchema },
   about: { story: textSectionSchema, mission: textSectionSchema, journey: aboutJourneySchema },
   legal: { privacy: textSectionSchema, terms: textSectionSchema },
 } as const;
@@ -32,7 +31,6 @@ export const pageSectionInputSchema = z.discriminatedUnion("sectionKey", [
   z.object({ pageKey: z.literal("home"), sectionKey: z.literal("why"), content: homeWhySchema, isVisible: z.boolean() }).strict(),
   z.object({ pageKey: z.literal("home"), sectionKey: z.literal("process"), content: processSchema, isVisible: z.boolean() }).strict(),
   z.object({ pageKey: z.literal("home"), sectionKey: z.literal("specialty"), content: homeSpecialtySchema, isVisible: z.boolean() }).strict(),
-  z.object({ pageKey: z.literal("home"), sectionKey: z.literal("insights"), content: homeInsightsSchema, isVisible: z.boolean() }).strict(),
   z.object({ pageKey: z.literal("home"), sectionKey: z.literal("faq"), content: homeFaqSchema, isVisible: z.boolean() }).strict(),
   z.object({ pageKey: z.literal("home"), sectionKey: z.literal("estimator"), content: homeEstimatorSchema, isVisible: z.boolean() }).strict(),
   z.object({ pageKey: z.literal("home"), sectionKey: z.literal("cta"), content: ctaSchema, isVisible: z.boolean() }).strict(),

@@ -18,7 +18,7 @@ The current Prisma documentation for the selected stable major requires the Pris
 ## Schema review and deviations
 
 - The DATABASE.md baseline intentionally left `Session`, `Account`, and `Verification` for the auth adapter. They are included here with the Better Auth-compatible fields and relations so the schema is valid before the auth phase. Better Auth integration may refine those fields in its own migration/ADR.
-- The baseline omitted timestamps on several tables despite its convention that every table has `createdAt` and `updatedAt`. Those timestamps were added to `GalleryItem`, `BlogCategory`, `PageSection`, `PageSeo`, `SiteSetting`, `ContactEvent`, `LocationZone`, `Quote`, `ProjectMedia`, `LeadNote`, `LeadStatusHistory`, `ActivityLog`, `EstimatorField`, `FieldOption`, `PricingRule`, and the auth models.
+- The baseline omitted timestamps on several tables despite its convention that every table has `createdAt` and `updatedAt`. Those timestamps were added to `GalleryItem`, `PageSection`, `PageSeo`, `SiteSetting`, `ContactEvent`, `LocationZone`, `Quote`, `ProjectMedia`, `LeadNote`, `LeadStatusHistory`, `ActivityLog`, `EstimatorField`, `FieldOption`, `PricingRule`, and the auth models.
 - The baseline omitted indexes for several explicitly filterable/sortable foreign-key and visibility fields. Supporting indexes were added without removing any baseline index.
 - The baseline's `directUrl` datasource field was replaced by `prisma.config.ts` because Prisma 7 removed that schema property. This preserves the intended pooled-runtime/direct-migration split.
 - No seed data is created in this phase. The existing `db:seed` placeholder remains intentionally non-seeding until the database seed phase.

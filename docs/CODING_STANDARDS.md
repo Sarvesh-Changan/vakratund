@@ -113,7 +113,7 @@ Order of operations (always): **rate limit (public) → authenticate → authori
 ## Appendix A — CMS module recipe
 
 Use this recipe for every database-backed admin content module (for example,
-Services, Projects, FAQs, and Blog). Keep the layers separate so the same
+Services, Projects, and FAQs). Keep the layers separate so the same
 validation and business rules are used by every entry point.
 
 ### A.1 Files and responsibilities
@@ -148,8 +148,8 @@ called before parsing or touching the database. The service writes one
 append-only `ActivityLog` entry for the mutation, with a sanitized diff and no
 PII or secrets. On success, revalidate the module collection tag, the affected
 entity tag, and the relevant admin path. For this project the tags are
-`services`, `service:{slug}`, `projects`, `project:{slug}`, `blog`,
-`post:{slug}`, `settings`, `faqs`, `testimonials`, `pages`, and `estimator`.
+`services`, `service:{slug}`, `projects`, `project:{slug}`, `settings`, `faqs`,
+`testimonials`, `pages`, and `estimator`.
 
 Expected validation, authorization, conflict, and not-found failures are
 returned as stable error codes and field errors. Unexpected errors are logged

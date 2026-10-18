@@ -112,16 +112,6 @@ export type Faq = Prisma.FaqModel
  */
 export type TeamMember = Prisma.TeamMemberModel
 /**
- * Model BlogCategory
- * 
- */
-export type BlogCategory = Prisma.BlogCategoryModel
-/**
- * Model BlogPost
- * 
- */
-export type BlogPost = Prisma.BlogPostModel
-/**
  * Model PageSection
  * 
  */

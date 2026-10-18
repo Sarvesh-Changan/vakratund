@@ -8,7 +8,7 @@ The site stores personal data (names, phones, emails of enquirers) and has an ad
 |---|---|---|
 | Account takeover | Brute-force admin login | Strong hashing, rate limit, lockout, secure cookies, optional 2FA |
 | Privilege escalation | EDITOR reads leads | Central permission map, server-side checks everywhere |
-| Injection | SQLi, XSS in blog/FAQ | Prisma parameterization, Zod, Markdown sanitization, CSP |
+| Injection | SQLi, XSS in FAQ/service content | Prisma parameterization, Zod, Markdown sanitization, CSP |
 | Spam/abuse | Bot floods lead form | Rate limit, honeypot, optional Turnstile, duplicate detection |
 | Malicious upload | Executable disguised as image | Signed uploads, MIME/size allowlist, Cloudinary-only storage |
 | Secret leakage | Keys in repo/client | Env-only secrets, `NEXT_PUBLIC_` discipline, secret scanning |
@@ -36,7 +36,7 @@ Single source: `src/config/permissions.ts`; helper `can(role, permission)` and `
 | Leads export / delete | ✅ | ✅ | ❌ | ❌ |
 | Estimator config & pricing | ✅ | ✅ | ❌ | ❌ |
 | Projects/Services/Gallery/Media | ✅ | ✅ | ✅ | ❌ |
-| Blog/FAQ/Testimonials/Team/Pages | ✅ | ✅ | ✅ | ❌ |
+| FAQ/Testimonials/Team/Pages | ✅ | ✅ | ✅ | ❌ |
 | SEO | ✅ | ✅ | ✅ | ❌ |
 | Site settings | ✅ | ✅ | ❌ | ❌ |
 | Users & roles | ✅ | ❌ | ❌ | ❌ |
@@ -51,7 +51,7 @@ Rules:
 ## 4. Input validation & output encoding
 - Validate all inputs with Zod on the server: types, lengths, formats, enums, ranges. Reject unknown keys (`.strict()`).
 - Never concatenate user input into SQL; no `$queryRawUnsafe`.
-- Markdown (blog, FAQ, descriptions) rendered through a sanitizing pipeline (no raw HTML, no `javascript:` URLs, `rel="noopener noreferrer nofollow ugc"` on user-supplied links).
+- Markdown (FAQ, service descriptions, and legal content) is rendered through a sanitizing pipeline (no raw HTML, no `javascript:` URLs, `rel="noopener noreferrer nofollow"` on user-supplied links).
 - Never use `dangerouslySetInnerHTML` except for JSON-LD (serialized with `JSON.stringify` and `<` escaped).
 - Escape values placed into emails; strip CR/LF from header fields (email header injection).
 - Validate redirect targets against an allowlist (no open redirects).
@@ -80,7 +80,7 @@ Rules:
 - IPs are **hashed with a server secret** before storage (never store raw IPs).
 
 ## 7. File uploads (Cloudinary)
-- Only authenticated, authorized users may request a signature; clients send a section enum and the server maps it to the folder allowlist (`vakratund/projects`, `vakratund/testimonials`, `vakratund/team`, `vakratund/blog`, `vakratund/gallery`, `vakratund/docs`). Free-form folders are rejected.
+- Only authenticated, authorized users may request a signature; clients send a section enum and the server maps the server-defined folder allowlist (`vakratund/projects`, `vakratund/testimonials`, `vakratund/team`, `vakratund/gallery`, `vakratund/docs`). Free-form folders are rejected.
 - Signed upload params include `folder`, `timestamp`, `allowed_formats`, and any other upload fields sent to Cloudinary; the browser reuses the exact signed values and the endpoint resource type matches the media kind.
 - Allowed: `jpg, jpeg, png, webp, avif` (images), `mp4, webm` (video, size-capped), `pdf` (documents, admin only). Max 10 MB image / 50 MB video / 15 MB PDF.
 - API secret only on the server; never exposed to the client.
@@ -112,7 +112,7 @@ Rules:
 ## 11. Logging, monitoring, audit
 - `ActivityLog` for all admin mutations (who/what/when, sanitized diff). Append-only.
 - Structured server logs with request id; redact PII; alert on spikes of 401/403/429/500.
-- Optional Sentry with PII scrubbing; Vercel Analytics/Speed Insights for performance.
+- Optional Sentry with PII scrubbing; optional Vercel performance telemetry.
 
 ## 12. Dependency & CI hygiene
 - `npm audit --omit=dev` in CI; Dependabot/Renovate weekly; review changelogs for major updates.
