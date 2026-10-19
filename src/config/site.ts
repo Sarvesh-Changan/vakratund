@@ -19,7 +19,6 @@ export type ResolvedSiteSettings = {
 };
 
 export const fallbackSiteSettings: ResolvedSiteSettings = {
-  // TODO(client): replace the text wordmark with the approved logo asset.
   businessName: "M/s. Vakratund Construction",
   tagline: "Quality is our first priority",
   phones: ["+919821502956", "+919359895322"],

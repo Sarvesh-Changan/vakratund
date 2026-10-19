@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { WhatsAppIcon } from "@/components/ui/whatsapp-icon";
 import { ContactLink, TrackedWhatsAppLink } from "./contact-link";
 import { phoneHref } from "./contact-utils";
+import { BrandLogo } from "@/components/brand-logo";
 
 export type HeaderService = { slug: string; title: string; shortDesc: string };
 
@@ -100,7 +101,7 @@ export function SiteHeader({ settings, services, overlayAtTop = false }: { setti
     <header onFocusCapture={() => setHeaderVisible(true)} className={cn("fixed inset-x-3 top-3 z-50 mx-auto h-16 max-w-[1300px] rounded-pill border text-ink shadow-soft transition-[transform,height,box-shadow] duration-300 motion-reduce:transition-none", transparent ? "border-line bg-white/90 backdrop-blur-xl" : "border-line bg-white/95 shadow-raised backdrop-blur-xl", scrolled && "h-14", !headerVisible && !menuOpen && "-translate-y-[calc(100%+1rem)]")}>
       <div className="relative z-50 mx-auto flex h-full items-center justify-between gap-3 px-3 sm:px-5 lg:px-6">
         <Link href="/" onClick={() => { setMenuOpen(false); setServicesOpen(false); }} className="group flex min-h-11 shrink-0 items-center gap-2 rounded-control" aria-label={`${settings.businessName} home`}>
-          <span className="flex size-9 items-center justify-center rounded-full bg-brand-signature text-sm font-bold text-white transition-transform group-hover:rotate-6" aria-hidden="true">V</span>
+          <BrandLogo width={42} height={42} priority className="size-10 shrink-0" />
           <span className="max-w-[11rem] font-heading text-sm font-bold leading-tight tracking-tight sm:max-w-none sm:text-base">{settings.businessName.replace(/^M\/s\.\s*/, "")}</span>
         </Link>
 

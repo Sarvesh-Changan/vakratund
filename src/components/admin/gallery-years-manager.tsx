@@ -1,46 +1,30 @@
 "use client";
 
+import { CalendarPlus, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
+
 import { createGalleryYear, deleteGalleryYear, moveGalleryYearItems } from "@/app/(admin)/admin/(protected)/gallery/actions";
 import { ConfirmDialog } from "@/components/admin/confirm-dialog";
-import { Button, Input, Select } from "@/components/ui";
+import { Button, Dialog, DialogPanel, Input, Select, Tooltip } from "@/components/ui";
 import type { GalleryYearView } from "@/server/services/gallery";
 
 export function GalleryYearsManager({ years, onReload }: { years: GalleryYearView[]; onReload: () => Promise<void> }) {
-  const [value, setValue] = useState(String(new Date().getFullYear()));
-  const [rangeFrom, setRangeFrom] = useState(2003);
-  const [rangeTo, setRangeTo] = useState(new Date().getFullYear());
+  const [modal, setModal] = useState<"add" | "range" | null>(null);
+  const [moveTargets, setMoveTargets] = useState<Record<string, string>>({});
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
-  const [moveTargets, setMoveTargets] = useState<Record<string, string>>({});
+  const currentYear = new Date().getFullYear();
+  async function add(year: number): Promise<boolean> { const result = await createGalleryYear({ year }); if (!result.ok) { setMessage(result.error.message); return false; } return true; }
+  async function addOne(year: number): Promise<void> { setBusy(true); const success = await add(year); setBusy(false); if (success) { setMessage(`Added ${year}.`); setModal(null); await onReload(); } }
+  async function addRange(from: number, to: number): Promise<void> { if (from > to) { setMessage("The start year must be before the end year."); return; } setBusy(true); let added = 0; for (let year = from; year <= to; year += 1) if (await add(year)) added += 1; setBusy(false); setModal(null); setMessage(`Added ${added} missing year${added === 1 ? "" : "s"}.`); await onReload(); }
+  async function remove(year: GalleryYearView): Promise<void> { setBusy(true); const result = await deleteGalleryYear({ id: year.id }); setBusy(false); if (!result.ok) setMessage(result.error.message); else { setMessage(`Deleted ${year.year}.`); await onReload(); } }
+  async function moveAndDelete(year: GalleryYearView): Promise<void> { const targetId = moveTargets[year.id]; if (!targetId) return; setBusy(true); const moved = await moveGalleryYearItems({ fromYearId: year.id, toYearId: targetId }); if (!moved.ok) { setBusy(false); setMessage(moved.error.message); return; } const result = await deleteGalleryYear({ id: year.id }); setBusy(false); if (!result.ok) setMessage(result.error.message); else { setMessage(`Moved ${moved.data.moved} item(s) and deleted ${year.year}.`); await onReload(); } }
+  return <div className="space-y-4"><div className="flex flex-wrap items-center justify-between gap-3"><div><h2 className="font-heading text-xl font-semibold">Gallery years</h2><p className="text-sm text-ink-muted">Keep project media grouped by the year it belongs to.</p></div><div className="flex gap-2"><Button type="button" variant="secondary" onClick={() => setModal("range")}><CalendarPlus size={16} aria-hidden="true" /> Quick add range</Button><Button type="button" onClick={() => setModal("add")}><Plus size={16} aria-hidden="true" /> Add Year</Button></div></div>{message ? <p role="status" className="rounded-control border border-brand-deep/30 bg-brand/10 p-3 text-sm">{message}</p> : null}{years.length === 0 ? <div className="rounded-card border border-dashed p-10 text-center">No gallery years yet.</div> : <div className="overflow-hidden rounded-card border bg-surface shadow-soft"><table className="w-full text-left text-sm"><caption className="sr-only">Gallery years</caption><thead className="bg-surface-alt text-xs uppercase tracking-[0.12em] text-ink-muted"><tr><th scope="col" className="px-4 py-3">Year</th><th scope="col" className="px-4 py-3">Images</th><th scope="col" className="px-4 py-3">Created</th><th scope="col" className="px-4 py-3 text-right">Actions</th></tr></thead><tbody className="divide-y divide-line">{years.map((year) => <tr key={year.id} className="hover:bg-surface-alt/60"><td className="px-4 py-4 font-semibold">{year.year}</td><td className="px-4 py-4">{year.imageCount}</td><td className="px-4 py-4 text-xs text-ink-muted">{new Date(year.createdAt).toLocaleDateString("en-IN")}</td><td className="px-4 py-4"><div className="flex justify-end gap-2">{year.imageCount > 0 ? <><label className="sr-only" htmlFor={`move-year-${year.id}`}>Move images from {year.year} to</label><Select id={`move-year-${year.id}`} value={moveTargets[year.id] ?? ""} onChange={(event) => setMoveTargets((current) => ({ ...current, [year.id]: event.target.value }))} className="w-40 text-sm"><option value="">Move images to…</option>{years.filter((candidate) => candidate.id !== year.id).map((candidate) => <option key={candidate.id} value={candidate.id}>{candidate.year}</option>)}</Select><ConfirmDialog title={`Move ${year.imageCount} item(s) before deleting ${year.year}?`} description="All items will move to the selected year, then this year will be deleted." confirmLabel="Move and delete" onConfirm={() => moveAndDelete(year)}><Button type="button" variant="secondary" disabled={busy || !moveTargets[year.id]}>Move &amp; delete</Button></ConfirmDialog></> : <ConfirmDialog title={`Delete ${year.year}?`} description="This year has no images." confirmLabel="Delete year" onConfirm={() => remove(year)}><Tooltip label={`Delete ${year.year}`}><Button type="button" variant="ghost" className="admin-icon-button border border-danger text-danger" aria-label={`Delete ${year.year}`}><Trash2 size={16} aria-hidden="true" /></Button></Tooltip></ConfirmDialog>}</div></td></tr>)}</tbody></table></div>}<YearDialog type={modal} busy={busy} currentYear={currentYear} onClose={() => setModal(null)} onAdd={addOne} onRange={addRange} /></div>;
+}
 
-  async function addYear(year: number): Promise<boolean> {
-    const result = await createGalleryYear({ year });
-    if (!result.ok) { setMessage(result.error.message); return false; }
-    return true;
-  }
-  async function submit(event: React.FormEvent<HTMLFormElement>): Promise<void> {
-    event.preventDefault(); setBusy(true); const created = await addYear(Number(value)); setBusy(false);
-    if (created) { setMessage(`Added ${value}.`); await onReload(); }
-  }
-  async function addRange(): Promise<void> {
-    if (rangeFrom > rangeTo) { setMessage("The start year must be before the end year."); return; }
-    setBusy(true); let added = 0;
-    for (let current = rangeFrom; current <= rangeTo; current += 1) if (await addYear(current)) added += 1;
-    setBusy(false); setMessage(`Added ${added} missing year${added === 1 ? "" : "s"}.`); await onReload();
-  }
-  async function remove(year: GalleryYearView): Promise<void> {
-    setBusy(true); const result = await deleteGalleryYear({ id: year.id }); setBusy(false);
-    setMessage(result.ok ? `Deleted ${year.year}.` : result.error.message); if (result.ok) await onReload();
-  }
-  async function moveAndDelete(year: GalleryYearView): Promise<void> {
-    const target = years.find((candidate) => candidate.id === moveTargets[year.id]);
-    if (!target) { setMessage("Add another year before moving these images."); return; }
-    setBusy(true); const moved = await moveGalleryYearItems({ fromYearId: year.id, toYearId: target.id });
-    if (!moved.ok) { setBusy(false); setMessage(moved.error.message); return; }
-    const result = await deleteGalleryYear({ id: year.id }); setBusy(false);
-    setMessage(result.ok ? `Moved ${moved.data.moved} item(s) to ${target.year} and deleted ${year.year}.` : result.error.message); if (result.ok) await onReload();
-  }
-
-  return <div className="space-y-5"><div className="grid gap-4 lg:grid-cols-2"><form onSubmit={(event) => void submit(event)} className="flex items-end gap-3 rounded-card border bg-surface p-4"><label className="flex-1 text-sm font-semibold">Add year<Input type="number" min={1990} max={new Date().getFullYear() + 1} value={value} onChange={(event) => setValue(event.target.value)} className="mt-1" required /></label><Button type="submit" loading={busy}>Add year</Button></form><section className="rounded-card border bg-surface p-4"><div className="flex items-end gap-3"><label className="flex-1 text-sm font-semibold">From<Input type="number" value={rangeFrom} onChange={(event) => setRangeFrom(Number(event.target.value))} className="mt-1" /></label><label className="flex-1 text-sm font-semibold">To<Input type="number" value={rangeTo} onChange={(event) => setRangeTo(Number(event.target.value))} className="mt-1" /></label><Button type="button" loading={busy} onClick={() => void addRange()}>Quick add range</Button></div></section></div>{message ? <p role="status" className="rounded-control border border-brand-deep/40 bg-brand/10 p-3 text-sm">{message}</p> : null}{years.length === 0 ? <div className="rounded-card border border-dashed p-8 text-center">No gallery years yet.</div> : <div className="space-y-3">{years.map((year) => <article key={year.id} className="flex flex-wrap items-center justify-between gap-3 rounded-card border bg-surface p-4"><div><h2 className="font-heading text-lg font-semibold">{year.year}</h2><p className="text-sm text-ink-muted">{year.imageCount} image/video item{year.imageCount === 1 ? "" : "s"}</p></div>{year.imageCount > 0 ? <div className="flex flex-wrap items-end gap-2"><label className="text-xs font-semibold">Move to<Select value={moveTargets[year.id] ?? ""} onChange={(event) => setMoveTargets((current) => ({ ...current, [year.id]: event.target.value }))} className="mt-1"><option value="">Choose year</option>{years.filter((candidate) => candidate.id !== year.id).map((candidate) => <option key={candidate.id} value={candidate.id}>{candidate.year}</option>)}</Select></label><ConfirmDialog title={`Move ${year.imageCount} item(s) before deleting ${year.year}?`} description="All items will move to the selected year, then this year will be deleted." confirmLabel="Move and delete" onConfirm={() => moveAndDelete(year)}><Button type="button" variant="secondary" disabled={busy || !moveTargets[year.id]}>Move items and delete</Button></ConfirmDialog></div> : <ConfirmDialog title={`Delete ${year.year}?`} description="This year has no images." confirmLabel="Delete year" onConfirm={() => remove(year)}><Button type="button" variant="ghost" className="text-danger" disabled={busy}>Delete</Button></ConfirmDialog>}</article>)}</div>}</div>;
+function YearDialog({ type, busy, currentYear, onClose, onAdd, onRange }: { type: "add" | "range" | null; busy: boolean; currentYear: number; onClose: () => void; onAdd: (year: number) => Promise<void>; onRange: (from: number, to: number) => Promise<void> }) {
+  const [year, setYear] = useState(currentYear);
+  const [from, setFrom] = useState(2003);
+  const [to, setTo] = useState(currentYear);
+  return <Dialog open={type !== null} onClose={onClose} title={type === "range" ? "Quick add year range" : "Add gallery year"}><DialogPanel>{type === "range" ? <form onSubmit={(event) => { event.preventDefault(); void onRange(from, to); }} className="space-y-4"><div className="grid grid-cols-2 gap-3"><label className="text-sm font-semibold">From<Input type="number" value={from} onChange={(event) => setFrom(Number(event.target.value))} className="mt-1" /></label><label className="text-sm font-semibold">To<Input type="number" value={to} onChange={(event) => setTo(Number(event.target.value))} className="mt-1" /></label></div><div className="flex justify-end gap-2"><Button type="button" variant="secondary" onClick={onClose}>Cancel</Button><Button type="submit" loading={busy}>Add missing years</Button></div></form> : <form onSubmit={(event) => { event.preventDefault(); void onAdd(year); }} className="space-y-4"><label className="text-sm font-semibold">Year<Input type="number" min={1990} max={currentYear + 1} value={year} onChange={(event) => setYear(Number(event.target.value))} className="mt-1" /></label><div className="flex justify-end gap-2"><Button type="button" variant="secondary" onClick={onClose}>Cancel</Button><Button type="submit" loading={busy}>Add year</Button></div></form>}</DialogPanel></Dialog>;
 }

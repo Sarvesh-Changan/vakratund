@@ -7,5 +7,5 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 export default function AdminLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <main className="admin-shell min-h-screen bg-bg text-ink">{children}</main>;
+  return <main className="admin-shell admin-theme min-h-screen bg-bg text-ink">{children}</main>;
 }

@@ -500,6 +500,39 @@ a:focus-visible .button-arrow {
 
 .admin-shell .glow-blob { display: none; }
 
+/* Admin is intentionally dense and utilitarian. These variables are scoped so
+   public-site cards and controls keep their editorial shapes. */
+.admin-theme {
+  --radius-control: 0.5rem;
+  --radius-card: 0.75rem;
+  --radius-panel: 0.75rem;
+  --radius-pill: 0.5rem;
+  --elevation-soft: 0 1px 2px rgb(27 26 43 / 0.04), 0 4px 12px rgb(27 26 43 / 0.04);
+  --elevation-raised: 0 8px 20px rgb(27 26 43 / 0.1);
+  --admin-surface: #ffffff;
+  --admin-surface-muted: #f7f7f9;
+}
+
+.admin-theme .button-arrow { display: none; }
+.admin-theme .bg-accent-2 { background-color: transparent !important; border: 1px solid var(--accent) !important; color: var(--accent-ink) !important; }
+.admin-theme .glow-blob { display: none !important; }
+.admin-theme [class*="backdrop-blur"] { backdrop-filter: none !important; }
+.admin-theme [class*="gradient"] { background-image: none !important; }
+.admin-theme button,
+.admin-theme a,
+.admin-theme input,
+.admin-theme select,
+.admin-theme textarea {
+  transition: none !important;
+}
+.admin-theme button:hover:not(:disabled),
+.admin-theme a:hover { transform: none !important; scale: 1 !important; }
+.admin-theme dialog { border-radius: 0.75rem; box-shadow: var(--elevation-raised); }
+.admin-theme dialog::backdrop { backdrop-filter: none; }
+.admin-theme table { border-collapse: separate; border-spacing: 0; }
+.admin-theme .admin-icon-button { width: 2.25rem; height: 2.25rem; padding: 0; border-radius: 0.5rem; }
+.admin-theme [role="switch"] > span:first-child { border-radius: 0.75rem; }
+
 @media (prefers-reduced-motion: reduce) {
   .site-page-load,
   .site-mobile-navigation-open .site-mobile-menu-link,

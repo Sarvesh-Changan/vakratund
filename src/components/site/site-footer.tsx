@@ -5,6 +5,7 @@ import { footerCompanyNavigation } from "@/config/navigation";
 import { WhatsAppIcon } from "@/components/ui/whatsapp-icon";
 import { ContactLink, TrackedWhatsAppLink } from "./contact-link";
 import { phoneHref } from "./contact-utils";
+import { BrandLogo } from "@/components/brand-logo";
 import type { HeaderService } from "./site-header";
 
 export function SiteFooter({ settings, services }: { settings: ResolvedSiteSettings; services: HeaderService[] }) {
@@ -26,7 +27,7 @@ export function SiteFooter({ settings, services }: { settings: ResolvedSiteSetti
         <div className="mx-auto grid max-w-[1440px] gap-x-8 gap-y-12 px-4 py-14 sm:px-6 sm:grid-cols-2 md:grid-cols-3 lg:px-8 xl:grid-cols-[1.4fr_1.55fr_.8fr_1.2fr_1.15fr_1fr] xl:gap-x-6 xl:py-16">
           <section aria-labelledby="footer-about-heading">
             <h2 id="footer-about-heading" className="font-heading text-sm font-bold uppercase tracking-[0.14em] text-brand">About</h2>
-            <Link href="/" className="mt-4 inline-flex items-center gap-2 font-heading text-lg font-bold"><span className="flex size-9 items-center justify-center rounded-full bg-brand text-sm text-brand-ink" aria-hidden="true">V</span>{settings.businessName}</Link>
+            <Link href="/" className="mt-4 inline-flex items-center gap-2 font-heading text-lg font-bold"><BrandLogo width={42} height={42} className="size-10 shrink-0" />{settings.businessName}</Link>
             <p className="mt-4 max-w-sm text-sm leading-7 text-white/65">{settings.tagline}. Civil engineering, project management and turnkey construction across Thane and Mumbai.</p>
           </section>
 

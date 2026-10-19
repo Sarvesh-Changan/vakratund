@@ -11,6 +11,7 @@ import { focusRing } from "@/components/ui/styles";
 import { cn } from "@/lib/utils";
 import { ADMIN_NAVIGATION } from "@/components/admin/admin-navigation";
 import { LogoutButton } from "@/app/(admin)/admin/logout-button";
+import { BrandLogo } from "@/components/brand-logo";
 
 export function AdminShell({
   children,
@@ -40,7 +41,7 @@ export function AdminShell({
   const safeRole = isRole(role) ? role : "EDITOR";
 
   return (
-    <div className="admin-shell min-h-screen lg:flex">
+    <div className="admin-shell admin-theme min-h-screen lg:flex">
       <div
         className={cn(
           "fixed inset-0 z-40 bg-charcoal/50 lg:hidden",
@@ -63,7 +64,8 @@ export function AdminShell({
             onClick={() => setOpen(false)}
             className="font-heading text-lg font-semibold"
           >
-            Vakratund<span className="text-brand-deep">.</span>
+            <BrandLogo width={42} height={42} className="size-10 shrink-0" />
+            <span>Vakratund<span className="text-brand-deep">.</span></span>
           </Link>
           <Button
             type="button"

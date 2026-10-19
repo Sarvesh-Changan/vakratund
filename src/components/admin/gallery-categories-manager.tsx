@@ -1,62 +1,29 @@
 "use client";
 
+import { ArrowDown, ArrowUp, Edit3, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 
 import { createGalleryCategory, deleteGalleryCategory, reorderGalleryCategory, updateGalleryCategory } from "@/app/(admin)/admin/(protected)/gallery/actions";
 import { ConfirmDialog } from "@/components/admin/confirm-dialog";
-import { Button, Input } from "@/components/ui";
+import { Button, Dialog, DialogPanel, Input, Tooltip } from "@/components/ui";
 import type { GalleryCategoryView } from "@/server/services/gallery";
 
 const dateFormatter = new Intl.DateTimeFormat("en-IN", { dateStyle: "medium" });
 
 export function GalleryCategoriesManager({ categories, onReload }: { categories: GalleryCategoryView[]; onReload: () => Promise<void> }) {
-  const [name, setName] = useState("");
+  const [open, setOpen] = useState(false);
+  const [editing, setEditing] = useState<GalleryCategoryView | null>(null);
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
-
-  async function create(event: React.FormEvent<HTMLFormElement>): Promise<void> {
-    event.preventDefault();
-    setBusy(true);
-    const result = await createGalleryCategory({ name, sortOrder: categories.length });
-    setBusy(false);
-    if (!result.ok) { setMessage(result.error.message); return; }
-    setName("");
-    setMessage(`Created ${result.data.name}.`);
-    await onReload();
-  }
-
-  async function save(category: GalleryCategoryView, nextName: string, sortOrder: number): Promise<void> {
-    setBusy(true);
-    const result = await updateGalleryCategory({ id: category.id, name: nextName, sortOrder });
-    setBusy(false);
-    if (!result.ok) { setMessage(result.error.message); return; }
-    setMessage(`Saved ${result.data.name}.`);
-    await onReload();
-  }
-
-  async function remove(category: GalleryCategoryView): Promise<void> {
-    setBusy(true);
-    const result = await deleteGalleryCategory({ id: category.id });
-    setBusy(false);
-    if (!result.ok) { setMessage(result.error.message); return; }
-    const { deletedItems, cleanupFailures } = result.data;
-    setMessage(cleanupFailures > 0 ? `Deleted category and ${deletedItems} item(s). ${cleanupFailures} Cloudinary file(s) failed cleanup; see server logs and retry from the unused media library.` : `Deleted category and ${deletedItems} item(s); Cloudinary assets were removed where unused.`);
-    await onReload();
-  }
-
-  async function move(category: GalleryCategoryView, direction: "up" | "down"): Promise<void> {
-    setBusy(true);
-    const result = await reorderGalleryCategory({ id: category.id, direction });
-    setBusy(false);
-    if (!result.ok) { setMessage(result.error.message); return; }
-    await onReload();
-  }
-
-  return <div className="space-y-5"><form onSubmit={(event) => void create(event)} className="flex flex-col gap-3 rounded-card border bg-surface p-4 sm:flex-row sm:items-end"><label className="flex-1 text-sm font-semibold">New category<Input value={name} onChange={(event) => setName(event.target.value)} maxLength={80} required className="mt-1" placeholder="e.g. Waterproofing" /></label><Button type="submit" loading={busy} disabled={!name.trim()}>Add category</Button></form>{message ? <p role="status" className="rounded-control border border-brand-deep/40 bg-brand/10 p-3 text-sm">{message}</p> : null}{categories.length === 0 ? <div className="rounded-card border border-dashed p-8 text-center"><p className="font-semibold">No gallery categories yet</p><p className="mt-2 text-sm text-ink-muted">Create a category before adding images.</p></div> : <div className="space-y-3">{categories.map((category, index) => <CategoryRow key={category.id} category={category} index={index} total={categories.length} busy={busy} onSave={save} onMove={move} onDelete={remove} />)}</div>}</div>;
+  async function save(name: string, sortOrder: number, id?: string): Promise<void> { setBusy(true); const result = id ? await updateGalleryCategory({ id, name, sortOrder }) : await createGalleryCategory({ name, sortOrder }); setBusy(false); if (!result.ok) { setMessage(result.error.message); return; } setMessage(`${id ? "Saved" : "Created"} ${result.data.name}.`); setOpen(false); setEditing(null); await onReload(); }
+  async function remove(category: GalleryCategoryView): Promise<void> { setBusy(true); const result = await deleteGalleryCategory({ id: category.id }); setBusy(false); if (!result.ok) setMessage(result.error.message); else { setMessage(`Deleted ${category.name} and ${result.data.deletedItems} item(s).`); await onReload(); } }
+  async function move(category: GalleryCategoryView, direction: "up" | "down"): Promise<void> { setBusy(true); const result = await reorderGalleryCategory({ id: category.id, direction }); setBusy(false); if (!result.ok) setMessage(result.error.message); else await onReload(); }
+  return <div className="space-y-4"><div className="flex flex-wrap items-center justify-between gap-3"><div><h2 className="font-heading text-xl font-semibold">Gallery categories</h2><p className="text-sm text-ink-muted">Organize media into client-facing groups.</p></div><Button type="button" onClick={() => { setEditing(null); setOpen(true); }}><Plus size={16} aria-hidden="true" /> Add Category</Button></div>{message ? <p role="status" className="rounded-control border border-brand-deep/30 bg-brand/10 p-3 text-sm">{message}</p> : null}{categories.length === 0 ? <div className="rounded-card border border-dashed p-10 text-center">No gallery categories yet.</div> : <div className="overflow-hidden rounded-card border bg-surface shadow-soft"><table className="w-full text-left text-sm"><caption className="sr-only">Gallery categories</caption><thead className="bg-surface-alt text-xs uppercase tracking-[0.12em] text-ink-muted"><tr><th scope="col" className="px-4 py-3">Name</th><th scope="col" className="px-4 py-3">Slug</th><th scope="col" className="px-4 py-3">Images</th><th scope="col" className="px-4 py-3">Sort order</th><th scope="col" className="px-4 py-3">Created</th><th scope="col" className="px-4 py-3 text-right">Actions</th></tr></thead><tbody className="divide-y divide-line">{categories.map((category, index) => <tr key={category.id} className="hover:bg-surface-alt/60"><td className="px-4 py-4 font-semibold">{category.name}</td><td className="px-4 py-4 font-mono text-xs text-ink-muted">{category.slug}</td><td className="px-4 py-4">{category.imageCount}</td><td className="px-4 py-4 font-mono text-xs">{category.sortOrder}</td><td className="px-4 py-4 text-xs text-ink-muted">{dateFormatter.format(new Date(category.createdAt))}</td><td className="px-4 py-4"><div className="flex justify-end gap-1"><Tooltip label={`Move ${category.name} up`}><Button type="button" variant="ghost" size="sm" className="admin-icon-button border" disabled={busy || index === 0} aria-label={`Move ${category.name} up`} onClick={() => void move(category, "up")}><ArrowUp size={15} aria-hidden="true" /></Button></Tooltip><Tooltip label={`Move ${category.name} down`}><Button type="button" variant="ghost" size="sm" className="admin-icon-button border" disabled={busy || index === categories.length - 1} aria-label={`Move ${category.name} down`} onClick={() => void move(category, "down")}><ArrowDown size={15} aria-hidden="true" /></Button></Tooltip><Tooltip label={`Edit ${category.name}`}><Button type="button" variant="ghost" size="sm" className="admin-icon-button border" aria-label={`Edit ${category.name}`} onClick={() => { setEditing(category); setOpen(true); }}><Edit3 size={16} aria-hidden="true" /></Button></Tooltip><ConfirmDialog title="Delete category?" description={`This permanently deletes ${category.imageCount} image/video item(s) in “${category.name}”.`} confirmLabel="Delete category" onConfirm={() => remove(category)}><Tooltip label={`Delete ${category.name}`}><Button type="button" variant="ghost" size="sm" className="admin-icon-button border border-danger text-danger" aria-label={`Delete ${category.name}`}><Trash2 size={16} aria-hidden="true" /></Button></Tooltip></ConfirmDialog></div></td></tr>)}</tbody></table></div>}<CategoryDialog key={`${editing?.id ?? "new"}-${open}`} open={open} category={editing} busy={busy} onClose={() => { setOpen(false); setEditing(null); }} onSave={save} /></div>;
 }
 
-function CategoryRow({ category, index, total, busy, onSave, onMove, onDelete }: { category: GalleryCategoryView; index: number; total: number; busy: boolean; onSave: (category: GalleryCategoryView, name: string, sortOrder: number) => Promise<void>; onMove: (category: GalleryCategoryView, direction: "up" | "down") => Promise<void>; onDelete: (category: GalleryCategoryView) => Promise<void> }) {
-  const [name, setName] = useState(category.name);
-  const [sortOrder, setSortOrder] = useState(category.sortOrder);
-  return <article className="grid gap-4 rounded-card border bg-surface p-4 md:grid-cols-[minmax(0,1fr)_9rem_auto]"><label className="text-sm font-semibold">Category name<Input value={name} onChange={(event) => setName(event.target.value)} maxLength={80} className="mt-1" /></label><label className="text-sm font-semibold">Sort order<Input type="number" min={0} max={100000} value={sortOrder} onChange={(event) => setSortOrder(Number(event.target.value))} className="mt-1" /></label><div className="flex flex-wrap items-end gap-2"><Button type="button" size="sm" variant="secondary" disabled={busy || index === 0} onClick={() => void onMove(category, "up")} aria-label={`Move ${category.name} up`}>↑</Button><Button type="button" size="sm" variant="secondary" disabled={busy || index === total - 1} onClick={() => void onMove(category, "down")} aria-label={`Move ${category.name} down`}>↓</Button><Button type="button" size="sm" disabled={busy || !name.trim()} onClick={() => void onSave(category, name, sortOrder)}>Save</Button><ConfirmDialog title="Delete category?" description={`This permanently deletes ${category.imageCount} image/video item(s) in “${category.name}”. Cloudinary files are removed when they are not used elsewhere.`} confirmLabel="Delete category" onConfirm={() => onDelete(category)}><Button type="button" size="sm" variant="ghost" className="text-danger" disabled={busy}>Delete</Button></ConfirmDialog></div><p className="text-xs text-ink-muted md:col-span-3">Created {dateFormatter.format(new Date(category.createdAt))} · {category.imageCount} image/video item{category.imageCount === 1 ? "" : "s"}</p></article>;
+function CategoryDialog({ open, category, busy, onClose, onSave }: { open: boolean; category: GalleryCategoryView | null; busy: boolean; onClose: () => void; onSave: (name: string, sortOrder: number, id?: string) => Promise<void> }) {
+  const [name, setName] = useState(category?.name ?? "");
+  const [sortOrder, setSortOrder] = useState(category?.sortOrder ?? 0);
+  function reset(): void { setName(category?.name ?? ""); setSortOrder(category?.sortOrder ?? 0); }
+  return <Dialog open={open} onClose={onClose} title={category ? "Edit category" : "Add category"}><DialogPanel><form onSubmit={(event) => { event.preventDefault(); void onSave(name, sortOrder, category?.id); }} className="space-y-4"><label className="block text-sm font-semibold">Name<Input value={name} onChange={(event) => setName(event.target.value)} required maxLength={80} className="mt-1" /></label><label className="block text-sm font-semibold">Sort order<Input type="number" min={0} value={sortOrder} onChange={(event) => setSortOrder(Number(event.target.value))} className="mt-1" /></label><div className="flex justify-end gap-2"><Button type="button" variant="secondary" onClick={() => { reset(); onClose(); }}>Cancel</Button><Button type="submit" loading={busy} disabled={!name.trim()}>{category ? "Save category" : "Add category"}</Button></div></form></DialogPanel></Dialog>;
 }

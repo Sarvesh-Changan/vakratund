@@ -166,4 +166,17 @@ Plain, specific, professional. Use numbers and facts (years, sqft, storeys). Avo
 - Forms: sticky save bar, dirty-state warning, and inline validation.
 - Every list: loading skeleton, empty state with primary action, error state with retry.
 - Destructive actions use ConfirmDialog with explicit wording.
+
+### Admin theme scope
+
+All protected admin screens are wrapped in `.admin-theme`. This scope overrides
+the public editorial treatment without changing public pages: controls and
+chips use an 8px radius, cards and panels use a 12px radius, surfaces are
+neutral with 1px borders and restrained shadows, and buttons do not lift,
+nudge arrows, blur, or use gradients. Primary buttons are solid accent fills;
+secondary buttons are outlined; danger actions use red text and borders.
+Small icon buttons are 36px squares and must have an accessible label and
+tooltip. Admin tables use sticky headers, dense spacing, real labeled switches,
+and responsive cards below 768px. Decorative blobs, animated reveals, and
+nonessential transitions are disabled in the admin scope.
 - Mobile-usable lead management (client will check leads on phone).
