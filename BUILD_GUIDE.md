@@ -122,12 +122,11 @@ Tasks:
 2. Load Sora (headings) and Inter (body) via next/font with display swap; set fluid type scale.
 3. Build accessible primitives in src/components/ui: Button (variants/sizes/loading), Input, Textarea, Select, Checkbox, Radio, Switch, FormField, Badge, Card, Accordion, Dialog, Sheet, Tabs, Tooltip, Toast, Skeleton, EmptyState, ErrorState, Pagination, Breadcrumbs, Container, SectionHeading, Stat, Stepper.
    Prefer native elements and small headless patterns; if a headless library is needed (e.g., Radix primitives) justify in an ADR and add only the packages used.
-4. Create /design-system (dev-only, noindex, excluded in production) page showing every component and state (default, hover, focus, disabled, loading, error) in light and dark.
 5. Add motion utilities (Reveal, CountUp) using the `motion` library, honoring prefers-reduced-motion.
 Constraints: no hard-coded hex in components; every component keyboard accessible; focus-visible ring using brand-deep.
 Done when: design-system page renders all components, passes axe checks manually via browser tools, and build passes.
 ```
-**Verify:** open `/design-system` on mobile + desktop widths; tab through components. **Commit:** `feat(ui): design tokens and component primitives`
+**Verify:** exercise the component examples on mobile + desktop widths; tab through controls. **Commit:** `feat(ui): design tokens and component primitives`
 
 ---
 
@@ -242,7 +241,7 @@ PHASE 7d — The retired editorial module and its public and admin surfaces are 
 PHASE 7e — Remaining admin modules.
 1. Pages/Content: edit PageSection blocks for home (hero, stats, cta, process) and about (story, mission) using per-section Zod schemas and purpose-built forms (not a raw JSON editor); visibility toggles; no HTML injection.
 2. SEO: PageSeo editor for static paths (/, /about, /services, /projects, /gallery, /faqs, /contact, /estimate) with title/description/OG image/canonical/noindex; sitemap & robots preview.
-3. Settings (singleton): business name, tagline, phones (multiple), email, WhatsApp number + default message, address, map embed URL (validate allowlisted domain), hours, social links, credentials (label/value), brochure PDF via MediaPicker, lead notification emails.
+3. Settings (singleton): business name, tagline, phones (multiple), email, WhatsApp number + default message, address, map embed URL (validate allowlisted domain), hours, social links, credentials (label/value), lead notification emails.
 4. Users (SUPER_ADMIN only): create/invite, edit role, deactivate/reactivate, revoke sessions, reset password; guard last SUPER_ADMIN.
 5. All changes logged to ActivityLog with sanitized diffs; all revalidate relevant tags.
 Done when: each module has role-tested Server Actions and the admin can fully edit Home hero/stats text and site settings.
@@ -303,7 +302,7 @@ PHASE 11 — Remaining public pages.
 2. /testimonials; show a friendly empty state if none are published.
 3. /faqs grouped by service/general with Accordion + FAQPage JSON-LD.
 4. /contact: form (name, phone, email optional, location, message, consent) — UI only now; submission is implemented in Phase 15. Contact info card from Settings, map embed (allowlisted), WhatsApp and tel: links.
-5. /privacy and /terms pages with editable Markdown content (stored as PageSection or Settings) and sensible defaults; mark `TODO(client/legal)` for review by a lawyer.
+5. /privacy page with editable Markdown content (stored as PageSection or Settings) and sensible defaults; mark `TODO(client/legal)` for review by a lawyer.
 Done when: all pages are reachable from navigation, responsive, SEO metadata present, no console errors.
 ```
 **Commit:** `feat(site): about, faqs, contact, legal pages`
@@ -368,9 +367,9 @@ Done when: I can complete an estimate end-to-end and see the Lead + Quote in the
 ```text
 PHASE 15 — Lead capture and management.
 Public:
-1. Implement submitContact (Contact form), submitProjectEnquiry (project page CTA, includes project slug), requestBrochure (name, phone, email, consent → returns a short-lived signed URL or page with download link), all using the same pipeline: rate limit → honeypot → validate → create Lead with tracking data (sourcePage, referrer, UTM, deviceType from UA, ipHash) → thank-you redirect.
+1. Implement submitContact (Contact form) and submitProjectEnquiry (project page CTA, includes project slug), using the same pipeline: rate limit → honeypot → validate → create Lead with tracking data (sourcePage, referrer, UTM, deviceType from UA, ipHash) → thank-you redirect.
 2. Capture UTM/referrer on first landing in a first-party cookie/sessionStorage and attach to leads.
-3. Thank-you pages for contact, enquiry and brochure (noindex).
+3. Thank-you pages for contact and enquiry (noindex).
 Admin (/admin/leads, /admin/quotes):
 4. Leads table: filters (status, type, date range, assignee, source), search (name/phone/email), sort, pagination, duplicate flag, mobile-friendly cards.
 5. Lead detail: contact info (tap-to-call, WhatsApp), quote summary + breakdown + snapshot viewer (for QUOTE), timeline (status history + notes), change status (NEW→CONTACTED→QUALIFIED→CONVERTED→CLOSED; allow reopen with reason), assign user, follow-up date, add note.
@@ -389,7 +388,7 @@ Done when: leads from all forms appear in admin with correct source tracking and
 **Prompt**
 ```text
 PHASE 16 — Email and contact integrations.
-1. Email service src/lib/email using Nodemailer over SMTP + React Email templates: (a) admin new-lead notification (type, name, phone, location, message, quote range, link to admin), (b) visitor confirmation (summary, what happens next, contact numbers), (c) password reset, (d) brochure delivery.
+1. Email service src/lib/email using Nodemailer over SMTP + React Email templates: (a) admin new-lead notification (type, name, phone, location, message, quote range, link to admin), (b) visitor confirmation (summary, what happens next, contact numbers), (c) password reset.
 2. Recipients from SiteSetting.notifyEmails with env fallback. Strip CR/LF from header values; escape content.
 3. Sending happens AFTER the DB transaction; failures are logged (no PII) and never fail the user's submission. Add an EmailLog table (status, type, leadId, error code) and a retry button in admin lead detail.
 4. WhatsApp: helper to build wa.me links from settings (+ per-project/page prefilled text). Click-to-call tel: links everywhere phone numbers appear. Ensure ContactEvent logging is wired (from Phase 8).
@@ -423,7 +422,7 @@ Done when: Rich Results Test–valid JSON-LD (verify manually), sitemap valid, n
 **Prompt**
 ```text
 PHASE 18 — Security hardening per docs/SECURITY.md (full pass).
-1. Implement the Upstash-backed limiter behind the existing interface with in-memory fallback in dev; apply the limits table in SECURITY.md §6 to login, lead forms, brochure, estimate API, upload signature, password reset.
+1. Implement the Upstash-backed limiter behind the existing interface with in-memory fallback in dev; apply the limits table in SECURITY.md §6 to login, lead forms, estimate API, upload signature, password reset.
 2. Add security headers in next.config (CSP with nonces, HSTS, nosniff, Referrer-Policy, Permissions-Policy, frame-ancestors none); adjust CSP for Cloudinary images, map embed, GA/Turnstile if enabled; confirm no CSP violations in console across all pages.
 3. Optional Turnstile integration on public forms behind an env flag, with server-side verification.
 4. Authorization audit: write an automated test that enumerates all Server Actions/route handlers under admin and asserts they reject unauthenticated and unauthorized roles (use a registry pattern if needed).
@@ -460,7 +459,7 @@ Done when: targets met or documented exceptions with reasons.
 PHASE 20 — Complete the test suite.
 1. Unit: ensure coverage for utils, validation schemas, permissions, estimator (≥ 90%), markdown sanitizer, JSON-LD builders.
 2. Integration (against a Neon test branch or local Postgres, selected by TEST_DATABASE_URL): lead submission transaction, quote snapshot immutability after config changes, role enforcement in services, CMS publish rules, last-SUPER_ADMIN guard.
-3. E2E (Playwright, desktop + mobile): estimate→lead→thank-you; contact form; brochure request; admin login; create+publish project and see it publicly; change lead status through the pipeline; estimator admin edit shows up in the public estimator; EDITOR cannot access leads.
+3. E2E (Playwright, desktop + mobile): estimate→lead→thank-you; contact form; admin login; create+publish project and see it publicly; change lead status through the pipeline; estimator admin edit shows up in the public estimator; EDITOR cannot access leads.
 4. Add `npm run test:ci` and wire into GitHub Actions (with services/env needed; secrets via GitHub Actions secrets).
 5. Write docs/TEST_PLAN.md with manual QA checklist for the client (browsers, devices, forms, emails, WhatsApp, call links).
 Done when: CI is green with unit + integration + e2e smoke.
@@ -478,7 +477,7 @@ PHASE 21 — Production readiness.
 3. Add Vercel config (vercel.json only if necessary), image domains, caching headers for static assets, and redirects for legacy URLs.
 4. Add health/monitoring: /api/health (basic) and /api/health?deep=1 (SUPER_ADMIN only); optional Sentry integration behind env flag with PII scrubbing; optional Vercel performance telemetry.
 5. Create docs/DEPLOYMENT.md: step-by-step for Neon production branch, Vercel project, env vars (Production vs Preview), domain + DNS, SSL, Gmail SMTP app password, Cloudinary settings, rollback.
-6. Final cleanup: remove dev-only pages from production (/design-system), remove unused deps/files, ensure no console.log of sensitive data.
+6. Final cleanup: remove unused files, ensure no console.log of sensitive data.
 Done when: a production build passes and docs/DEPLOYMENT.md can be followed by someone new.
 ```
 **Commit:** `chore: production readiness and deployment docs`
@@ -503,7 +502,7 @@ Using docs/DEPLOYMENT.md, produce a personalized go-live checklist for me with e
 **Production smoke test checklist (you):**
 - [ ] Home/Services/Projects load fast on mobile data
 - [ ] Estimate flow works; Lead+Quote visible in admin; emails received
-- [ ] Contact form, brochure request, WhatsApp and call links work
+- [ ] Contact form, WhatsApp and call links work
 - [ ] Admin login/logout, edit a service → public page updates
 - [ ] Upload an image; it appears optimized
 - [ ] `/admin` not indexed; sitemap and robots correct

@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const leadStatusSchema = z.enum(["NEW", "CONTACTED", "QUALIFIED", "CONVERTED", "CLOSED"]);
-export const leadTypeSchema = z.enum(["QUOTE", "CONTACT", "PROJECT_ENQUIRY", "BROCHURE", "INSPECTION"]);
+export const leadTypeSchema = z.enum(["QUOTE", "CONTACT", "PROJECT_ENQUIRY", "INSPECTION"]);
 
 const dateSchema = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Use YYYY-MM-DD.").optional();
 

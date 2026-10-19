@@ -4,7 +4,7 @@ import { prisma } from "@/lib/db/client";
 
 export type PublicLead = {
   publicId: string;
-  type: "CONTACT" | "PROJECT_ENQUIRY" | "BROCHURE";
+  type: "CONTACT" | "PROJECT_ENQUIRY";
 };
 
 export async function getPublicLeadByReference(

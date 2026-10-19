@@ -8,7 +8,7 @@ The public route matrix was captured with Playwright against the production buil
 | --- | ---: | ---: | ---: | ---: | ---: |
 | Public pages | 15 | 90 | 90/90 | 0/90 | 0.000 |
 
-Routes included `/`, `/about`, `/services`, `/services/building-construction`, `/projects`, `/projects/residential-commercial-building-kharkar-ali`, `/gallery`, `/testimonials`, `/contact`, `/estimate`, `/faqs`, `/privacy`, `/terms` and `/download/company-profile`. Each route had one H1 in the captured document. Browser CLS is an automated local observation from the Playwright `layout-shift` API; it is not a Lighthouse score.
+Routes included `/`, `/about`, `/services`, `/services/building-construction`, `/projects`, `/projects/residential-commercial-building-kharkar-ali`, `/gallery`, `/testimonials`, `/contact`, `/estimate`, `/faqs` and `/privacy`. Each route had one H1 in the captured document. Browser CLS is an automated local observation from the Playwright `layout-shift` API; it is not a Lighthouse score.
 
 ### Visual and accessibility fixes from this sweep
 

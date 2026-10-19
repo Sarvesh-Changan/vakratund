@@ -19,25 +19,3 @@ You may ask us to access, correct or delete information associated with your enq
 
 We use reasonable technical and organisational safeguards, but no internet transmission can be guaranteed to be completely secure.
 `;
-
-// TODO(client/legal): Have qualified Indian counsel review and replace these defaults before launch.
-export const defaultTermsMarkdown = `## Using this website
-
-This website provides general information about Vakratund Construction and its services. Information on this website is not a binding quotation, engineering certification or construction contract.
-
-## Project discussions
-
-Any estimate, timeline or scope discussed through this website is indicative until confirmed in a written proposal and agreement after the required site assessment.
-
-## Website content
-
-We work to keep published information accurate and current. Project photographs, descriptions and other materials may not be copied or reused without permission.
-
-## External services
-
-Links to third-party services are provided for convenience. Their content and privacy practices are governed by their own terms.
-
-## Contact
-
-Questions about these terms can be raised through our [Contact page](/contact).
-`;

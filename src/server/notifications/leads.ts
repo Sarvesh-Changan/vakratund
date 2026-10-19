@@ -3,11 +3,9 @@ import "server-only";
 import { createElement } from "react";
 
 import { resolveNotifyRecipients, sendEmail } from "@/lib/email";
-import { renderTemplate, AdminNewLeadEmail, BrochureDeliveryEmail, VisitorConfirmationEmail } from "@/lib/email/templates";
+import { renderTemplate, AdminNewLeadEmail, VisitorConfirmationEmail } from "@/lib/email/templates";
 import { getEnv } from "@/lib/env";
 import { prisma } from "@/lib/db/client";
-import { createBrochureToken } from "@/server/brochure-token";
-import { getPublicBrochureMedia } from "@/server/queries/brochure";
 import { getSettings } from "@/server/services/settings";
 import { buildWhatsAppHref } from "@/lib/contact/whatsapp";
 
@@ -36,17 +34,6 @@ export async function notifyLeadCreated(leadId: string, options: { admin?: boole
   if (!sendVisitor || !lead.email) return;
   const phones = settings?.phones ?? [];
   const whatsapp = buildWhatsAppHref({ whatsappNumber: settings?.whatsappNumber || phones[0] || lead.phone, whatsappMessage: settings?.whatsappMessage, phones }, { pageTitle: "Enquiry confirmation" }, `Hello, I am following up on my ${lead.type.toLowerCase().replaceAll("_", " ")} enquiry.`);
-  if (lead.type === "BROCHURE") {
-    try {
-      const brochure = await getPublicBrochureMedia();
-      if (!brochure) return;
-      const token = createBrochureToken(brochure.id);
-      const template = await renderTemplate(createElement(BrochureDeliveryEmail, { data: { name: lead.name, downloadUrl: `${adminUrl}/api/brochure/download?token=${encodeURIComponent(token)}` } }));
-      const result = await sendEmail({ to: lead.email, subject: "Your Vakratund company profile", html: template.html, text: template.text, replyTo: notifyRecipients[0], type: "BROCHURE_DELIVERY", leadId: lead.id });
-      if (!result.ok) logFailure("BROCHURE_DELIVERY", result.code);
-    } catch { logFailure("BROCHURE_DELIVERY", "EMAIL_RENDER_FAILED"); }
-    return;
-  }
   try {
     if (!whatsapp) return;
     const template = await renderTemplate(createElement(VisitorConfirmationEmail, { data: { name: lead.name, summary: lead.message || `Your ${lead.type.toLowerCase().replaceAll("_", " ")} enquiry`, phones, whatsappUrl: whatsapp, quote: quote && quote.lowAmount > 0 && quote.pricingMode === "ESTIMATE" ? quote : null } }));

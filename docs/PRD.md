@@ -53,9 +53,8 @@ integrations, native apps. Keep data model extensible for them.
 | PUB-8 | FAQs | Grouped by service/general; FAQPage schema. |
 | PUB-9 | Contact | Form, map embed, address, phones, email, WhatsApp, hours. |
 | PUB-10 | Estimator | See 5.2. |
-| PUB-11 | Brochure download | Company profile PDF gated by lead form (name, phone, email); download link returned after submit; lead stored with type `BROCHURE`. |
 | PUB-12 | Global CTAs | Sticky mobile bar (Call / WhatsApp / Quote), floating WhatsApp button, header CTA. |
-| PUB-13 | Legal & errors | Privacy policy, Terms, 404, 500, loading skeletons. |
+| PUB-13 | Legal & errors | Privacy policy, 404, 500, loading skeletons. |
 
 ### 5.2 Estimator (database-driven)
 | ID | Requirement | Acceptance criteria |
@@ -74,7 +73,7 @@ integrations, native apps. Keep data model extensible for them.
 | ID | Requirement |
 |---|---|
 | LEAD-1 | Capture source page, referrer, UTM params, device, timestamp (IP stored only as hash). |
-| LEAD-2 | Types: `QUOTE`, `CONTACT`, `PROJECT_ENQUIRY`, `BROCHURE`, `INSPECTION`. Call/WhatsApp clicks logged as `ContactEvent`. |
+| LEAD-2 | Types: `QUOTE`, `CONTACT`, `PROJECT_ENQUIRY`, `INSPECTION`. Call/WhatsApp clicks logged as `ContactEvent`. |
 | LEAD-3 | Pipeline: NEW → CONTACTED → QUALIFIED → CONVERTED → CLOSED with status history, notes, assignee, follow-up date. |
 | LEAD-4 | Duplicate detection by phone within 30 days (flag, don't discard). |
 | LEAD-5 | Thank-you pages per lead type with next steps and optional conversion tracking event. |
@@ -92,7 +91,7 @@ integrations, native apps. Keep data model extensible for them.
 | ADM-8 | Gallery & Media | Signed Cloudinary image/video uploads with category/year assignment, duplicate detection, publish/featured/cover controls, year management, library and usage-safe deletion. |
 | ADM-9 | Pages/content | Edit Home hero, stats, About text, CTA copy via structured sections (no HTML injection). |
 | ADM-10 | SEO | Per-page and per-entity title/description/OG image/canonical/noindex; sitemap and robots preview. |
-| ADM-11 | Settings | Business info, phones, email, address, hours, social links, WhatsApp number/message, brochure file, email recipients. |
+| ADM-11 | Settings | Business info, phones, email, address, hours, social links, WhatsApp number/message, email recipients. |
 | ADM-12 | Users & roles | SUPER_ADMIN manages users; roles SUPER_ADMIN, ADMIN, EDITOR, SALES; deactivate users; password reset. |
 | ADM-13 | Activity log | Who did what, when; filterable; immutable. |
 
@@ -112,7 +111,7 @@ SUPER_ADMIN everything · ADMIN everything except user management · EDITOR cont
 ## 7. Content requirements and gaps
 Real content is in `CONTENT.md`. Items needing the client (`TODO(client)`): logo and brand assets,
 original project photos, office address, email, GST/MSME numbers, testimonials, permission to publish
-client names, estimator base rates, brochure PDF final version, WhatsApp Business number, domain access.
+client names, estimator base rates, WhatsApp Business number, domain access.
 
 ## 8. Release plan
 | Milestone | Contents |

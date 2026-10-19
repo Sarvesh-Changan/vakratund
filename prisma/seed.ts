@@ -773,12 +773,6 @@ const pageSeo = [
     description:
       "Read how Vakratund Construction handles enquiry information and privacy requests.",
   },
-  {
-    path: "/terms",
-    title: "Terms of Use",
-    description:
-      "Read the terms for using the Vakratund Construction website and project enquiries.",
-  },
 ] as const;
 
 function fieldsForService(service: ServiceSeed): EstimatorField[] {

@@ -62,14 +62,13 @@ async function usageMap(mediaIds: readonly string[]): Promise<Map<string, MediaU
   if (mediaIds.length === 0) return result;
   const assets = await prisma.mediaAsset.findMany({ where: { id: { in: [...mediaIds] } }, select: { id: true, publicId: true } });
   const mediaIdByPublicId = new Map(assets.map((asset) => [asset.publicId, asset.id]));
-  const [projectMedia, galleries, services, teams, testimonials, pageSeo, settings] = await Promise.all([
+  const [projectMedia, galleries, services, teams, testimonials, pageSeo] = await Promise.all([
     prisma.projectMedia.findMany({ where: { mediaId: { in: [...mediaIds] } }, select: { mediaId: true, projectId: true } }),
     prisma.galleryItem.findMany({ where: { publicId: { in: assets.map((asset) => asset.publicId) } }, select: { publicId: true, title: true, category: { select: { name: true } } } }),
     prisma.service.findMany({ where: { coverId: { in: [...mediaIds] } }, select: { coverId: true, title: true, slug: true } }),
     prisma.teamMember.findMany({ where: { photoId: { in: [...mediaIds] } }, select: { photoId: true, name: true } }),
     prisma.testimonial.findMany({ where: { photoId: { in: [...mediaIds] } }, select: { photoId: true, name: true } }),
     prisma.pageSeo.findMany({ where: { ogImageId: { in: [...mediaIds] } }, select: { ogImageId: true, path: true } }),
-    prisma.siteSetting.findMany({ where: { brochureMediaId: { in: [...mediaIds] } }, select: { brochureMediaId: true } }),
   ]);
 
   const projectIds = [...new Set(projectMedia.map((row) => row.projectId))];
@@ -87,7 +86,6 @@ async function usageMap(mediaIds: readonly string[]): Promise<Map<string, MediaU
   for (const row of teams) if (row.photoId) addUsage(result, row.photoId, { type: "Team", label: row.name });
   for (const row of testimonials) if (row.photoId) addUsage(result, row.photoId, { type: "Testimonial", label: row.name, href: `/admin/testimonials` });
   for (const row of pageSeo) if (row.ogImageId) addUsage(result, row.ogImageId, { type: "SEO", label: row.path, href: `/admin/seo` });
-  for (const row of settings) if (row.brochureMediaId) addUsage(result, row.brochureMediaId, { type: "Settings", label: "Company profile brochure", href: `/admin/settings` });
   return result;
 }
 

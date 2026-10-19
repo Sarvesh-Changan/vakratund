@@ -8,7 +8,7 @@ import type { TrackingInput } from "@/lib/validation/leads";
 const PUBLIC_ID_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 const DUPLICATE_WINDOW_MS = 30 * 24 * 60 * 60 * 1000;
 
-export type PublicLeadType = "CONTACT" | "PROJECT_ENQUIRY" | "BROCHURE";
+export type PublicLeadType = "CONTACT" | "PROJECT_ENQUIRY";
 
 export type PersistPublicLeadInput = {
   type: PublicLeadType;

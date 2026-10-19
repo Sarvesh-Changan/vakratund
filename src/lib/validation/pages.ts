@@ -20,7 +20,7 @@ const aboutJourneySchema = z.object({ eyebrow: optionalText(80), title: text(120
 export const pageSectionSchemas = {
   home: { hero: heroSchema, stats: statsSchema, services: homeServicesSchema, projects: homeProjectsSchema, why: homeWhySchema, process: processSchema, specialty: homeSpecialtySchema, faq: homeFaqSchema, estimator: homeEstimatorSchema, cta: ctaSchema },
   about: { story: textSectionSchema, mission: textSectionSchema, journey: aboutJourneySchema },
-  legal: { privacy: textSectionSchema, terms: textSectionSchema },
+  legal: { privacy: textSectionSchema },
 } as const;
 
 export const pageSectionInputSchema = z.discriminatedUnion("sectionKey", [
@@ -38,7 +38,6 @@ export const pageSectionInputSchema = z.discriminatedUnion("sectionKey", [
   z.object({ pageKey: z.literal("about"), sectionKey: z.literal("mission"), content: textSectionSchema, isVisible: z.boolean() }).strict(),
   z.object({ pageKey: z.literal("about"), sectionKey: z.literal("journey"), content: aboutJourneySchema, isVisible: z.boolean() }).strict(),
   z.object({ pageKey: z.literal("legal"), sectionKey: z.literal("privacy"), content: textSectionSchema, isVisible: z.boolean() }).strict(),
-  z.object({ pageKey: z.literal("legal"), sectionKey: z.literal("terms"), content: textSectionSchema, isVisible: z.boolean() }).strict(),
 ]);
 export const pageSectionIdSchema = z.object({ pageKey: z.enum(["home", "about", "legal"]), sectionKey: z.string().min(1).max(40) }).strict();
 export type PageSectionInput = z.infer<typeof pageSectionInputSchema>;

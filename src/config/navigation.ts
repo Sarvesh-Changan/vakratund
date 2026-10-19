@@ -10,5 +10,4 @@ export const footerCompanyNavigation = [
   { label: "About us", href: "/about" },
   { label: "Projects", href: "/projects" },
   { label: "Gallery", href: "/gallery" },
-  { label: "Company profile", href: "/download/company-profile" },
 ] as const;

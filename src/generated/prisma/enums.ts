@@ -51,7 +51,6 @@ export const LeadType = {
   QUOTE: 'QUOTE',
   CONTACT: 'CONTACT',
   PROJECT_ENQUIRY: 'PROJECT_ENQUIRY',
-  BROCHURE: 'BROCHURE',
   INSPECTION: 'INSPECTION'
 } as const
 

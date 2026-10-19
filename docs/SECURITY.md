@@ -71,7 +71,6 @@ Rules:
 |---|---|
 | Login | 5 / 15 min (+ per email) |
 | Lead / quote / contact submit | 5 / 10 min, 20 / day |
-| Brochure download request | 5 / 10 min |
 | Estimate calculation API | 60 / min |
 | Upload signature | 30 / hour (authenticated) |
 | Password reset | 3 / hour per email |
@@ -85,7 +84,6 @@ Rules:
 - Allowed: `jpg, jpeg, png, webp, avif` (images), `mp4, webm` (video, size-capped), `pdf` (documents, admin only). Max 10 MB image / 50 MB video / 15 MB PDF.
 - API secret only on the server; never exposed to the client.
 - Store only metadata in DB; require alt text; strip EXIF GPS where possible (Cloudinary `fl_strip_profile` or on upload preset).
-- Gated brochure: serve via a short-lived signed URL, not a permanent public link, if confidentiality is desired.
 
 ## 8. Secrets & configuration
 - `.env.local` for development only; production secrets in Vercel project env (Production/Preview separated).

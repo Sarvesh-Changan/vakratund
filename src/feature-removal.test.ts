@@ -44,3 +44,19 @@ describe("retired editorial surface", () => {
     expect(schema).not.toContain(`model ${retiredModel}`);
   });
 });
+
+describe("admin sidebar navigation", () => {
+  it("does not expose hidden admin modules while preserving the remaining modules", () => {
+    const hiddenModules = ["Media", "Pages", "Settings", "Users"];
+    const visibleModules = ["Dashboard", "Leads", "Quotes", "Estimator", "Projects", "Services", "Testimonials", "FAQs", "Team", "Gallery", "SEO", "Activity"];
+
+    expect(ADMIN_NAVIGATION.map((item) => item.label)).not.toEqual(expect.arrayContaining(hiddenModules));
+    expect(ADMIN_NAVIGATION.map((item) => item.label)).toEqual(expect.arrayContaining(visibleModules));
+    expect(ADMIN_NAVIGATION.map((item) => item.href)).not.toEqual(expect.arrayContaining([
+      "/admin/media",
+      "/admin/pages",
+      "/admin/settings",
+      "/admin/users",
+    ]));
+  });
+});

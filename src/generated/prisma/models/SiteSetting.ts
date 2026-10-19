@@ -44,7 +44,6 @@ export type SiteSettingMinAggregateOutputType = {
   responseTimeText: string | null
   address: string | null
   mapEmbedUrl: string | null
-  brochureMediaId: string | null
   foundedYear: number | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -60,7 +59,6 @@ export type SiteSettingMaxAggregateOutputType = {
   responseTimeText: string | null
   address: string | null
   mapEmbedUrl: string | null
-  brochureMediaId: string | null
   foundedYear: number | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -80,7 +78,6 @@ export type SiteSettingCountAggregateOutputType = {
   businessHours: number
   socials: number
   credentials: number
-  brochureMediaId: number
   notifyEmails: number
   foundedYear: number
   createdAt: number
@@ -107,7 +104,6 @@ export type SiteSettingMinAggregateInputType = {
   responseTimeText?: true
   address?: true
   mapEmbedUrl?: true
-  brochureMediaId?: true
   foundedYear?: true
   createdAt?: true
   updatedAt?: true
@@ -123,7 +119,6 @@ export type SiteSettingMaxAggregateInputType = {
   responseTimeText?: true
   address?: true
   mapEmbedUrl?: true
-  brochureMediaId?: true
   foundedYear?: true
   createdAt?: true
   updatedAt?: true
@@ -143,7 +138,6 @@ export type SiteSettingCountAggregateInputType = {
   businessHours?: true
   socials?: true
   credentials?: true
-  brochureMediaId?: true
   notifyEmails?: true
   foundedYear?: true
   createdAt?: true
@@ -251,7 +245,6 @@ export type SiteSettingGroupByOutputType = {
   businessHours: runtime.JsonValue | null
   socials: runtime.JsonValue | null
   credentials: runtime.JsonValue | null
-  brochureMediaId: string | null
   notifyEmails: string[]
   foundedYear: number
   createdAt: Date
@@ -295,7 +288,6 @@ export type SiteSettingWhereInput = {
   businessHours?: Prisma.JsonNullableFilter<"SiteSetting">
   socials?: Prisma.JsonNullableFilter<"SiteSetting">
   credentials?: Prisma.JsonNullableFilter<"SiteSetting">
-  brochureMediaId?: Prisma.StringNullableFilter<"SiteSetting"> | string | null
   notifyEmails?: Prisma.StringNullableListFilter<"SiteSetting">
   foundedYear?: Prisma.IntFilter<"SiteSetting"> | number
   createdAt?: Prisma.DateTimeFilter<"SiteSetting"> | Date | string
@@ -316,7 +308,6 @@ export type SiteSettingOrderByWithRelationInput = {
   businessHours?: Prisma.SortOrderInput | Prisma.SortOrder
   socials?: Prisma.SortOrderInput | Prisma.SortOrder
   credentials?: Prisma.SortOrderInput | Prisma.SortOrder
-  brochureMediaId?: Prisma.SortOrderInput | Prisma.SortOrder
   notifyEmails?: Prisma.SortOrder
   foundedYear?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -340,7 +331,6 @@ export type SiteSettingWhereUniqueInput = Prisma.AtLeast<{
   businessHours?: Prisma.JsonNullableFilter<"SiteSetting">
   socials?: Prisma.JsonNullableFilter<"SiteSetting">
   credentials?: Prisma.JsonNullableFilter<"SiteSetting">
-  brochureMediaId?: Prisma.StringNullableFilter<"SiteSetting"> | string | null
   notifyEmails?: Prisma.StringNullableListFilter<"SiteSetting">
   foundedYear?: Prisma.IntFilter<"SiteSetting"> | number
   createdAt?: Prisma.DateTimeFilter<"SiteSetting"> | Date | string
@@ -361,7 +351,6 @@ export type SiteSettingOrderByWithAggregationInput = {
   businessHours?: Prisma.SortOrderInput | Prisma.SortOrder
   socials?: Prisma.SortOrderInput | Prisma.SortOrder
   credentials?: Prisma.SortOrderInput | Prisma.SortOrder
-  brochureMediaId?: Prisma.SortOrderInput | Prisma.SortOrder
   notifyEmails?: Prisma.SortOrder
   foundedYear?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -390,7 +379,6 @@ export type SiteSettingScalarWhereWithAggregatesInput = {
   businessHours?: Prisma.JsonNullableWithAggregatesFilter<"SiteSetting">
   socials?: Prisma.JsonNullableWithAggregatesFilter<"SiteSetting">
   credentials?: Prisma.JsonNullableWithAggregatesFilter<"SiteSetting">
-  brochureMediaId?: Prisma.StringNullableWithAggregatesFilter<"SiteSetting"> | string | null
   notifyEmails?: Prisma.StringNullableListFilter<"SiteSetting">
   foundedYear?: Prisma.IntWithAggregatesFilter<"SiteSetting"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"SiteSetting"> | Date | string
@@ -411,7 +399,6 @@ export type SiteSettingCreateInput = {
   businessHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   socials?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   credentials?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  brochureMediaId?: string | null
   notifyEmails?: Prisma.SiteSettingCreatenotifyEmailsInput | string[]
   foundedYear?: number
   createdAt?: Date | string
@@ -432,7 +419,6 @@ export type SiteSettingUncheckedCreateInput = {
   businessHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   socials?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   credentials?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  brochureMediaId?: string | null
   notifyEmails?: Prisma.SiteSettingCreatenotifyEmailsInput | string[]
   foundedYear?: number
   createdAt?: Date | string
@@ -453,7 +439,6 @@ export type SiteSettingUpdateInput = {
   businessHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   socials?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   credentials?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  brochureMediaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notifyEmails?: Prisma.SiteSettingUpdatenotifyEmailsInput | string[]
   foundedYear?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -474,7 +459,6 @@ export type SiteSettingUncheckedUpdateInput = {
   businessHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   socials?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   credentials?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  brochureMediaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notifyEmails?: Prisma.SiteSettingUpdatenotifyEmailsInput | string[]
   foundedYear?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -495,7 +479,6 @@ export type SiteSettingCreateManyInput = {
   businessHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   socials?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   credentials?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  brochureMediaId?: string | null
   notifyEmails?: Prisma.SiteSettingCreatenotifyEmailsInput | string[]
   foundedYear?: number
   createdAt?: Date | string
@@ -516,7 +499,6 @@ export type SiteSettingUpdateManyMutationInput = {
   businessHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   socials?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   credentials?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  brochureMediaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notifyEmails?: Prisma.SiteSettingUpdatenotifyEmailsInput | string[]
   foundedYear?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -537,7 +519,6 @@ export type SiteSettingUncheckedUpdateManyInput = {
   businessHours?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   socials?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   credentials?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  brochureMediaId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notifyEmails?: Prisma.SiteSettingUpdatenotifyEmailsInput | string[]
   foundedYear?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -558,7 +539,6 @@ export type SiteSettingCountOrderByAggregateInput = {
   businessHours?: Prisma.SortOrder
   socials?: Prisma.SortOrder
   credentials?: Prisma.SortOrder
-  brochureMediaId?: Prisma.SortOrder
   notifyEmails?: Prisma.SortOrder
   foundedYear?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -579,7 +559,6 @@ export type SiteSettingMaxOrderByAggregateInput = {
   responseTimeText?: Prisma.SortOrder
   address?: Prisma.SortOrder
   mapEmbedUrl?: Prisma.SortOrder
-  brochureMediaId?: Prisma.SortOrder
   foundedYear?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -595,7 +574,6 @@ export type SiteSettingMinOrderByAggregateInput = {
   responseTimeText?: Prisma.SortOrder
   address?: Prisma.SortOrder
   mapEmbedUrl?: Prisma.SortOrder
-  brochureMediaId?: Prisma.SortOrder
   foundedYear?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -639,7 +617,6 @@ export type SiteSettingSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   businessHours?: boolean
   socials?: boolean
   credentials?: boolean
-  brochureMediaId?: boolean
   notifyEmails?: boolean
   foundedYear?: boolean
   createdAt?: boolean
@@ -660,7 +637,6 @@ export type SiteSettingSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   businessHours?: boolean
   socials?: boolean
   credentials?: boolean
-  brochureMediaId?: boolean
   notifyEmails?: boolean
   foundedYear?: boolean
   createdAt?: boolean
@@ -681,7 +657,6 @@ export type SiteSettingSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   businessHours?: boolean
   socials?: boolean
   credentials?: boolean
-  brochureMediaId?: boolean
   notifyEmails?: boolean
   foundedYear?: boolean
   createdAt?: boolean
@@ -702,14 +677,13 @@ export type SiteSettingSelectScalar = {
   businessHours?: boolean
   socials?: boolean
   credentials?: boolean
-  brochureMediaId?: boolean
   notifyEmails?: boolean
   foundedYear?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type SiteSettingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "businessName" | "tagline" | "phones" | "email" | "whatsappNumber" | "whatsappMessage" | "responseTimeText" | "address" | "mapEmbedUrl" | "businessHours" | "socials" | "credentials" | "brochureMediaId" | "notifyEmails" | "foundedYear" | "createdAt" | "updatedAt", ExtArgs["result"]["siteSetting"]>
+export type SiteSettingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "businessName" | "tagline" | "phones" | "email" | "whatsappNumber" | "whatsappMessage" | "responseTimeText" | "address" | "mapEmbedUrl" | "businessHours" | "socials" | "credentials" | "notifyEmails" | "foundedYear" | "createdAt" | "updatedAt", ExtArgs["result"]["siteSetting"]>
 
 export type $SiteSettingPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "SiteSetting"
@@ -728,7 +702,6 @@ export type $SiteSettingPayload<ExtArgs extends runtime.Types.Extensions.Interna
     businessHours: runtime.JsonValue | null
     socials: runtime.JsonValue | null
     credentials: runtime.JsonValue | null
-    brochureMediaId: string | null
     notifyEmails: string[]
     foundedYear: number
     createdAt: Date
@@ -1169,7 +1142,6 @@ export interface SiteSettingFieldRefs {
   readonly businessHours: Prisma.FieldRef<"SiteSetting", 'Json'>
   readonly socials: Prisma.FieldRef<"SiteSetting", 'Json'>
   readonly credentials: Prisma.FieldRef<"SiteSetting", 'Json'>
-  readonly brochureMediaId: Prisma.FieldRef<"SiteSetting", 'String'>
   readonly notifyEmails: Prisma.FieldRef<"SiteSetting", 'String[]'>
   readonly foundedYear: Prisma.FieldRef<"SiteSetting", 'Int'>
   readonly createdAt: Prisma.FieldRef<"SiteSetting", 'DateTime'>

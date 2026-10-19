@@ -54,7 +54,7 @@ enum Role            { SUPER_ADMIN ADMIN EDITOR SALES }
 enum PublishStatus   { DRAFT PUBLISHED ARCHIVED }
 enum ProjectStatus   { COMPLETED ONGOING }
 enum LeadStatus      { NEW CONTACTED QUALIFIED CONVERTED CLOSED }
-enum LeadType        { QUOTE CONTACT PROJECT_ENQUIRY BROCHURE INSPECTION }
+enum LeadType        { QUOTE CONTACT PROJECT_ENQUIRY INSPECTION }
 enum ContactEventType{ CALL WHATSAPP }
 enum PricingMode     { ESTIMATE INSPECTION_ONLY }
 enum AreaUnit        { SQFT RFT UNIT LUMPSUM }
@@ -326,7 +326,6 @@ model SiteSetting {                      // singleton row id = "singleton"
   businessHours  Json?
   socials        Json?                  // { facebook, instagram, linkedin, youtube, justdial }
   credentials    Json?                  // [{ label, value }]  e.g. MSME reg. no.
-  brochureMediaId String?
   notifyEmails   String[]
   foundedYear    Int      @default(2003)
   updatedAt      DateTime @updatedAt

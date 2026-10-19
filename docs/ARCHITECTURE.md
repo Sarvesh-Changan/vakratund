@@ -78,7 +78,6 @@ Rules:
 │  │  │  ├─ page.tsx
 │  │  │  ├─ about/ services/[slug]/ projects/[slug]/ gallery/ faqs/ contact/
 │  │  │  ├─ estimate/ (page, thank-you)
-│  │  │  └─ download/company-profile/
 │  │  ├─ (admin)/admin/
 │  │  │  ├─ login/ (public)
 │  │  │  └─ (protected)/ dashboard leads quotes estimator projects services testimonials faqs gallery media pages seo settings users activity

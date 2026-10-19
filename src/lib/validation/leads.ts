@@ -74,29 +74,8 @@ export const projectEnquirySubmissionSchema = z
   })
   .strict();
 
-export const brochureSubmissionSchema = z
-  .object({
-    contact: z
-      .object({
-        name: z
-          .string()
-          .trim()
-          .min(1)
-          .max(100)
-          .refine((value) => !/[<>]/.test(value), "HTML is not allowed."),
-        phone: z.string().trim().min(1).max(30),
-        email: z.string().trim().email().max(254),
-        website: z.string().max(200),
-        consent: z.boolean().refine((value) => value, "Consent is required."),
-      })
-      .strict(),
-    ...securityFields,
-  })
-  .strict();
-
 export type TrackingInput = z.infer<typeof trackingSchema>;
 export type ContactLeadSubmission = z.infer<typeof contactLeadSubmissionSchema>;
 export type ProjectEnquirySubmission = z.infer<
   typeof projectEnquirySubmissionSchema
 >;
-export type BrochureSubmission = z.infer<typeof brochureSubmissionSchema>;

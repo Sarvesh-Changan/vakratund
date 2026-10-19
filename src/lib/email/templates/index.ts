@@ -1,12 +1,11 @@
 import { render } from "@react-email/render";
 
 import { AdminNewLeadEmail, type AdminLeadEmailData } from "./admin-new-lead";
-import { BrochureDeliveryEmail, type BrochureDeliveryEmailData } from "./brochure-delivery";
 import { PasswordResetEmail, type PasswordResetEmailData } from "./password-reset";
 import { VisitorConfirmationEmail, type VisitorConfirmationEmailData } from "./visitor-confirmation";
 
-export { AdminNewLeadEmail, BrochureDeliveryEmail, PasswordResetEmail, VisitorConfirmationEmail };
-export type { AdminLeadEmailData, BrochureDeliveryEmailData, PasswordResetEmailData, VisitorConfirmationEmailData };
+export { AdminNewLeadEmail, PasswordResetEmail, VisitorConfirmationEmail };
+export type { AdminLeadEmailData, PasswordResetEmailData, VisitorConfirmationEmailData };
 
 export async function renderTemplate(node: React.ReactNode): Promise<{ html: string; text: string }> {
   const html = await render(node);

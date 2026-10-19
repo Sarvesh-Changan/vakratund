@@ -38,7 +38,6 @@ enum LeadType {
   QUOTE
   CONTACT
   PROJECT_ENQUIRY
-  BROCHURE
   INSPECTION
 }
 
@@ -423,13 +422,11 @@ model SiteSetting {
   businessHours  Json?
   socials        Json?
   credentials    Json?
-  brochureMediaId String?
   notifyEmails   String[]
   foundedYear    Int      @default(2003)
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
-  @@index([brochureMediaId])
 }
 
 model Lead {

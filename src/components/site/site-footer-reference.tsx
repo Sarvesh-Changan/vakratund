@@ -61,11 +61,6 @@ export function SiteFooterReference({
                 Gallery
               </Link>
             </li>
-            <li>
-              <Link href="/download/company-profile" className="hover:text-ink">
-                Company profile
-              </Link>
-            </li>
           </ul>
         </nav>
         <nav aria-labelledby="footer-services-heading">
@@ -173,9 +168,6 @@ export function SiteFooterReference({
           <nav aria-label="Legal" className="flex flex-wrap gap-x-5 gap-y-2">
             <Link href="/privacy" className="hover:text-ink">
               Privacy policy
-            </Link>
-            <Link href="/terms" className="hover:text-ink">
-              Terms of use
             </Link>
           </nav>
           <p>{settings.address}</p>

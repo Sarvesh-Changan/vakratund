@@ -141,7 +141,7 @@ Fixed bottom bar: **Call · WhatsApp · Get Quote**; hides on scroll down, shows
 - Effects enhance content only after hydration and preference detection. Without JavaScript, before detection, and with reduced motion enabled, content is visible and static. Keep LCP hero headings and images unwrapped or use `priority` on Reveal/MaskImage so they never wait for an animation.
 - Every entrance runs at most once. Use the shared easing `cubic-bezier(0.22, 1, 0.36, 1)`, 150–300ms for interaction feedback, and no more than 600ms for reveals. Animate transform and opacity only; reserve dimensions for counters and never move content in a way that causes layout shift.
 - Respect `prefers-reduced-motion` for every component: no reveal, count-up, parallax, or looping marquee. Parallax is disabled below 768px and for coarse pointers. It uses CSS scroll timelines when supported and a passive, frame-throttled scroll fallback otherwise.
-- Marquees pause on hover and keyboard focus. Do not use motion to convey information, autoplay video, animate large areas continuously, or delay interaction. `/design-system/motion` is a development-only visual check and includes a reduced-motion simulation switch.
+- Marquees pause on hover and keyboard focus. Do not use motion to convey information, autoplay video, animate large areas continuously, or delay interaction.
 
 ## 8. Imagery
 - Real project photos only (stock only for abstract backgrounds, flagged `TODO(client)`).

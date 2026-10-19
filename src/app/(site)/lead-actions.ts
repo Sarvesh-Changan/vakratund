@@ -6,14 +6,9 @@ import { redirect } from "next/navigation";
 import { getEnv } from "@/lib/env";
 import { checkLeadSubmitLimit, hashIp, requestIp } from "@/lib/rate-limit/lead-submit";
 import { contactSchema } from "@/lib/validation/contact";
-import {
-  brochureSubmissionSchema,
-  contactLeadSubmissionSchema,
-  projectEnquirySubmissionSchema,
-} from "@/lib/validation/leads";
+import { contactLeadSubmissionSchema, projectEnquirySubmissionSchema } from "@/lib/validation/leads";
 import { normalizeIndianPhone } from "@/lib/validation/quote-submission";
 import { scheduleLeadNotification } from "@/server/notifications/schedule";
-import { getBrochureMediaId } from "@/server/queries/brochure";
 import { persistPublicLead, ProjectNotFoundError } from "@/server/services/public-leads";
 
 const MINIMUM_FILL_TIME_MS = 1_200;
@@ -35,7 +30,6 @@ function failure(
 ): LeadActionError {
   return { ok: false, code, message, status, ...extra };
 }
-
 function record(input: unknown): Record<string, unknown> {
   return input && typeof input === "object" && !Array.isArray(input)
     ? (input as Record<string, unknown>)
@@ -135,7 +129,7 @@ function normalizeContact(contact: {
 }
 
 async function saveLead(
-  type: "CONTACT" | "PROJECT_ENQUIRY" | "BROCHURE",
+  type: "CONTACT" | "PROJECT_ENQUIRY",
   input: Omit<Parameters<typeof persistPublicLead>[0], "type">,
 ): Promise<Awaited<ReturnType<typeof persistPublicLead>>> {
   const saved = await persistPublicLead({ ...input, type });
@@ -186,25 +180,3 @@ export async function submitProjectEnquiry(input: unknown): Promise<LeadActionEr
   redirect(`/project-enquiry/thank-you?ref=${encodeURIComponent(saved.publicId)}`);
 }
 
-export async function requestBrochure(input: unknown): Promise<LeadActionError | never> {
-  const guarded = await guard(input);
-  if (!guarded.ok) return guarded;
-  const parsed = brochureSubmissionSchema.safeParse(guarded.raw);
-  if (!parsed.success) {
-    return failure("VALIDATION_ERROR", "Please correct the download details.", 400, {
-      fieldErrors: fieldErrors(parsed.error),
-    });
-  }
-  const normalizedPhone = normalizeIndianPhone(parsed.data.contact.phone);
-  if (!normalizedPhone) return failure("VALIDATION_ERROR", "Use a valid Indian phone number.");
-  if (!(await getBrochureMediaId())) {
-    return failure("BROCHURE_UNAVAILABLE", "The company profile is not available yet.", 409);
-  }
-  let saved: Awaited<ReturnType<typeof persistPublicLead>>;
-  try {
-    saved = await saveLead("BROCHURE", { name: parsed.data.contact.name, phone: normalizedPhone, email: parsed.data.contact.email, message: "Requested the company profile brochure.", consent: parsed.data.contact.consent, tracking: parsed.data.tracking, ipHash: guarded.ipHash });
-  } catch {
-    return failure("SUBMISSION_FAILED", "We could not save your request. Please try again.", 500);
-  }
-  redirect(`/download/company-profile/thank-you?ref=${encodeURIComponent(saved.publicId)}`);
-}

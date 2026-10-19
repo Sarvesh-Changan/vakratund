@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, CheckCircle2, Download, Phone } from "lucide-react";
+import { ArrowRight, CheckCircle2, Phone } from "lucide-react";
 import type { ResolvedSiteSettings } from "@/config/site";
 import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
 import { Breadcrumbs, Card, Container } from "@/components/ui";
@@ -14,7 +14,6 @@ export function LeadThankYou({
   eyebrow,
   title,
   description,
-  downloadHref,
   projectName,
   estimateReference,
   reference,
@@ -24,7 +23,6 @@ export function LeadThankYou({
   eyebrow: string;
   title: string;
   description: string;
-  downloadHref?: string;
   projectName?: string;
   estimateReference?: string;
   reference?: string;
@@ -38,7 +36,6 @@ export function LeadThankYou({
         <Breadcrumbs items={breadcrumbs.map((item) => ({ label: item.name, href: item.item }))} />
         <div className="rounded-card border border-line bg-bg p-6 shadow-soft sm:p-8">
         <p className="eyebrow">Next steps</p>
-        {downloadHref ? <Card className="mt-8 border-brand/30 bg-surface-alt"><h2 className="font-heading text-xl font-bold">Your company profile</h2><p className="mt-2 text-sm text-ink-muted">This download link expires in 10 minutes.</p><a href={downloadHref} className="mt-5 inline-flex min-h-12 items-center gap-2 rounded-control bg-brand px-5 font-bold text-brand-ink hover:bg-brand/90"><Download size={18} aria-hidden="true" /> Download brochure</a></Card> : null}
         <Card className="mt-8 border-line bg-tint">
           <h2 className="font-heading text-xl font-bold">What happens next?</h2>
           <ol className="mt-5 grid gap-3 sm:grid-cols-3">

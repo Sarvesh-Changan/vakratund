@@ -2936,7 +2936,6 @@ export const SiteSettingScalarFieldEnum = {
   businessHours: 'businessHours',
   socials: 'socials',
   credentials: 'credentials',
-  brochureMediaId: 'brochureMediaId',
   notifyEmails: 'notifyEmails',
   foundedYear: 'foundedYear',
   createdAt: 'createdAt',

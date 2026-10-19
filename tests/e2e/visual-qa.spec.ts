@@ -26,8 +26,6 @@ const routes = [
   { name: "estimate", path: "/estimate" },
   { name: "faqs", path: "/faqs" },
   { name: "privacy", path: "/privacy" },
-  { name: "terms", path: "/terms" },
-  { name: "company-profile", path: "/download/company-profile" },
 ] as const;
 
 const widths = [360, 390, 768, 1024, 1280, 1536] as const;

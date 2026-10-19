@@ -175,7 +175,7 @@ With reduced motion emulated, the sampled infinite 96s and 60s animations still 
 
 Recommend **ACCENT_SET: REFERENCE**. It captures the reference site's strongest structural lesson—white/light breathing room, a cool alternate band, one substantial dark editorial field, image-led cards and a gradient-led conversion moment—without importing its recruitment imagery, copy, logo, icons or code. Vakratund's orange remains a tiny signature mark, while lavender and mint are used as restrained, accessible interface accents.
 
-The prior A/B/C comparison remains available at `/design-system/themes` for review, but the selected reference palette is now the live token set. Keep the reference-inspired values scoped to Vakratund's own components and content.
+The selected reference palette is now the live token set. Keep the reference-inspired values scoped to Vakratund's own components and content.
 
 ### What we must not copy
 
