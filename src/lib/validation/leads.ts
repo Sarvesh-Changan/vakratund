@@ -54,7 +54,6 @@ export const contactLeadSubmissionSchema = z
           .max(2_000)
           .refine((value) => !/[<>]/.test(value), "HTML is not allowed."),
         website: z.string().max(200),
-        consent: z.boolean().refine((value) => value, "Consent is required."),
       })
       .strict(),
     ...securityFields,

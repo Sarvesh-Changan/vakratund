@@ -120,7 +120,6 @@ function normalizeContact(contact: {
   location: string;
   message: string;
   website: string;
-  consent: boolean;
 }) {
   const normalizedPhone = normalizeIndianPhone(contact.phone);
   if (!normalizedPhone) return null;
@@ -150,7 +149,7 @@ export async function submitContact(input: unknown): Promise<LeadActionError | n
   if (!contact) return failure("VALIDATION_ERROR", "Use a valid Indian phone number.");
   let saved: Awaited<ReturnType<typeof persistPublicLead>>;
   try {
-    saved = await saveLead("CONTACT", { name: contact.name, phone: contact.phone, email: contact.email, location: contact.location, message: contact.message, consent: contact.consent, tracking: parsed.data.tracking, ipHash: guarded.ipHash });
+    saved = await saveLead("CONTACT", { name: contact.name, phone: contact.phone, email: contact.email, location: contact.location, message: contact.message, consent: false, tracking: parsed.data.tracking, ipHash: guarded.ipHash });
   } catch {
     return failure("SUBMISSION_FAILED", "We could not save your enquiry. Please try again.", 500);
   }
@@ -170,7 +169,7 @@ export async function submitProjectEnquiry(input: unknown): Promise<LeadActionEr
   if (!contact) return failure("VALIDATION_ERROR", "Use a valid Indian phone number.");
   let saved: Awaited<ReturnType<typeof persistPublicLead>>;
   try {
-    saved = await saveLead("PROJECT_ENQUIRY", { name: contact.name, phone: contact.phone, email: contact.email, location: contact.location, message: contact.message, consent: contact.consent, tracking: parsed.data.tracking, ipHash: guarded.ipHash, projectSlug: parsed.data.projectSlug });
+    saved = await saveLead("PROJECT_ENQUIRY", { name: contact.name, phone: contact.phone, email: contact.email, location: contact.location, message: contact.message, consent: false, tracking: parsed.data.tracking, ipHash: guarded.ipHash, projectSlug: parsed.data.projectSlug });
   } catch (error) {
     if (error instanceof ProjectNotFoundError) {
       return failure("PROJECT_NOT_FOUND", "That project is no longer available.", 404);

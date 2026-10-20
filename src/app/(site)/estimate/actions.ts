@@ -68,7 +68,7 @@ export async function submitQuote(input: unknown): Promise<QuoteActionError | ne
   if (!parsed.success) return failure("VALIDATION_ERROR", "Please correct the enquiry details.", 400, { fieldErrors: parsed.error.flatten().fieldErrors as Record<string, string[]> });
   const normalizedPhone = normalizeIndianPhone(parsed.data.contact.phone);
   if (!normalizedPhone) return failure("VALIDATION_ERROR", "Use a valid Indian phone number.", 400, { fieldErrors: { "contact.phone": ["Use a valid Indian phone number."] } });
-  const contactParsed = contactSchema.safeParse({ name: parsed.data.contact.name, phone: normalizedPhone, email: parsed.data.contact.email, location: parsed.data.contact.location, message: parsed.data.contact.requirements, website: "", consent: parsed.data.contact.consent });
+  const contactParsed = contactSchema.safeParse({ name: parsed.data.contact.name, phone: normalizedPhone, email: parsed.data.contact.email, location: parsed.data.contact.location, message: parsed.data.contact.requirements, website: "" });
   if (!contactParsed.success) return failure("VALIDATION_ERROR", "Please correct the enquiry details.", 400, { fieldErrors: contactParsed.error.flatten().fieldErrors as Record<string, string[]> });
 
   const config = await loadEstimatorConfigFromDatabase(parsed.data.serviceSlug);

@@ -68,5 +68,4 @@ export const footerQuickLinks = [
   { label: "Our projects", href: "/projects" },
   { label: "Estimate a project", href: "/estimate" },
   { label: "Request inspection", href: "/contact?type=inspection" },
-  { label: "Privacy policy", href: "/privacy" },
 ] as const;

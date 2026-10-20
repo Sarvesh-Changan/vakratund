@@ -165,11 +165,6 @@ export function SiteFooterReference({
             © {new Date().getFullYear()} {settings.businessName}. All rights
             reserved.
           </p>
-          <nav aria-label="Legal" className="flex flex-wrap gap-x-5 gap-y-2">
-            <Link href="/privacy" className="hover:text-ink">
-              Privacy policy
-            </Link>
-          </nav>
           <p>{settings.address}</p>
         </div>
       </div>

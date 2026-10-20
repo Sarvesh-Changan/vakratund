@@ -7,7 +7,6 @@ import { CountUp, HoverCard, MaskImage, Reveal, RevealGroup } from "@/components
 import { Card, Container, EmptyState, SectionHeading } from "@/components/ui";
 import { MarkdownRenderer } from "@/lib/markdown/renderer";
 import type { AboutPageData, AboutJourney } from "@/server/queries/about";
-import { PageHero } from "./page-hero";
 
 const breadcrumbs = [
   { name: "Home", item: "/" },
@@ -19,16 +18,6 @@ export function LegacyAboutPage({ data }: { data: AboutPageData }) {
   return (
     <>
       <BreadcrumbJsonLd items={breadcrumbs} />
-      <PageHero
-        breadcrumbs={breadcrumbs.map((item) => ({
-          label: item.name,
-          href: item.item,
-        }))}
-        eyebrow="About us"
-        title="Civil engineering experience grounded in the region"
-        description={settings.tagline}
-      />
-
       <Container className="py-16 lg:py-24">
         <div className="grid gap-12 lg:grid-cols-[minmax(0,1.15fr)_minmax(18rem,0.85fr)] lg:gap-20">
           <div className="space-y-12">
@@ -253,8 +242,6 @@ export function AboutPage({ data }: { data: AboutPageData }) {
 
   return <>
     <BreadcrumbJsonLd items={breadcrumbs} />
-    <PageHero breadcrumbs={breadcrumbs.map((item) => ({ label: item.name, href: item.item }))} eyebrow="About us" title="Civil engineering experience grounded in the region" description={settings.tagline} image={aboutImage ? { url: aboutImage.url, alt: aboutImage.title } : null} compact />
-
     <section className="section-light"><Container className="section-space-generous"><div className="grid gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(20rem,.9fr)] lg:items-start lg:gap-16"><Reveal><div>{story ? <><p className="eyebrow">Our story</p><h2 className="mt-3 font-heading text-h2 font-semibold">{story.title}</h2><MarkdownRenderer content={story.body} className="prose prose-slate mt-6 max-w-none leading-8 text-ink-muted prose-headings:font-heading prose-headings:text-ink prose-a:text-accent-ink" /></> : <EmptyState title="Our story is being prepared" description="Published company information will appear here once it is available." />}</div></Reveal><Reveal delay={80}><div className="relative"><div className="relative aspect-[4/3] overflow-hidden rounded-feature border border-line bg-tint shadow-soft">{aboutImage ? <CloudImage src={aboutImage.url} alt={aboutImage.title} fill sizes="(min-width: 1024px) 38vw, 100vw" className="object-cover" /> : <div className="home-blueprint-pattern size-full bg-gradient-to-br from-tint via-bg to-accent/20" aria-hidden="true" />}</div><div className="absolute -bottom-6 left-5 rounded-card border border-line bg-dark p-5 text-white shadow-raised sm:left-8"><p className="eyebrow text-accent-2">Since</p><p className="mt-1 font-heading text-4xl font-bold tabular-nums"><CountUp value={settings.foundedYear} format="year" /></p></div></div></Reveal></div><RevealGroup className="mt-16 grid gap-4 md:grid-cols-3">{facts.map(({ label, value, format, Icon }) => <Reveal key={label}><Card className="border-line bg-tint"><Icon className="text-accent-ink" size={22} aria-hidden="true" /><p className="mt-5 font-heading text-3xl font-bold tabular-nums text-accent-ink"><CountUp value={value} format={format} /></p><p className="mt-1 text-sm text-ink-muted">{label}</p></Card></Reveal>)}</RevealGroup></Container></section>
 
     {mission ? <section className="section-tint"><Container className="section-space-generous"><SectionHeading eyebrow="Our aim and values" title={mission.title} description={mission.body} /><RevealGroup className="mt-10 grid gap-5 md:grid-cols-3">{aboutValues.map((value) => <Reveal key={value.title}><HoverCard className="h-full rounded-card"><Card className="h-full border-line bg-bg"><div className="flex size-11 items-center justify-center rounded-full bg-accent/15 text-accent-ink"><CheckCircle2 size={20} aria-hidden="true" /></div><h3 className="mt-5 font-heading text-xl font-semibold">{value.title}</h3><p className="mt-3 text-sm leading-7 text-ink-muted">{value.description}</p></Card></HoverCard></Reveal>)}</RevealGroup></Container></section> : null}

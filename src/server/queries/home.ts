@@ -8,7 +8,7 @@ import { prisma } from "@/lib/db/client";
 import { pageSectionSchemas } from "@/lib/validation/pages";
 import { getPublishedFaqs } from "@/server/queries/faqs";
 import { getFeaturedGallery } from "@/server/queries/gallery";
-import { getPublishedProjectCount, getPublishedProjects } from "@/server/queries/projects";
+import { getPublishedProjectCount } from "@/server/queries/projects";
 import { getPublicSettings } from "@/server/queries/settings";
 import { getPublishedServices, type PublishedService } from "@/server/queries/services";
 import { getVisibleTeamMembers } from "@/server/queries/team";
@@ -16,8 +16,6 @@ import { getPublishedTestimonials } from "@/server/queries/testimonials";
 
 export type HomeHero = z.infer<typeof pageSectionSchemas.home.hero>;
 export type HomeStats = z.infer<typeof pageSectionSchemas.home.stats>;
-export type HomeServicesSection = z.infer<typeof pageSectionSchemas.home.services>;
-export type HomeProjectsSection = z.infer<typeof pageSectionSchemas.home.projects>;
 export type HomeWhySection = z.infer<typeof pageSectionSchemas.home.why>;
 export type HomeProcess = z.infer<typeof pageSectionSchemas.home.process>;
 export type HomeSpecialtySection = z.infer<typeof pageSectionSchemas.home.specialty>;
@@ -33,10 +31,6 @@ export type HomePageData = {
   heroVisible: boolean;
   heroImage: HomeHeroImage | null;
   stats: HomeStats | null;
-  servicesSection: HomeServicesSection | null;
-  servicesVisible: boolean;
-  projectsSection: HomeProjectsSection;
-  projectsVisible: boolean;
   whySection: HomeWhySection | null;
   whyVisible: boolean;
   process: HomeProcess | null;
@@ -48,7 +42,6 @@ export type HomePageData = {
   estimatorVisible: boolean;
   cta: HomeCta | null;
   services: Awaited<ReturnType<typeof getPublishedServices>>;
-  featuredProjects: Awaited<ReturnType<typeof getPublishedProjects>>;
   publishedProjectCount: number;
   featuredGallery: Awaited<ReturnType<typeof getFeaturedGallery>>;
   structuralService: PublishedService | null;
@@ -78,16 +71,6 @@ export function normalizeHomeHero(value: Prisma.JsonValue, phone = ""): HomeHero
 
 function normalizeStats(value: Prisma.JsonValue): HomeStats | null {
   const result = pageSectionSchemas.home.stats.safeParse(value);
-  return result.success ? result.data : null;
-}
-
-function normalizeHomeProjects(value: Prisma.JsonValue): HomeProjectsSection | null {
-  const result = pageSectionSchemas.home.projects.safeParse(value);
-  return result.success ? result.data : null;
-}
-
-function normalizeHomeServices(value: Prisma.JsonValue): HomeServicesSection | null {
-  const result = pageSectionSchemas.home.services.safeParse(value);
   return result.success ? result.data : null;
 }
 
@@ -135,22 +118,17 @@ function fallbackHero(settings: ResolvedSiteSettings): HomeHero {
   return { eyebrow: "Project Management Consultant & Turnkey Project Developers", title: "Building trust since 2003", description: "Civil engineering services for project management, repairs and rehabilitation of RCC structures, and construction of new buildings.", trustChips: ["MSME registered", "Insured workforce", "Since 2003"], primaryCta: "Get Free Quote", primaryHref: "/estimate", secondaryCta: "Call Now", secondaryHref: phone ? `tel:${phone}` : "/contact", backgroundImageId: null };
 }
 
-function fallbackProjectsSection(): HomeProjectsSection {
-  return { eyebrow: "Featured work", title: "Selected projects", description: "", viewAllLabel: "View all projects" };
-}
-
 function fallbackHomePageData(): HomePageData {
   const settings = resolveSiteSettings(null);
-  return { settings, hero: fallbackHero(settings), heroVisible: true, heroImage: null, stats: null, servicesSection: null, servicesVisible: false, projectsSection: fallbackProjectsSection(), projectsVisible: true, whySection: null, whyVisible: false, process: null, specialtySection: null, specialtyVisible: false, faqSection: null, faqVisible: false, estimatorSection: null, estimatorVisible: false, cta: null, services: [], featuredProjects: [], featuredGallery: [], publishedProjectCount: 0, structuralService: null, testimonials: [], faqs: [], team: [] };
+  return { settings, hero: fallbackHero(settings), heroVisible: true, heroImage: null, stats: null, whySection: null, whyVisible: false, process: null, specialtySection: null, specialtyVisible: false, faqSection: null, faqVisible: false, estimatorSection: null, estimatorVisible: false, cta: null, services: [], featuredGallery: [], publishedProjectCount: 0, structuralService: null, testimonials: [], faqs: [], team: [] };
 }
 
 async function readHomePageData(): Promise<HomePageData> {
   try {
-    const [settingsRow, sections, services, featuredProjects, publishedProjectCount, featuredGallery, testimonials, faqs, team] = await Promise.all([
+    const [settingsRow, sections, services, publishedProjectCount, featuredGallery, testimonials, faqs, team] = await Promise.all([
       getPublicSettings(),
       prisma.pageSection.findMany({ where: { pageKey: "home" }, orderBy: { sortOrder: "asc" }, select: { sectionKey: true, content: true, isVisible: true } }),
       getPublishedServices(),
-      getPublishedProjects({ isFeatured: true }),
       getPublishedProjectCount(),
       getFeaturedGallery(),
       getPublishedTestimonials(),
@@ -162,8 +140,6 @@ async function readHomePageData(): Promise<HomePageData> {
     const parsedHero = heroSection ? normalizeHomeHero(heroSection.content, settings.phones[0] ?? "") : null;
     const hero = parsedHero?.title?.trim() ? parsedHero : fallbackHero(settings);
     const statsSection = sections.find((section) => section.sectionKey === "stats");
-    const servicesSection = sections.find((section) => section.sectionKey === "services");
-    const projectsSection = sections.find((section) => section.sectionKey === "projects");
     const whySection = sections.find((section) => section.sectionKey === "why");
     const processSection = sections.find((section) => section.sectionKey === "process");
     const specialtySection = sections.find((section) => section.sectionKey === "specialty");
@@ -178,10 +154,6 @@ async function readHomePageData(): Promise<HomePageData> {
       heroVisible: heroSection?.isVisible ?? true,
       heroImage,
       stats: statsSection?.isVisible ? normalizeStats(statsSection.content) : null,
-      servicesSection: servicesSection?.isVisible ? normalizeHomeServices(servicesSection.content) : null,
-      servicesVisible: servicesSection?.isVisible ?? false,
-      projectsSection: projectsSection ? normalizeHomeProjects(projectsSection.content) ?? fallbackProjectsSection() : fallbackProjectsSection(),
-      projectsVisible: projectsSection?.isVisible ?? true,
       whySection: whySection?.isVisible ? normalizeHomeWhy(whySection.content) : null,
       whyVisible: whySection?.isVisible ?? false,
       process: processSection?.isVisible ? normalizeHomeProcess(processSection.content) : null,
@@ -193,7 +165,6 @@ async function readHomePageData(): Promise<HomePageData> {
       estimatorVisible: estimatorSection?.isVisible ?? false,
       cta: ctaSection?.isVisible ? normalizeHomeCta(ctaSection.content) : null,
       services,
-      featuredProjects,
       publishedProjectCount,
       featuredGallery,
       structuralService: services.find((service) => service.slug === "structural-repairs-rehabilitation") ?? null,

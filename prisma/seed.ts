@@ -767,12 +767,6 @@ const pageSeo = [
     description:
       "Read published client feedback about Vakratund Construction.",
   },
-  {
-    path: "/privacy",
-    title: "Privacy Policy",
-    description:
-      "Read how Vakratund Construction handles enquiry information and privacy requests.",
-  },
 ] as const;
 
 function fieldsForService(service: ServiceSeed): EstimatorField[] {

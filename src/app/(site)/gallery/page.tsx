@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { BreadcrumbJsonLd, ImageGalleryJsonLd } from "@/components/seo/json-ld";
-import { GalleryLightbox } from "@/components/site/gallery-lightbox";
-import { PageHero } from "@/components/site/page-hero";
+import { GalleryLightbox, type GalleryCategoryCollection } from "@/components/site/gallery-lightbox";
 import { Container } from "@/components/ui";
 import { buildMetadata } from "@/lib/seo/metadata";
 import { getGalleryLandingData } from "@/server/queries/gallery";
@@ -43,16 +42,19 @@ export default async function GalleryRoute({ searchParams }: GalleryPageProps) {
     return value ? `/gallery?${value}` : "/gallery";
   };
   const hasFilter = Boolean(filter.categorySlug || filter.year);
-  const years = Array.from(new Set(landing.items.map((item) => item.year))).sort((a, b) => b - a);
+  const categoryCollections: GalleryCategoryCollection[] = landing.categories.flatMap((category) => {
+    const items = landing.items.filter((item) => item.categoryId === category.id);
+    const cover = items.some((item) => item.id === category.cover.id) ? category.cover : items[0];
+    return cover ? [{ category, items, cover }] : [];
+  });
 
   return (
     <>
       <BreadcrumbJsonLd items={breadcrumbs} />
       {!hasFilter ? <ImageGalleryJsonLd gallery={{ name: "Vakratund Construction project gallery", description: "Selected construction, repair and rehabilitation work by Vakratund Construction.", url: "/gallery", images: landing.items.slice(0, 20).map((item) => item.url) }} /> : null}
-      <PageHero breadcrumbs={breadcrumbs.map((item) => ({ label: item.name, href: item.item }))} eyebrow="Our work" title="Construction gallery" description="Browse selected construction, repair, rehabilitation and turnkey work, organized by category and year." />
       <section className="section-tint">
         <Container className="section-space-generous">
-          <div className="sticky top-20 z-10 rounded-card border bg-surface/95 p-4 shadow-soft backdrop-blur">
+          <div className="rounded-card border bg-surface/95 p-4 shadow-soft backdrop-blur">
             <div className="grid gap-3 lg:grid-cols-[5rem_1fr]">
               <p className="text-sm font-semibold">Categories</p>
               <div className="flex gap-2 overflow-x-auto pb-1">
@@ -66,10 +68,16 @@ export default async function GalleryRoute({ searchParams }: GalleryPageProps) {
               </div>
             </div>
           </div>
-          {landing.items.length > 0 ? (
+          {categoryCollections.length > 0 ? (
             <section className="mt-8" aria-labelledby="gallery-items-heading">
-              <div className="mb-5 flex items-end justify-between gap-4"><div><p className="eyebrow">Portfolio</p><h2 id="gallery-items-heading" className="mt-2 font-heading text-h2 font-semibold">{selectedCategory?.name ?? (filter.year ? `Work from ${filter.year}` : "All published work")}</h2></div>{hasFilter ? <Link href="/gallery" className="text-sm font-semibold text-accent-ink hover:underline">Clear filters</Link> : null}</div>
-              {!filter.year ? <div className="space-y-10">{years.map((year) => <section key={year} aria-labelledby={`gallery-year-${year}`}><h3 id={`gallery-year-${year}`} className="mb-4 font-heading text-xl font-semibold">{year}</h3><GalleryLightbox items={landing.items.filter((item) => item.year === year)} /></section>)}</div> : <GalleryLightbox items={landing.items} />}
+              {filter.categorySlug ? <>
+                <Link href={query(undefined, filter.year)} className="inline-flex min-h-10 items-center rounded-pill border border-line bg-surface px-4 text-sm font-semibold text-ink-muted hover:bg-tint">← Back to all categories</Link>
+                <div className="mt-7 border-b border-line pb-6"><p className="eyebrow">Gallery collection</p><h2 id="gallery-items-heading" className="mt-2 font-heading text-h2 font-semibold">{selectedCategory?.name ?? "Gallery collection"}</h2><p className="mt-3 text-sm leading-6 text-ink-muted">Displaying {landing.items.length} published {landing.items.length === 1 ? "design" : "designs"} in this category.</p></div>
+                <div className="mt-8"><GalleryLightbox items={landing.items} /></div>
+              </> : <>
+                <div className="mb-7"><p className="eyebrow">Portfolio</p><h2 id="gallery-items-heading" className="mt-2 font-heading text-h2 font-semibold">Gallery collections</h2></div>
+                <GalleryLightbox items={landing.items} categories={categoryCollections} categoryBaseHref={filter.year ? `/gallery?year=${filter.year}&category=` : "/gallery?category="} />
+              </>}
             </section>
           ) : (
             <div className="mt-8 rounded-card border border-dashed p-10 text-center"><p className="font-semibold">{hasFilter ? "No results for these filters" : "No gallery images yet"}</p><p className="mt-2 text-sm text-ink-muted">{hasFilter ? "Try another category or year." : "We are preparing selected project work. Contact us to discuss your requirement."}</p><div className="mt-5 flex justify-center gap-3"><Link href="/contact" className="inline-flex min-h-11 items-center rounded-control bg-brand px-4 font-semibold text-brand-ink">Contact us</Link>{hasFilter ? <Link href="/gallery" className="inline-flex min-h-11 items-center rounded-control border px-4 font-semibold">Clear filters</Link> : null}</div></div>

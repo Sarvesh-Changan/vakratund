@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import Script from "next/script";
 import { useEffect, useState, type ReactNode } from "react";
 
@@ -55,7 +54,6 @@ export function AnalyticsConsent({ gaId }: { gaId?: string }): ReactNode {
             <button type="button" className="min-h-11 rounded-control border border-line px-4 text-sm font-semibold" onClick={() => { writeConsent("declined"); setConsent(false); }}>Decline</button>
             <button type="button" className="min-h-11 rounded-control bg-brand px-4 text-sm font-bold text-brand-ink" onClick={() => { writeConsent("accepted"); setConsent(true); }}>Accept</button>
           </div>
-          <Link href="/privacy" className="sr-only focus:not-sr-only focus:absolute focus:bottom-2 focus:left-4 focus:text-sm focus:underline">Privacy details</Link>
         </aside>
       )}
     </>

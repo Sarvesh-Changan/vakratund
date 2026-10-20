@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { contactLeadSubmissionSchema, projectEnquirySubmissionSchema } from "./leads";
 
-const contact = { name: "Asha Shah", phone: "+919821502956", email: "", location: "Thane", message: "Please call me.", website: "", consent: true };
+const contact = { name: "Asha Shah", phone: "+919821502956", email: "", location: "Thane", message: "Please call me.", website: "" };
 
 describe("lead submission validation", () => {
-  it("requires explicit consent for contact leads", () => {
-    expect(contactLeadSubmissionSchema.safeParse({ contact: { ...contact, consent: false }, formStartedAt: Date.now() }).success).toBe(false);
+  it("accepts contact leads without a consent field", () => {
+    expect(contactLeadSubmissionSchema.safeParse({ contact, formStartedAt: Date.now() }).success).toBe(true);
   });
 
   it("accepts tracking fields without allowing unknown fields", () => {

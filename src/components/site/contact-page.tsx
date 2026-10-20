@@ -2,15 +2,15 @@ import { Clock3, Mail, MapPin, Phone } from "lucide-react";
 import Link from "next/link";
 
 import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
-import { HoverCard, Reveal, RevealGroup } from "@/components/motion";
-import { Breadcrumbs, Card, Container, SectionHeading } from "@/components/ui";
-import { formatBusinessHours } from "@/lib/site/business-hours";
-import { phoneHref, whatsappHref } from "./contact-utils";
-import { ContactLink, TrackedWhatsAppLink } from "./contact-link";
-import { ContactForm } from "./contact-form";
-import type { ResolvedSiteSettings } from "@/config/site";
+import { Reveal } from "@/components/motion";
+import { Card, Container, SectionHeading } from "@/components/ui";
 import { WhatsAppIcon } from "@/components/ui/whatsapp-icon";
+import { formatBusinessHours } from "@/lib/site/business-hours";
+import type { ResolvedSiteSettings } from "@/config/site";
+import { ContactForm } from "./contact-form";
 import { ContactCopyButton } from "./contact-copy-button";
+import { ContactLink, TrackedWhatsAppLink } from "./contact-link";
+import { phoneHref, whatsappHref } from "./contact-utils";
 
 const breadcrumbs = [
   { name: "Home", item: "/" },
@@ -27,178 +27,113 @@ export function ContactPage({
   projectSlug?: string;
 }) {
   const hours = formatBusinessHours(settings.businessHours);
+
   return (
     <>
       <BreadcrumbJsonLd items={breadcrumbs} />
-      <section className="section-dark pt-28 text-white sm:pt-32">
-        <Container className="section-space-compact">
-          <Reveal>
-            <Breadcrumbs
-              items={breadcrumbs.map((item) => ({
-                label: item.name,
-                href: item.item,
-              }))}
-              className="text-white/65"
-            />
-            <p className="eyebrow mt-10 text-brand">Contact</p>
-            <h1 className="mt-4 max-w-5xl font-heading text-h1 font-semibold leading-[1.04] tracking-[-0.045em]">
-              Let’s discuss your project requirement
-            </h1>
-            <p className="mt-5 max-w-2xl text-lg leading-8 text-white/75">
-              Share a few details and our team can understand the next useful
-              step.
-            </p>
-          </Reveal>
+      <section className="section-light relative overflow-hidden">
+        <div className="home-blueprint-pattern absolute inset-0 opacity-[0.08]" aria-hidden="true" />
+        <Container className="relative section-space-compact">
+          <div className="grid gap-10 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1fr)] lg:items-start lg:gap-16">
+            <Reveal>
+              <div className="max-w-md">
+                <p className="eyebrow">Contact</p>
+                <h1 className="mt-4 font-heading text-h1 font-semibold leading-[1.04] tracking-[-0.045em]">Let&apos;s discuss your space.</h1>
+                <div className="mt-7 h-1 w-20 rounded-full bg-brand-deep" aria-hidden="true" />
+                <ul className="mt-8 space-y-5" aria-label="Contact details">
+                  {settings.phones.map((phone) => (
+                    <li key={phone} className="flex items-center gap-4">
+                      <span className="flex size-12 shrink-0 items-center justify-center rounded-full border border-line bg-surface shadow-soft">
+                        <Phone className="text-brand-deep" size={21} aria-hidden="true" />
+                      </span>
+                      <div className="min-w-0">
+                        <p className="text-sm text-ink-muted">Call us</p>
+                        <div className="flex flex-wrap items-center gap-3">
+                          <ContactLink href={phoneHref(phone)} eventType="CALL" context="contact-page-phone" className="font-semibold text-accent-ink underline-offset-4 hover:underline">{phone}</ContactLink>
+                          <ContactCopyButton value={phone} label="phone number" />
+                        </div>
+                      </div>
+                    </li>
+                  ))}
+                  {whatsappHref(settings, { pageTitle: "Contact page" }) ? (
+                    <li className="flex items-center gap-4">
+                      <span className="flex size-12 shrink-0 items-center justify-center rounded-full border border-whatsapp/40 bg-surface text-whatsapp shadow-soft">
+                        <WhatsAppIcon size={22} />
+                      </span>
+                      <TrackedWhatsAppLink settings={settings} whatsappContext={{ pageTitle: "Contact page" }} context="contact-page-whatsapp" target="_blank" rel="noopener noreferrer" className="font-semibold text-whatsapp-text underline-offset-4 hover:underline">Message us on WhatsApp</TrackedWhatsAppLink>
+                    </li>
+                  ) : null}
+                  {settings.email ? (
+                    <li className="flex items-center gap-4">
+                      <span className="flex size-12 shrink-0 items-center justify-center rounded-full border border-line bg-surface shadow-soft">
+                        <Mail className="text-brand-deep" size={21} aria-hidden="true" />
+                      </span>
+                      <div className="min-w-0">
+                        <p className="text-sm text-ink-muted">Email us</p>
+                        <div className="flex flex-wrap items-center gap-3">
+                          <a href={`mailto:${settings.email}`} className="break-all font-semibold text-accent-ink underline-offset-4 hover:underline">{settings.email}</a>
+                          <ContactCopyButton value={settings.email} label="email address" />
+                        </div>
+                      </div>
+                    </li>
+                  ) : null}
+                  <li className="flex items-center gap-4">
+                    <span className="flex size-12 shrink-0 items-center justify-center rounded-full border border-line bg-surface shadow-soft">
+                      <MapPin className="text-brand-deep" size={21} aria-hidden="true" />
+                    </span>
+                    <div>
+                      <p className="text-sm text-ink-muted">Find us</p>
+                      <p className="font-semibold">{settings.address}</p>
+                    </div>
+                  </li>
+                </ul>
+                {hours.length ? (
+                  <div className="mt-8 border-t border-line pt-6">
+                    <div className="flex items-center gap-3">
+                      <Clock3 className="text-brand-deep" size={20} aria-hidden="true" />
+                      <h2 className="font-heading text-lg font-semibold">Business hours</h2>
+                    </div>
+                    <dl className="mt-4 grid gap-2 text-sm sm:grid-cols-2">
+                      {hours.map((entry) => <div key={entry.day} className="flex justify-between gap-4"><dt className="text-ink-muted">{entry.day}</dt><dd className="font-medium">{entry.value}</dd></div>)}
+                    </dl>
+                  </div>
+                ) : null}
+              </div>
+            </Reveal>
+            <Reveal delay={80}>
+              <Card className="p-6 sm:p-8 lg:p-10">
+                <h2 className="font-heading text-h2 font-semibold">Send us a message</h2>
+                <div className="mt-7">
+                  <ContactForm projectPrefill={projectPrefill} projectSlug={projectSlug} />
+                </div>
+              </Card>
+            </Reveal>
+          </div>
+
+          <section className="mt-14" aria-label="Map and location">
+            <SectionHeading eyebrow="Find us" title="Visit or plan a site discussion" />
+            <div className="mt-6 overflow-hidden rounded-panel border bg-surface shadow-soft">
+              {settings.mapEmbedUrl ? (
+                <iframe
+                  title={`${settings.businessName} location map`}
+                  src={settings.mapEmbedUrl}
+                  loading="lazy"
+                  referrerPolicy="strict-origin-when-cross-origin"
+                  className="h-[22rem] w-full border-0"
+                />
+              ) : (
+                <div className="flex min-h-56 flex-col items-center justify-center gap-3 px-6 text-center">
+                  <MapPin className="text-brand-deep" size={28} aria-hidden="true" />
+                  <p className="font-semibold">Map details are being prepared.</p>
+                  <p className="max-w-md text-sm text-ink-muted">Please use the contact details above to arrange a conversation in Thane or Mumbai.</p>
+                  <Link href="/contact" className="text-sm font-semibold text-brand-deep underline-offset-4 hover:underline">Contact the team</Link>
+                </div>
+              )}
+            </div>
+          </section>
+          <div className="mt-8 rounded-card border border-line bg-tint p-5"><p className="eyebrow">What happens next</p><p className="mt-2 text-sm leading-6 text-ink-muted">{settings.responseTimeText}</p></div>
         </Container>
       </section>
-
-      <section className="section-light"><Container className="section-space-generous">
-        <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(20rem,0.72fr)] lg:items-start lg:gap-12">
-          <Reveal>
-            <Card className="p-6 sm:p-8">
-              <SectionHeading
-                eyebrow="Send an enquiry"
-                title="Tell us what you are planning"
-              />
-              <div className="mt-8">
-                <ContactForm
-                  projectPrefill={projectPrefill}
-                  projectSlug={projectSlug}
-                />
-              </div>
-            </Card>
-          </Reveal>
-          <aside aria-label="Contact details">
-            <RevealGroup className="space-y-5">
-            <Reveal>
-              <HoverCard>
-                <Card className="bg-surface-alt">
-                  <h2 className="font-heading text-xl font-semibold">
-                    Talk to Vakratund
-                  </h2>
-                  <ul className="mt-6 space-y-5 text-sm">
-                    {settings.phones.map((phone) => (
-                      <li key={phone} className="flex gap-3">
-                        <Phone
-                          className="mt-1 shrink-0 text-brand-deep"
-                          size={18}
-                          aria-hidden="true"
-                        />
-                        <div className="flex min-w-0 flex-1 items-center justify-between gap-3"><ContactLink href={phoneHref(phone)} eventType="CALL" context="contact-page-phone" className="font-semibold text-accent-ink underline-offset-4 hover:underline">{phone}</ContactLink><ContactCopyButton value={phone} label="phone number" /></div>
-                      </li>
-                    ))}
-                    {whatsappHref(settings, { pageTitle: "Contact page" }) ? (
-                      <li>
-                        <TrackedWhatsAppLink
-                          settings={settings}
-                          whatsappContext={{ pageTitle: "Contact page" }}
-                          context="contact-page-whatsapp"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex min-h-11 items-center gap-2 rounded-control bg-whatsapp px-4 font-semibold text-charcoal hover:bg-whatsapp-dark"
-                        >
-                          <WhatsAppIcon size={18} />
-                          Message us on WhatsApp
-                        </TrackedWhatsAppLink>
-                      </li>
-                    ) : null}
-                    {settings.email ? (
-                      <li className="flex gap-3">
-                        <Mail
-                          className="mt-1 shrink-0 text-brand-deep"
-                          size={18}
-                          aria-hidden="true"
-                        />
-                        <div className="flex min-w-0 flex-1 items-center justify-between gap-3"><a href={`mailto:${settings.email}`} className="break-all font-semibold text-accent-ink underline-offset-4 hover:underline">{settings.email}</a><ContactCopyButton value={settings.email} label="email address" /></div>
-                      </li>
-                    ) : null}
-                    <li className="flex gap-3">
-                      <MapPin
-                        className="mt-1 shrink-0 text-brand-deep"
-                        size={18}
-                        aria-hidden="true"
-                      />
-                      <span>{settings.address}</span>
-                    </li>
-                  </ul>
-                </Card>
-              </HoverCard>
-            </Reveal>
-            <Reveal>
-              <HoverCard>
-                <Card>
-                  <div className="flex items-center gap-3">
-                    <Clock3
-                      className="text-brand-deep"
-                      size={20}
-                      aria-hidden="true"
-                    />
-                    <h2 className="font-heading text-xl font-semibold">
-                      Business hours
-                    </h2>
-                  </div>
-                  {hours.length ? (
-                    <dl className="mt-5 space-y-2 text-sm">
-                      {hours.map((entry) => (
-                        <div
-                          key={entry.day}
-                          className="flex justify-between gap-4"
-                        >
-                          <dt className="text-ink-muted">{entry.day}</dt>
-                          <dd className="font-medium">{entry.value}</dd>
-                        </div>
-                      ))}
-                    </dl>
-                  ) : (
-                  <p className="mt-4 text-sm text-ink-muted">
-                      Hours are available on request. Please call or message us.
-                    </p>
-                  )}
-                </Card>
-              </HoverCard>
-            </Reveal>
-            </RevealGroup>
-          </aside>
-        </div>
-
-        <section className="mt-16" aria-label="Map and location">
-          <SectionHeading
-            eyebrow="Find us"
-            title="Visit or plan a site discussion"
-          />
-          <div className="mt-8 overflow-hidden rounded-panel border bg-surface shadow-soft">
-            {settings.mapEmbedUrl ? (
-              <iframe
-                title={`${settings.businessName} location map`}
-                src={settings.mapEmbedUrl}
-                loading="lazy"
-                referrerPolicy="strict-origin-when-cross-origin"
-                className="h-[22rem] w-full border-0"
-              />
-            ) : (
-              <div className="flex min-h-56 flex-col items-center justify-center gap-3 px-6 text-center">
-                <MapPin
-                  className="text-brand-deep"
-                  size={28}
-                  aria-hidden="true"
-                />
-                <p className="font-semibold">Map details are being prepared.</p>
-                <p className="max-w-md text-sm text-ink-muted">
-                  Please use the contact details above to arrange a conversation
-                  in Thane or Mumbai.
-                </p>
-                <Link
-                  href="/contact"
-                  className="text-sm font-semibold text-brand-deep underline-offset-4 hover:underline"
-                >
-                  Contact the team
-                </Link>
-              </div>
-            )}
-          </div>
-        </section>
-        <div className="mt-8 grid gap-4 rounded-card border border-line bg-tint p-5 sm:grid-cols-2"><div><p className="eyebrow">What happens next</p><p className="mt-2 text-sm leading-6 text-ink-muted">{settings.responseTimeText}</p></div><div className="sm:border-l sm:border-line sm:pl-5"><p className="eyebrow">Privacy first</p><p className="mt-2 text-sm leading-6 text-ink-muted">Your details are used only to respond to this enquiry. Read our <Link href="/privacy" className="font-semibold text-accent-ink underline-offset-4 hover:underline">Privacy Policy</Link>.</p></div></div>
-      </Container></section>
     </>
   );
 }

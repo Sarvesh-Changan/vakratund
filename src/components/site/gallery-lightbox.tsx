@@ -1,21 +1,28 @@
 "use client";
 
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
-import { ChevronLeft, ChevronRight, Play, X } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight, FolderOpen, Play, X } from "lucide-react";
+import Link from "next/link";
 import { CloudImage } from "@/components/cloud-image";
 import { CloudVideoPoster } from "@/components/cloud-video-poster";
 import { HoverCard, MaskImage, Reveal, RevealGroup } from "@/components/motion";
 import { cloudinaryVideoPoster } from "@/lib/cloudinary/url";
 import { Button } from "@/components/ui";
-import type { PublishedGalleryItem } from "@/server/queries/gallery";
+import type { PublishedGalleryCategory, PublishedGalleryItem } from "@/server/queries/gallery";
 
-export function GalleryLightbox({ items }: { items: PublishedGalleryItem[] }) {
+export type GalleryCategoryCollection = { category: PublishedGalleryCategory; year?: number; items: PublishedGalleryItem[]; cover: PublishedGalleryCategory["cover"] };
+
+export function GalleryLightbox({ items, categories, categoryBaseHref }: { items: PublishedGalleryItem[]; categories?: GalleryCategoryCollection[]; categoryBaseHref?: string }) {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const restoreFocusRef = useRef<HTMLElement | null>(null);
   const touchStartRef = useRef<number | null>(null);
   const active = activeIndex === null ? null : (items[activeIndex] ?? null);
+
+  function closeViewer(): void {
+    setActiveIndex(null);
+  }
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -58,8 +65,25 @@ export function GalleryLightbox({ items }: { items: PublishedGalleryItem[] }) {
 
   return (
     <>
-      <RevealGroup className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {items.map((item, index) => (
+      <RevealGroup className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {categories ? categories.map((collection) => (
+          <Reveal key={collection.category.id}>
+            <HoverCard className="h-full rounded-card">
+              <Link
+                className="group relative block aspect-[4/3] w-full overflow-hidden rounded-card border border-line bg-dark text-left shadow-soft focus-visible:outline-2 focus-visible:outline-brand-deep focus-visible:outline-offset-2"
+                href={categoryBaseHref ? `${categoryBaseHref}${encodeURIComponent(collection.category.slug)}` : "#"}
+                aria-label={`Browse ${collection.category.name} gallery, ${collection.items.length} ${collection.items.length === 1 ? "item" : "items"}`}
+              >
+                <div className="absolute inset-0 bg-dark">
+                  {collection.cover.mediaType === "VIDEO" ? <CloudVideoPoster src={collection.cover.url} alt={collection.cover.alt} fill sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw" className="object-cover transition-transform duration-700 group-hover:scale-105" /> : <CloudImage src={collection.cover.url} alt={collection.cover.alt} fill sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw" className="object-cover transition-transform duration-700 group-hover:scale-105" />}
+                </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-dark via-dark/35 to-transparent" aria-hidden="true" />
+                <span className="absolute right-4 top-4 inline-flex items-center gap-1.5 rounded-pill border border-white/20 bg-dark/65 px-3 py-2 text-xs font-semibold text-white backdrop-blur-sm"><FolderOpen size={14} aria-hidden="true" />{collection.items.length} {collection.items.length === 1 ? "item" : "items"}</span>
+                <span className="absolute inset-x-5 bottom-5 text-white sm:inset-x-6 sm:bottom-6"><span className="block font-heading text-2xl font-semibold sm:text-3xl">{collection.category.name}</span>{collection.year ? <span className="mt-1 block text-sm text-white/75">{collection.year}</span> : null}<span className="mt-2 inline-flex items-center gap-2 text-sm font-semibold text-white/85">Browse collection <ArrowRight size={16} aria-hidden="true" /></span></span>
+              </Link>
+            </HoverCard>
+          </Reveal>
+        )) : items.map((item, index) => (
           <Reveal key={item.id}>
             <HoverCard className="h-full rounded-card">
               <button
@@ -118,11 +142,11 @@ export function GalleryLightbox({ items }: { items: PublishedGalleryItem[] }) {
         aria-label="Gallery viewer"
         onCancel={(event) => {
           event.preventDefault();
-          setActiveIndex(null);
+          closeViewer();
         }}
         onKeyDown={handleKeyDown}
         onClick={(event) => {
-          if (event.target === dialogRef.current) setActiveIndex(null);
+          if (event.target === dialogRef.current) closeViewer();
         }}
         className="m-auto max-h-[92vh] w-[min(96vw,72rem)] max-w-none rounded-panel border border-line bg-charcoal p-0 text-white shadow-raised backdrop:bg-charcoal/80"
       >
@@ -139,7 +163,7 @@ export function GalleryLightbox({ items }: { items: PublishedGalleryItem[] }) {
                 ref={closeRef}
                 type="button"
                 className="inline-flex size-11 items-center justify-center rounded-control text-white hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-brand focus-visible:outline-offset-2"
-                onClick={() => setActiveIndex(null)}
+                onClick={closeViewer}
                 aria-label="Close gallery viewer"
               >
                 <X size={20} aria-hidden="true" />

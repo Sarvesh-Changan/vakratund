@@ -900,15 +900,8 @@ export function EstimateFlow({
                         htmlFor="estimate-consent"
                         className="text-sm leading-6 text-ink-muted"
                       >
-                        I agree to the{" "}
-                        <Link
-                          href="/privacy"
-                          className="font-semibold text-brand-deep underline-offset-4 hover:underline"
-                        >
-                          Privacy Policy
-                        </Link>{" "}
-                        and consent to Vakratund Construction using these
-                        details to respond.
+                        I consent to Vakratund Construction using these details
+                        to respond.
                       </label>
                     </div>
                   </FormField>

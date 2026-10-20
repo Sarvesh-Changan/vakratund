@@ -514,6 +514,16 @@ a:focus-visible .button-arrow {
 }
 
 .admin-theme .button-arrow { display: none; }
+.admin-theme .gallery-admin {
+  --accent: #ae0000;
+  --accent-ink: #ffffff;
+  --brand: var(--accent);
+  --brand-ink: var(--accent-ink);
+  --brand-deep: #8d0000;
+}
+.admin-theme .gallery-admin .bg-accent-2 {
+  color: var(--ink) !important;
+}
 .admin-theme .bg-accent-2 { background-color: transparent !important; border: 1px solid var(--accent) !important; color: var(--accent-ink) !important; }
 .admin-theme .glow-blob { display: none !important; }
 .admin-theme [class*="backdrop-blur"] { backdrop-filter: none !important; }

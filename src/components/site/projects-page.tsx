@@ -1,7 +1,6 @@
 import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
 import { Container, CountUp, SectionHeading } from "@/components/ui";
 import type { PublishedProject } from "@/server/queries/projects";
-import { PageHero } from "./page-hero";
 import { ProjectsFilterGrid } from "./projects-filter-grid";
 
 export function ProjectsPage({ projects }: { projects: PublishedProject[] }) {
@@ -12,15 +11,6 @@ export function ProjectsPage({ projects }: { projects: PublishedProject[] }) {
   return (
     <>
       <BreadcrumbJsonLd items={breadcrumbs} />
-      <PageHero
-        breadcrumbs={breadcrumbs.map((item) => ({
-          label: item.name,
-          href: item.item,
-        }))}
-        eyebrow="Projects"
-        title="Work grounded in delivery"
-        description="Published project records from construction, turnkey development, repair surveys and rehabilitation work."
-      />
       <section className="section-tint">
         <Container className="section-space-generous">
           <div className="grid gap-5 sm:grid-cols-3">

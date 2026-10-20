@@ -5,8 +5,6 @@ import { HomeHero } from "./home-hero";
 import { HomeCredibilityStrip } from "./home-credibility-strip";
 import { HomeGallery } from "./home-gallery";
 import { HomeProcess } from "./home-process";
-import { HomeProjects } from "./home-projects";
-import { HomeServices } from "./home-services";
 import { HomeSocialProof } from "./home-social-proof";
 import { HomeStats } from "./home-stats";
 import { HomeWhy } from "./home-why";
@@ -19,8 +17,6 @@ export function HomePage({ data }: { data: HomePageData }) {
     {data.heroVisible ? <HomeHero hero={data.hero} image={data.heroImage} gallery={data.featuredGallery} settings={data.settings} /> : null}
     {data.heroVisible ? <HomeCredibilityStrip hero={data.hero} settings={data.settings} services={data.services} /> : null}
     <HomeStats stats={data.stats} foundedYear={data.settings.foundedYear} teamSize={data.team.length} serviceCount={data.services.length} projectCount={data.publishedProjectCount} />
-    <HomeServices services={data.services} section={data.servicesSection} />
-    {data.projectsVisible ? <HomeProjects projects={data.featuredProjects} section={data.projectsSection} /> : null}
     <HomeWhereWeWork settings={data.settings} />
     {data.specialtyVisible || data.structuralService ? <HomeSpecialty section={data.specialtySection} service={data.structuralService} /> : null}
     <HomeProcess process={data.process} />

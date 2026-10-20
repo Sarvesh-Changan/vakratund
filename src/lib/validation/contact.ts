@@ -9,7 +9,6 @@ export const contactSchema = z.object({
   location: plainText(160),
   message: plainText(2000),
   website: z.string().max(0, "Leave this field empty."),
-  consent: z.boolean().refine((value) => value, "Please agree to the Privacy Policy before sending."),
 }).strict();
 
 export type ContactInput = z.infer<typeof contactSchema>;

@@ -1,7 +1,6 @@
 import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
 import { Container, SectionHeading } from "@/components/ui";
 import type { PublishedService } from "@/server/queries/services";
-import { PageHero } from "./page-hero";
 import { ServicesFilterGrid } from "./services-filter-grid";
 
 export function ServicesPage({ services }: { services: PublishedService[] }) {
@@ -12,17 +11,6 @@ export function ServicesPage({ services }: { services: PublishedService[] }) {
   return (
     <>
       <BreadcrumbJsonLd items={breadcrumbs} />
-      <PageHero
-        breadcrumbs={breadcrumbs.map((item) => ({
-          label: item.name,
-          href: item.item,
-        }))}
-        eyebrow="Services"
-        title="Construction, repair and project management services"
-        description="Explore the published services configured for M/s. Vakratund Construction."
-        compact
-      />
-
       <section className="section-tint">
         <Container className="section-space-generous">
           <SectionHeading
