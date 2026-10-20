@@ -14,7 +14,7 @@ vi.mock("@/lib/db/client", () => ({ prisma: { $transaction: transaction } }));
 
 import { nextEstimatorVersion, saveEstimatorService } from "./estimator-admin";
 
-const input = { id: "seed-estimator", isActive: true, pricingMode: "ESTIMATE" as const, unit: "SQFT" as const, baseRate: 100, minCharge: 0, minArea: 100, maxArea: 10000, spreadPercent: 10, roundTo: 100, sortOrder: 0, disclaimer: null, fields: [], rules: [] };
+const input = { id: "seed-estimator", isActive: true, pricingMode: "ESTIMATE" as const, unit: "SQFT" as const, baseRate: 100, minCharge: 0, minArea: 100, maxArea: 10000, spreadPercent: 10, roundTo: 100, sortOrder: 0, disclaimer: null, includedText: [], notIncludedText: [], fields: [], rules: [] };
 
 describe("estimator admin transactions", () => {
   it("bumps the version for each saved change", async () => {

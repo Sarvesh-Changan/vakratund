@@ -94,9 +94,6 @@ export function ProjectForm({ initial, assets, services }: { initial: ProjectVie
     router.refresh();
   }
 
-  const previewTitle = form.seoTitle || form.title || "Project title";
-  const previewDescription = form.seoDesc || form.summary || "Your project summary will appear here.";
-
   return <form onSubmit={submit} className="space-y-6">
     {message ? <p role="alert" className="rounded-control border border-danger/40 bg-danger/10 p-3 text-sm text-danger">{message}</p> : null}
     <FormSection title="Project identity" description="The title, summary, and slug are used on the public project detail page.">

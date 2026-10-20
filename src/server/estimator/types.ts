@@ -26,13 +26,17 @@ export type Field = {
   key: string;
   label: string;
   helpText?: string | null;
+  shortHelp?: string | null;
   type: FieldType;
   required: boolean;
+  isAdvanced?: boolean;
   sortOrder: number;
   min: number | null;
   max: number | null;
   step?: number | null;
   defaultValue?: string | null;
+  presetValues?: number[];
+  unitLabel?: string | null;
   showIf?: Condition;
   effectType: EffectType;
   effectValue: number | null;
@@ -64,6 +68,8 @@ export type EstimatorConfig = {
   slug: string;
   name: string;
   description?: string | null;
+  includedText?: string[];
+  notIncludedText?: string[];
   pricingMode: PricingMode;
   unit: AreaUnit;
   areaFieldKey: string;

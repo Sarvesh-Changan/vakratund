@@ -7,4 +7,9 @@ describe("estimator admin validation", () => {
   it("rejects empty rule conditions", () => expect(estimatorServiceAdminSchema.safeParse({ ...base, rules: [{ name: "Broken", order: 0, condition: { all: [] }, effectType: "ADD_FLAT", effectValue: 100, isActive: true }] }).success).toBe(false));
   it("rejects invalid rule operators and unknown keys", () => expect(estimatorServiceAdminSchema.safeParse({ ...base, rules: [{ name: "Broken", order: 0, condition: { all: [{ field: "area", operator: "eval", value: "x" }] }, effectType: "ADD_FLAT", effectValue: 100, isActive: true }] }).success).toBe(false));
   it("rejects inverted area ranges and missing effect values", () => expect(estimatorServiceAdminSchema.safeParse({ ...base, minArea: 1000, maxArea: 100, fields: [{ key: "area", label: "Area", helpText: null, type: "NUMBER", required: true, sortOrder: 0, min: null, max: null, step: null, defaultValue: null, showIf: null, effectType: "ADD_FLAT", effectValue: null, options: [], isActive: true }] }).success).toBe(false));
+  it("requires human labels and keeps advanced fields optional", () => {
+    const field = { key: "area", label: "Area", helpText: null, shortHelp: null, type: "NUMBER" as const, required: true, isAdvanced: false, sortOrder: 0, min: null, max: null, step: null, defaultValue: null, presetValues: [], unitLabel: null, showIf: null, effectType: "NONE" as const, effectValue: null, options: [], isActive: true };
+    expect(estimatorServiceAdminSchema.safeParse({ ...base, fields: [{ ...field, label: "area" }] }).success).toBe(false);
+    expect(estimatorServiceAdminSchema.safeParse({ ...base, fields: [{ ...field, isAdvanced: true, required: true }] }).success).toBe(false);
+  });
 });

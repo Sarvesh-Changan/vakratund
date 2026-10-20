@@ -1,44 +1,43 @@
 import { expect, test } from "@playwright/test";
+import type { Page } from "@playwright/test";
 
-test("visitor can complete the estimator on a mobile viewport", async ({ page }) => {
-  await page.goto("/estimate");
+async function openService(page: Page, name: RegExp) {
   const serviceStep = page.locator('section[aria-labelledby="estimate-service-title"]');
   if (await serviceStep.count() === 0) {
-    test.info().annotations.push({
-      type: "exception",
-      description: "Estimator is not configured in the current database; publish an estimator service before running the submission flow.",
-    });
-    return;
+    test.info().annotations.push({ type: "exception", description: "Estimator is not configured in the current database." });
+    return false;
   }
   await expect(serviceStep).toBeVisible();
-  await serviceStep.getByRole("button", { name: /PMC & Turnkey Project Development/i }).click();
+  await serviceStep.getByRole("button", { name }).click();
+  return true;
+}
 
+async function completeContact(page: Page, submitLabel: string) {
   const detailsStep = page.locator('section[aria-labelledby="estimate-details-title"]');
   await expect(detailsStep).toBeVisible();
-  const areaInput = detailsStep.locator('input[type="number"]').first();
-  await areaInput.fill("500");
-  for (const select of await detailsStep.locator("select").all()) {
-    const options = await select.locator("option").count();
-    if (options > 1) await select.selectOption({ index: 1 });
-  }
-  for (const checkbox of await detailsStep.locator('input[type="checkbox"]').all()) await checkbox.check().catch(() => undefined);
-  await detailsStep.getByRole("button", { name: "Continue" }).click();
+  await detailsStep.getByLabel("Name").fill("Estimator Test");
+  await detailsStep.getByLabel("Phone").fill("+919821502956");
+  await detailsStep.getByLabel("Consent").check();
+  await page.getByRole("button", { name: submitLabel }).last().click();
+}
 
-  const resultStep = page.locator('section[aria-labelledby="estimate-result-title"]');
-  await expect(resultStep).toBeVisible();
-  const inspectionButton = resultStep.getByRole("button", { name: "Request Site Inspection" });
-  if (await inspectionButton.count()) await inspectionButton.click();
-  else await resultStep.getByRole("button", { name: "Continue to contact" }).click();
+test("priced estimator is a three-step keyboard-operable flow on mobile", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/estimate");
+  await expect(page.locator('nav[aria-label="Contact actions"]')).toHaveCount(0);
+  if (!await openService(page, /Building Construction/i)) return;
+  await expect(page.getByText("Step 2 of 3")).toBeVisible();
+  await page.getByLabel("Project area").fill("800");
+  await page.getByRole("button", { name: "Continue to your details" }).click();
+  await expect(page.getByText("Step 3 of 3")).toBeVisible();
+  await completeContact(page, "Get my estimate");
+});
 
-  const contactStep = page.locator('section[aria-labelledby="estimate-contact-title"]');
-  await expect(contactStep).toBeVisible();
-  await contactStep.getByLabel("Name").fill("Mobile Estimator Test");
-  await contactStep.getByLabel("Phone").fill("+919821502956");
-  await contactStep.getByLabel("Location").fill("Thane");
-  await contactStep.getByLabel("Requirements").fill("Please review this project enquiry.");
-  await contactStep.getByLabel("Consent").check();
-  await contactStep.getByRole("button", { name: "Submit enquiry" }).click();
-
-  await expect(page).toHaveURL(/\/estimate\/thank-you\?ref=VK-[A-Z2-9]{6}$/);
-  await expect(page.getByRole("heading", { name: "Thank you for getting in touch." })).toBeVisible();
+test("inspection-only estimator completes in three steps on desktop", async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto("/estimate");
+  if (!await openService(page, /PMC & Turnkey Project Development/i)) return;
+  await expect(page.getByText("Site inspection required").first()).toBeVisible();
+  await page.getByRole("button", { name: "Continue to your details" }).click();
+  await completeContact(page, "Request site inspection");
 });

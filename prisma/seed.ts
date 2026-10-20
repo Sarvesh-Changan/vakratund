@@ -91,11 +91,16 @@ type EstimatorField = {
   key: string;
   label: string;
   helpText: string;
+  shortHelp?: string;
   type: "SELECT" | "RADIO" | "NUMBER" | "MULTISELECT";
   required: boolean;
+  isAdvanced?: boolean;
   min?: number;
   max?: number;
   step?: number;
+  defaultValue?: string;
+  presetValues?: number[];
+  unitLabel?: string;
   options?: EstimatorOption[];
 };
 
@@ -774,31 +779,38 @@ function fieldsForService(service: ServiceSeed): EstimatorField[] {
     {
       key: "area",
       label: "Project area (sq ft)",
-      helpText:
-        "TODO(client): confirm the allowed area range for this service.",
+      helpText: "Enter the approximate area you want us to work on.",
+      shortHelp: "A rough area is enough for an indicative range.",
       type: "NUMBER",
       required: true,
       min: 100,
       max: 100000,
       step: 100,
+      defaultValue: "800",
+      presetValues: [600, 800, 1200, 1500],
+      unitLabel: "sq ft",
     },
     {
       key: "floors",
       label: "Number of floors",
-      helpText:
-        "TODO(client): confirm whether floor count is required for this service.",
+      helpText: "Include the ground floor when counting the building floors.",
+      shortHelp: "Choose the closest floor count.",
       type: "NUMBER",
       required: false,
       min: 1,
       max: 100,
       step: 1,
+      defaultValue: "1",
+      unitLabel: "floors",
     },
     {
       key: "location",
       label: "Project location",
       helpText: "Select the closest configured location zone.",
+      shortHelp: "Location helps us account for local site conditions.",
       type: "SELECT",
-      required: true,
+      required: false,
+      defaultValue: "thane",
       options: locations.map((location) => ({
         value: location.id.replace("seed-zone-", ""),
         label: location.name,
@@ -806,29 +818,54 @@ function fieldsForService(service: ServiceSeed): EstimatorField[] {
     },
   ];
 
-  if (service.pricingMode === "INSPECTION_ONLY") return common;
+  if (service.pricingMode === "INSPECTION_ONLY") {
+    const area = common[0];
+    const location = common[2];
+    if (!area || !location) throw new Error("Estimator seed fields are incomplete.");
+    return [
+      area,
+      location,
+      {
+        key: "issue",
+        label: "What do you need help with?",
+        helpText: "Choose the closest description of your requirement.",
+        shortHelp: "This helps us prepare for the first conversation.",
+        type: "RADIO",
+        required: true,
+        defaultValue: "survey-or-audit",
+        options: [
+          { value: "survey-or-audit", label: "Survey or audit" },
+          { value: "repair-or-strengthening", label: "Repair or strengthening" },
+          { value: "new-project-or-planning", label: "New project or planning" },
+          { value: "other-requirement", label: "Something else" },
+        ],
+      },
+    ];
+  }
 
   const addOns: Record<string, EstimatorOption[]> = {
-    "building-construction": ["rcc-works", "brick-block-work", "plaster"].map(
-      (value) => ({ value, label: value.replaceAll("-", " ") }),
-    ),
+    "building-construction": [
+      { value: "rcc-works", label: "RCC works" },
+      { value: "brick-block-work", label: "Brick or block work" },
+      { value: "plaster", label: "Plaster work" },
+    ],
     "waterproofing-solutions": [
-      "crack-treatment",
-      "pressure-injection-grouting",
-      "parapet-coating",
-    ].map((value) => ({ value, label: value.replaceAll("-", " ") })),
+      { value: "crack-treatment", label: "Crack treatment" },
+      { value: "pressure-injection-grouting", label: "Pressure or injection grouting" },
+      { value: "parapet-coating", label: "Parapet coating" },
+    ],
     "damp-proofing": [{ value: "plinth-treatment", label: "Plinth treatment" }],
     "painting-works": [
       { value: "raincoat-parapet", label: "Raincoat application on parapet" },
       { value: "building-facades", label: "Building facades" },
     ],
     "interior-works": [
-      "tv-units",
-      "kitchens",
-      "false-ceilings-cove-lighting",
-      "partitions",
-      "wooden-paneling",
-    ].map((value) => ({ value, label: value.replaceAll("-", " ") })),
+      { value: "tv-units", label: "TV units" },
+      { value: "kitchens", label: "Kitchens" },
+      { value: "false-ceilings-cove-lighting", label: "False ceilings with cove lighting" },
+      { value: "partitions", label: "Partitions" },
+      { value: "wooden-paneling", label: "Wooden paneling" },
+    ],
     "fabrication-porta-house": [
       { value: "porta-house", label: "Porta House" },
       { value: "chain-link-fencing", label: "Chain-link fencing" },
@@ -840,10 +877,11 @@ function fieldsForService(service: ServiceSeed): EstimatorField[] {
     {
       key: "specification",
       label: "Specification level",
-      helpText:
-        "TODO(client): confirm specification levels and their pricing effects.",
+      helpText: "Choose the finish level closest to your plan.",
+      shortHelp: "You can discuss the final specification during the site visit.",
       type: "RADIO",
       required: true,
+      defaultValue: "standard",
       options: [
         { value: "standard", label: "Standard" },
         { value: "premium", label: "Premium" },
@@ -851,10 +889,12 @@ function fieldsForService(service: ServiceSeed): EstimatorField[] {
     },
     {
       key: "add-ons",
-      label: "Add-ons",
-      helpText: "TODO(client): confirm available add-ons and pricing effects.",
+      label: "Optional extras",
+      helpText: "Select anything extra you may want included.",
+      shortHelp: "These choices are optional and can be discussed later.",
       type: "MULTISELECT",
       required: false,
+      isAdvanced: true,
       options: addOns[service.slug] ?? [],
     },
   ];
@@ -1100,6 +1140,11 @@ async function main() {
         slug: service.slug,
         name: service.title,
         description: SERVICE_DESCRIPTION,
+        includedText:
+          service.pricingMode === "ESTIMATE"
+            ? ["A database-driven indicative range", "A clear summary of your selected choices"]
+            : ["A first review of your requirement", "A follow-up plan for the site inspection"],
+        notIncludedText: ["Final measurements and site-specific quotation", "Taxes, approvals or specialist work not listed in the choices"],
         pricingMode: service.pricingMode,
         unit: "SQFT",
         baseRate: 0,
@@ -1131,12 +1176,17 @@ async function main() {
           key: field.key,
           label: field.label,
           helpText: field.helpText,
+          shortHelp: field.shortHelp,
           type: field.type,
           required: field.required,
+          isAdvanced: field.isAdvanced ?? false,
           sortOrder: fieldIndex,
           min: field.min,
           max: field.max,
           step: field.step,
+          defaultValue: field.defaultValue,
+          presetValues: field.presetValues ?? [],
+          unitLabel: field.unitLabel,
           effectType: "NONE",
           effectValue: null,
           isActive: true,

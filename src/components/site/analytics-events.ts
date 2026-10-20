@@ -1,4 +1,4 @@
-export type AnalyticsEventName = "generate_lead" | "click_call" | "click_whatsapp" | "estimate_completed";
+export type AnalyticsEventName = "generate_lead" | "click_call" | "click_whatsapp" | "estimate_completed" | "estimate_started" | "estimate_step_viewed" | "estimate_range_viewed" | "estimate_extras_opened" | "estimate_submitted";
 
 type AnalyticsParams = Record<string, string | number | boolean | undefined>;
 

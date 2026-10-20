@@ -1,0 +1,9 @@
+ALTER TABLE "EstimatorService"
+  ADD COLUMN "includedText" TEXT[] NOT NULL DEFAULT ARRAY[]::TEXT[],
+  ADD COLUMN "notIncludedText" TEXT[] NOT NULL DEFAULT ARRAY[]::TEXT[];
+
+ALTER TABLE "EstimatorField"
+  ADD COLUMN "shortHelp" TEXT,
+  ADD COLUMN "isAdvanced" BOOLEAN NOT NULL DEFAULT false,
+  ADD COLUMN "presetValues" INTEGER[] NOT NULL DEFAULT ARRAY[]::INTEGER[],
+  ADD COLUMN "unitLabel" TEXT;

@@ -29,7 +29,7 @@ function validateOptionValue(field: Field, value: Answers[string], errors: Field
 
 function validateField(field: Field, value: Answers[string], errors: FieldError[]): void {
   if (isEmpty(value)) {
-    if (field.required) errors.push(fieldError(field.key, "REQUIRED", `${field.label} is required.`));
+    if (field.required && field.isAdvanced !== true) errors.push(fieldError(field.key, "REQUIRED", `${field.label} is required.`));
     return;
   }
   if (field.type === "NUMBER") {

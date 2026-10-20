@@ -516,6 +516,8 @@ model EstimatorService {
   slug           String             @unique
   name           String
   description    String?
+  includedText   String[]           @default([])
+  notIncludedText String[]          @default([])
   pricingMode    PricingMode        @default(ESTIMATE)
   unit           AreaUnit           @default(SQFT)
   baseRate       Decimal            @db.Decimal(12, 2)
@@ -544,13 +546,17 @@ model EstimatorField {
   key                String
   label              String
   helpText           String?
+  shortHelp          String?
   type               FieldType
   required           Boolean          @default(true)
+  isAdvanced         Boolean          @default(false)
   sortOrder          Int              @default(0)
   min                Int?
   max                Int?
   step               Int?
   defaultValue       String?
+  presetValues       Int[]            @default([])
+  unitLabel          String?
   showIf             Json?
   effectType         EffectType       @default(NONE)
   effectValue        Decimal?         @db.Decimal(12, 2)

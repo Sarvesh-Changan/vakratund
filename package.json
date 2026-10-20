@@ -19,7 +19,8 @@
     "db:deploy": "prisma migrate deploy",
     "db:studio": "prisma studio",
     "db:reset": "node scripts/db-reset.mjs",
-    "db:seed": "node --no-warnings=ExperimentalWarning --experimental-strip-types prisma/seed.ts"
+    "db:seed": "node --no-warnings=ExperimentalWarning --experimental-strip-types prisma/seed.ts",
+    "estimator:simplify": "node --no-warnings=ExperimentalWarning --experimental-strip-types scripts/estimator-simplify.ts"
   },
   "dependencies": {
     "@better-auth/prisma-adapter": "^1.7.7",

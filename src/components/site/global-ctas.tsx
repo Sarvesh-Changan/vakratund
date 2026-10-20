@@ -1,4 +1,7 @@
+"use client";
+
 import { ArrowUpRight, Phone } from "lucide-react";
+import { usePathname } from "next/navigation";
 import type { ResolvedSiteSettings } from "@/config/site";
 import { WhatsAppIcon } from "@/components/ui/whatsapp-icon";
 import { ContactLink, TrackedWhatsAppLink } from "./contact-link";
@@ -6,8 +9,9 @@ import { phoneHref } from "./contact-utils";
 
 export function GlobalCtas({ settings }: { settings: ResolvedSiteSettings }) {
   const phone = settings.phones[0];
+  const pathname = usePathname();
 
-  if (!phone) return null;
+  if (!phone || pathname.startsWith("/estimate")) return null;
 
   return (
     <>

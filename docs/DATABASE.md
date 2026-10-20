@@ -426,6 +426,8 @@ model EstimatorService {
   slug           String      @unique
   name           String
   description    String?
+  includedText   String[]           @default([])       // configured summary copy
+  notIncludedText String[]          @default([])
   pricingMode    PricingMode @default(ESTIMATE)
   unit           AreaUnit    @default(SQFT)
   baseRate       Decimal     @db.Decimal(12, 2)      // ₹ per unit
@@ -454,13 +456,17 @@ model EstimatorField {
   key                String                      // stable machine key, e.g. "floors"
   label              String
   helpText           String?
+  shortHelp          String?                     // one-line visitor hint
   type               FieldType
   required           Boolean   @default(true)
+  isAdvanced         Boolean   @default(false)   // shown under Optional extras
   sortOrder          Int       @default(0)
   min                Int?
   max                Int?
   step               Int?
   defaultValue       String?
+  presetValues       Int[]     @default([])       // quick picks for NUMBER fields
+  unitLabel          String?                      // e.g. "sq ft"
   showIf             Json?                       // { key, op: "eq"|"in"|"gt"|"lt", value }
   // for NUMBER fields: optional effect per unit of the number
   effectType         EffectType @default(NONE)

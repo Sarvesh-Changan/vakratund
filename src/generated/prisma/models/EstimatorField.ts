@@ -31,6 +31,7 @@ export type EstimatorFieldAvgAggregateOutputType = {
   min: number | null
   max: number | null
   step: number | null
+  presetValues: number | null
   effectValue: runtime.Decimal | null
 }
 
@@ -39,6 +40,7 @@ export type EstimatorFieldSumAggregateOutputType = {
   min: number | null
   max: number | null
   step: number | null
+  presetValues: number[]
   effectValue: runtime.Decimal | null
 }
 
@@ -48,13 +50,16 @@ export type EstimatorFieldMinAggregateOutputType = {
   key: string | null
   label: string | null
   helpText: string | null
+  shortHelp: string | null
   type: $Enums.FieldType | null
   required: boolean | null
+  isAdvanced: boolean | null
   sortOrder: number | null
   min: number | null
   max: number | null
   step: number | null
   defaultValue: string | null
+  unitLabel: string | null
   effectType: $Enums.EffectType | null
   effectValue: runtime.Decimal | null
   isActive: boolean | null
@@ -68,13 +73,16 @@ export type EstimatorFieldMaxAggregateOutputType = {
   key: string | null
   label: string | null
   helpText: string | null
+  shortHelp: string | null
   type: $Enums.FieldType | null
   required: boolean | null
+  isAdvanced: boolean | null
   sortOrder: number | null
   min: number | null
   max: number | null
   step: number | null
   defaultValue: string | null
+  unitLabel: string | null
   effectType: $Enums.EffectType | null
   effectValue: runtime.Decimal | null
   isActive: boolean | null
@@ -88,13 +96,17 @@ export type EstimatorFieldCountAggregateOutputType = {
   key: number
   label: number
   helpText: number
+  shortHelp: number
   type: number
   required: number
+  isAdvanced: number
   sortOrder: number
   min: number
   max: number
   step: number
   defaultValue: number
+  presetValues: number
+  unitLabel: number
   showIf: number
   effectType: number
   effectValue: number
@@ -110,6 +122,7 @@ export type EstimatorFieldAvgAggregateInputType = {
   min?: true
   max?: true
   step?: true
+  presetValues?: true
   effectValue?: true
 }
 
@@ -118,6 +131,7 @@ export type EstimatorFieldSumAggregateInputType = {
   min?: true
   max?: true
   step?: true
+  presetValues?: true
   effectValue?: true
 }
 
@@ -127,13 +141,16 @@ export type EstimatorFieldMinAggregateInputType = {
   key?: true
   label?: true
   helpText?: true
+  shortHelp?: true
   type?: true
   required?: true
+  isAdvanced?: true
   sortOrder?: true
   min?: true
   max?: true
   step?: true
   defaultValue?: true
+  unitLabel?: true
   effectType?: true
   effectValue?: true
   isActive?: true
@@ -147,13 +164,16 @@ export type EstimatorFieldMaxAggregateInputType = {
   key?: true
   label?: true
   helpText?: true
+  shortHelp?: true
   type?: true
   required?: true
+  isAdvanced?: true
   sortOrder?: true
   min?: true
   max?: true
   step?: true
   defaultValue?: true
+  unitLabel?: true
   effectType?: true
   effectValue?: true
   isActive?: true
@@ -167,13 +187,17 @@ export type EstimatorFieldCountAggregateInputType = {
   key?: true
   label?: true
   helpText?: true
+  shortHelp?: true
   type?: true
   required?: true
+  isAdvanced?: true
   sortOrder?: true
   min?: true
   max?: true
   step?: true
   defaultValue?: true
+  presetValues?: true
+  unitLabel?: true
   showIf?: true
   effectType?: true
   effectValue?: true
@@ -275,13 +299,17 @@ export type EstimatorFieldGroupByOutputType = {
   key: string
   label: string
   helpText: string | null
+  shortHelp: string | null
   type: $Enums.FieldType
   required: boolean
+  isAdvanced: boolean
   sortOrder: number
   min: number | null
   max: number | null
   step: number | null
   defaultValue: string | null
+  presetValues: number[]
+  unitLabel: string | null
   showIf: runtime.JsonValue | null
   effectType: $Enums.EffectType
   effectValue: runtime.Decimal | null
@@ -319,13 +347,17 @@ export type EstimatorFieldWhereInput = {
   key?: Prisma.StringFilter<"EstimatorField"> | string
   label?: Prisma.StringFilter<"EstimatorField"> | string
   helpText?: Prisma.StringNullableFilter<"EstimatorField"> | string | null
+  shortHelp?: Prisma.StringNullableFilter<"EstimatorField"> | string | null
   type?: Prisma.EnumFieldTypeFilter<"EstimatorField"> | $Enums.FieldType
   required?: Prisma.BoolFilter<"EstimatorField"> | boolean
+  isAdvanced?: Prisma.BoolFilter<"EstimatorField"> | boolean
   sortOrder?: Prisma.IntFilter<"EstimatorField"> | number
   min?: Prisma.IntNullableFilter<"EstimatorField"> | number | null
   max?: Prisma.IntNullableFilter<"EstimatorField"> | number | null
   step?: Prisma.IntNullableFilter<"EstimatorField"> | number | null
   defaultValue?: Prisma.StringNullableFilter<"EstimatorField"> | string | null
+  presetValues?: Prisma.IntNullableListFilter<"EstimatorField">
+  unitLabel?: Prisma.StringNullableFilter<"EstimatorField"> | string | null
   showIf?: Prisma.JsonNullableFilter<"EstimatorField">
   effectType?: Prisma.EnumEffectTypeFilter<"EstimatorField"> | $Enums.EffectType
   effectValue?: Prisma.DecimalNullableFilter<"EstimatorField"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -342,13 +374,17 @@ export type EstimatorFieldOrderByWithRelationInput = {
   key?: Prisma.SortOrder
   label?: Prisma.SortOrder
   helpText?: Prisma.SortOrderInput | Prisma.SortOrder
+  shortHelp?: Prisma.SortOrderInput | Prisma.SortOrder
   type?: Prisma.SortOrder
   required?: Prisma.SortOrder
+  isAdvanced?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   min?: Prisma.SortOrderInput | Prisma.SortOrder
   max?: Prisma.SortOrderInput | Prisma.SortOrder
   step?: Prisma.SortOrderInput | Prisma.SortOrder
   defaultValue?: Prisma.SortOrderInput | Prisma.SortOrder
+  presetValues?: Prisma.SortOrder
+  unitLabel?: Prisma.SortOrderInput | Prisma.SortOrder
   showIf?: Prisma.SortOrderInput | Prisma.SortOrder
   effectType?: Prisma.SortOrder
   effectValue?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -369,13 +405,17 @@ export type EstimatorFieldWhereUniqueInput = Prisma.AtLeast<{
   key?: Prisma.StringFilter<"EstimatorField"> | string
   label?: Prisma.StringFilter<"EstimatorField"> | string
   helpText?: Prisma.StringNullableFilter<"EstimatorField"> | string | null
+  shortHelp?: Prisma.StringNullableFilter<"EstimatorField"> | string | null
   type?: Prisma.EnumFieldTypeFilter<"EstimatorField"> | $Enums.FieldType
   required?: Prisma.BoolFilter<"EstimatorField"> | boolean
+  isAdvanced?: Prisma.BoolFilter<"EstimatorField"> | boolean
   sortOrder?: Prisma.IntFilter<"EstimatorField"> | number
   min?: Prisma.IntNullableFilter<"EstimatorField"> | number | null
   max?: Prisma.IntNullableFilter<"EstimatorField"> | number | null
   step?: Prisma.IntNullableFilter<"EstimatorField"> | number | null
   defaultValue?: Prisma.StringNullableFilter<"EstimatorField"> | string | null
+  presetValues?: Prisma.IntNullableListFilter<"EstimatorField">
+  unitLabel?: Prisma.StringNullableFilter<"EstimatorField"> | string | null
   showIf?: Prisma.JsonNullableFilter<"EstimatorField">
   effectType?: Prisma.EnumEffectTypeFilter<"EstimatorField"> | $Enums.EffectType
   effectValue?: Prisma.DecimalNullableFilter<"EstimatorField"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -392,13 +432,17 @@ export type EstimatorFieldOrderByWithAggregationInput = {
   key?: Prisma.SortOrder
   label?: Prisma.SortOrder
   helpText?: Prisma.SortOrderInput | Prisma.SortOrder
+  shortHelp?: Prisma.SortOrderInput | Prisma.SortOrder
   type?: Prisma.SortOrder
   required?: Prisma.SortOrder
+  isAdvanced?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   min?: Prisma.SortOrderInput | Prisma.SortOrder
   max?: Prisma.SortOrderInput | Prisma.SortOrder
   step?: Prisma.SortOrderInput | Prisma.SortOrder
   defaultValue?: Prisma.SortOrderInput | Prisma.SortOrder
+  presetValues?: Prisma.SortOrder
+  unitLabel?: Prisma.SortOrderInput | Prisma.SortOrder
   showIf?: Prisma.SortOrderInput | Prisma.SortOrder
   effectType?: Prisma.SortOrder
   effectValue?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -421,13 +465,17 @@ export type EstimatorFieldScalarWhereWithAggregatesInput = {
   key?: Prisma.StringWithAggregatesFilter<"EstimatorField"> | string
   label?: Prisma.StringWithAggregatesFilter<"EstimatorField"> | string
   helpText?: Prisma.StringNullableWithAggregatesFilter<"EstimatorField"> | string | null
+  shortHelp?: Prisma.StringNullableWithAggregatesFilter<"EstimatorField"> | string | null
   type?: Prisma.EnumFieldTypeWithAggregatesFilter<"EstimatorField"> | $Enums.FieldType
   required?: Prisma.BoolWithAggregatesFilter<"EstimatorField"> | boolean
+  isAdvanced?: Prisma.BoolWithAggregatesFilter<"EstimatorField"> | boolean
   sortOrder?: Prisma.IntWithAggregatesFilter<"EstimatorField"> | number
   min?: Prisma.IntNullableWithAggregatesFilter<"EstimatorField"> | number | null
   max?: Prisma.IntNullableWithAggregatesFilter<"EstimatorField"> | number | null
   step?: Prisma.IntNullableWithAggregatesFilter<"EstimatorField"> | number | null
   defaultValue?: Prisma.StringNullableWithAggregatesFilter<"EstimatorField"> | string | null
+  presetValues?: Prisma.IntNullableListFilter<"EstimatorField">
+  unitLabel?: Prisma.StringNullableWithAggregatesFilter<"EstimatorField"> | string | null
   showIf?: Prisma.JsonNullableWithAggregatesFilter<"EstimatorField">
   effectType?: Prisma.EnumEffectTypeWithAggregatesFilter<"EstimatorField"> | $Enums.EffectType
   effectValue?: Prisma.DecimalNullableWithAggregatesFilter<"EstimatorField"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -441,13 +489,17 @@ export type EstimatorFieldCreateInput = {
   key: string
   label: string
   helpText?: string | null
+  shortHelp?: string | null
   type: $Enums.FieldType
   required?: boolean
+  isAdvanced?: boolean
   sortOrder?: number
   min?: number | null
   max?: number | null
   step?: number | null
   defaultValue?: string | null
+  presetValues?: Prisma.EstimatorFieldCreatepresetValuesInput | number[]
+  unitLabel?: string | null
   showIf?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   effectType?: $Enums.EffectType
   effectValue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -464,13 +516,17 @@ export type EstimatorFieldUncheckedCreateInput = {
   key: string
   label: string
   helpText?: string | null
+  shortHelp?: string | null
   type: $Enums.FieldType
   required?: boolean
+  isAdvanced?: boolean
   sortOrder?: number
   min?: number | null
   max?: number | null
   step?: number | null
   defaultValue?: string | null
+  presetValues?: Prisma.EstimatorFieldCreatepresetValuesInput | number[]
+  unitLabel?: string | null
   showIf?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   effectType?: $Enums.EffectType
   effectValue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -485,13 +541,17 @@ export type EstimatorFieldUpdateInput = {
   key?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.StringFieldUpdateOperationsInput | string
   helpText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shortHelp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumFieldTypeFieldUpdateOperationsInput | $Enums.FieldType
   required?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isAdvanced?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   min?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   max?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   step?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   defaultValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  presetValues?: Prisma.EstimatorFieldUpdatepresetValuesInput | number[]
+  unitLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   showIf?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   effectType?: Prisma.EnumEffectTypeFieldUpdateOperationsInput | $Enums.EffectType
   effectValue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -508,13 +568,17 @@ export type EstimatorFieldUncheckedUpdateInput = {
   key?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.StringFieldUpdateOperationsInput | string
   helpText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shortHelp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumFieldTypeFieldUpdateOperationsInput | $Enums.FieldType
   required?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isAdvanced?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   min?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   max?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   step?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   defaultValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  presetValues?: Prisma.EstimatorFieldUpdatepresetValuesInput | number[]
+  unitLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   showIf?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   effectType?: Prisma.EnumEffectTypeFieldUpdateOperationsInput | $Enums.EffectType
   effectValue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -530,13 +594,17 @@ export type EstimatorFieldCreateManyInput = {
   key: string
   label: string
   helpText?: string | null
+  shortHelp?: string | null
   type: $Enums.FieldType
   required?: boolean
+  isAdvanced?: boolean
   sortOrder?: number
   min?: number | null
   max?: number | null
   step?: number | null
   defaultValue?: string | null
+  presetValues?: Prisma.EstimatorFieldCreatepresetValuesInput | number[]
+  unitLabel?: string | null
   showIf?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   effectType?: $Enums.EffectType
   effectValue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -550,13 +618,17 @@ export type EstimatorFieldUpdateManyMutationInput = {
   key?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.StringFieldUpdateOperationsInput | string
   helpText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shortHelp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumFieldTypeFieldUpdateOperationsInput | $Enums.FieldType
   required?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isAdvanced?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   min?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   max?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   step?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   defaultValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  presetValues?: Prisma.EstimatorFieldUpdatepresetValuesInput | number[]
+  unitLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   showIf?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   effectType?: Prisma.EnumEffectTypeFieldUpdateOperationsInput | $Enums.EffectType
   effectValue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -571,13 +643,17 @@ export type EstimatorFieldUncheckedUpdateManyInput = {
   key?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.StringFieldUpdateOperationsInput | string
   helpText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shortHelp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumFieldTypeFieldUpdateOperationsInput | $Enums.FieldType
   required?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isAdvanced?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   min?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   max?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   step?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   defaultValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  presetValues?: Prisma.EstimatorFieldUpdatepresetValuesInput | number[]
+  unitLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   showIf?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   effectType?: Prisma.EnumEffectTypeFieldUpdateOperationsInput | $Enums.EffectType
   effectValue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -596,6 +672,14 @@ export type EstimatorFieldOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type IntNullableListFilter<$PrismaModel = never> = {
+  equals?: number[] | Prisma.ListIntFieldRefInput<$PrismaModel> | null
+  has?: number | Prisma.IntFieldRefInput<$PrismaModel> | null
+  hasEvery?: number[] | Prisma.ListIntFieldRefInput<$PrismaModel>
+  hasSome?: number[] | Prisma.ListIntFieldRefInput<$PrismaModel>
+  isEmpty?: boolean
+}
+
 export type EstimatorFieldEstimatorServiceIdKeyCompoundUniqueInput = {
   estimatorServiceId: string
   key: string
@@ -607,13 +691,17 @@ export type EstimatorFieldCountOrderByAggregateInput = {
   key?: Prisma.SortOrder
   label?: Prisma.SortOrder
   helpText?: Prisma.SortOrder
+  shortHelp?: Prisma.SortOrder
   type?: Prisma.SortOrder
   required?: Prisma.SortOrder
+  isAdvanced?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   min?: Prisma.SortOrder
   max?: Prisma.SortOrder
   step?: Prisma.SortOrder
   defaultValue?: Prisma.SortOrder
+  presetValues?: Prisma.SortOrder
+  unitLabel?: Prisma.SortOrder
   showIf?: Prisma.SortOrder
   effectType?: Prisma.SortOrder
   effectValue?: Prisma.SortOrder
@@ -627,6 +715,7 @@ export type EstimatorFieldAvgOrderByAggregateInput = {
   min?: Prisma.SortOrder
   max?: Prisma.SortOrder
   step?: Prisma.SortOrder
+  presetValues?: Prisma.SortOrder
   effectValue?: Prisma.SortOrder
 }
 
@@ -636,13 +725,16 @@ export type EstimatorFieldMaxOrderByAggregateInput = {
   key?: Prisma.SortOrder
   label?: Prisma.SortOrder
   helpText?: Prisma.SortOrder
+  shortHelp?: Prisma.SortOrder
   type?: Prisma.SortOrder
   required?: Prisma.SortOrder
+  isAdvanced?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   min?: Prisma.SortOrder
   max?: Prisma.SortOrder
   step?: Prisma.SortOrder
   defaultValue?: Prisma.SortOrder
+  unitLabel?: Prisma.SortOrder
   effectType?: Prisma.SortOrder
   effectValue?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
@@ -656,13 +748,16 @@ export type EstimatorFieldMinOrderByAggregateInput = {
   key?: Prisma.SortOrder
   label?: Prisma.SortOrder
   helpText?: Prisma.SortOrder
+  shortHelp?: Prisma.SortOrder
   type?: Prisma.SortOrder
   required?: Prisma.SortOrder
+  isAdvanced?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   min?: Prisma.SortOrder
   max?: Prisma.SortOrder
   step?: Prisma.SortOrder
   defaultValue?: Prisma.SortOrder
+  unitLabel?: Prisma.SortOrder
   effectType?: Prisma.SortOrder
   effectValue?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
@@ -675,6 +770,7 @@ export type EstimatorFieldSumOrderByAggregateInput = {
   min?: Prisma.SortOrder
   max?: Prisma.SortOrder
   step?: Prisma.SortOrder
+  presetValues?: Prisma.SortOrder
   effectValue?: Prisma.SortOrder
 }
 
@@ -725,8 +821,17 @@ export type EstimatorFieldUncheckedUpdateManyWithoutEstimatorServiceNestedInput 
   deleteMany?: Prisma.EstimatorFieldScalarWhereInput | Prisma.EstimatorFieldScalarWhereInput[]
 }
 
+export type EstimatorFieldCreatepresetValuesInput = {
+  set: number[]
+}
+
 export type EnumFieldTypeFieldUpdateOperationsInput = {
   set?: $Enums.FieldType
+}
+
+export type EstimatorFieldUpdatepresetValuesInput = {
+  set?: number[]
+  push?: number | number[]
 }
 
 export type EnumEffectTypeFieldUpdateOperationsInput = {
@@ -760,13 +865,17 @@ export type EstimatorFieldCreateWithoutEstimatorServiceInput = {
   key: string
   label: string
   helpText?: string | null
+  shortHelp?: string | null
   type: $Enums.FieldType
   required?: boolean
+  isAdvanced?: boolean
   sortOrder?: number
   min?: number | null
   max?: number | null
   step?: number | null
   defaultValue?: string | null
+  presetValues?: Prisma.EstimatorFieldCreatepresetValuesInput | number[]
+  unitLabel?: string | null
   showIf?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   effectType?: $Enums.EffectType
   effectValue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -781,13 +890,17 @@ export type EstimatorFieldUncheckedCreateWithoutEstimatorServiceInput = {
   key: string
   label: string
   helpText?: string | null
+  shortHelp?: string | null
   type: $Enums.FieldType
   required?: boolean
+  isAdvanced?: boolean
   sortOrder?: number
   min?: number | null
   max?: number | null
   step?: number | null
   defaultValue?: string | null
+  presetValues?: Prisma.EstimatorFieldCreatepresetValuesInput | number[]
+  unitLabel?: string | null
   showIf?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   effectType?: $Enums.EffectType
   effectValue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -832,13 +945,17 @@ export type EstimatorFieldScalarWhereInput = {
   key?: Prisma.StringFilter<"EstimatorField"> | string
   label?: Prisma.StringFilter<"EstimatorField"> | string
   helpText?: Prisma.StringNullableFilter<"EstimatorField"> | string | null
+  shortHelp?: Prisma.StringNullableFilter<"EstimatorField"> | string | null
   type?: Prisma.EnumFieldTypeFilter<"EstimatorField"> | $Enums.FieldType
   required?: Prisma.BoolFilter<"EstimatorField"> | boolean
+  isAdvanced?: Prisma.BoolFilter<"EstimatorField"> | boolean
   sortOrder?: Prisma.IntFilter<"EstimatorField"> | number
   min?: Prisma.IntNullableFilter<"EstimatorField"> | number | null
   max?: Prisma.IntNullableFilter<"EstimatorField"> | number | null
   step?: Prisma.IntNullableFilter<"EstimatorField"> | number | null
   defaultValue?: Prisma.StringNullableFilter<"EstimatorField"> | string | null
+  presetValues?: Prisma.IntNullableListFilter<"EstimatorField">
+  unitLabel?: Prisma.StringNullableFilter<"EstimatorField"> | string | null
   showIf?: Prisma.JsonNullableFilter<"EstimatorField">
   effectType?: Prisma.EnumEffectTypeFilter<"EstimatorField"> | $Enums.EffectType
   effectValue?: Prisma.DecimalNullableFilter<"EstimatorField"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -852,13 +969,17 @@ export type EstimatorFieldCreateWithoutOptionsInput = {
   key: string
   label: string
   helpText?: string | null
+  shortHelp?: string | null
   type: $Enums.FieldType
   required?: boolean
+  isAdvanced?: boolean
   sortOrder?: number
   min?: number | null
   max?: number | null
   step?: number | null
   defaultValue?: string | null
+  presetValues?: Prisma.EstimatorFieldCreatepresetValuesInput | number[]
+  unitLabel?: string | null
   showIf?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   effectType?: $Enums.EffectType
   effectValue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -874,13 +995,17 @@ export type EstimatorFieldUncheckedCreateWithoutOptionsInput = {
   key: string
   label: string
   helpText?: string | null
+  shortHelp?: string | null
   type: $Enums.FieldType
   required?: boolean
+  isAdvanced?: boolean
   sortOrder?: number
   min?: number | null
   max?: number | null
   step?: number | null
   defaultValue?: string | null
+  presetValues?: Prisma.EstimatorFieldCreatepresetValuesInput | number[]
+  unitLabel?: string | null
   showIf?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   effectType?: $Enums.EffectType
   effectValue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -910,13 +1035,17 @@ export type EstimatorFieldUpdateWithoutOptionsInput = {
   key?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.StringFieldUpdateOperationsInput | string
   helpText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shortHelp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumFieldTypeFieldUpdateOperationsInput | $Enums.FieldType
   required?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isAdvanced?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   min?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   max?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   step?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   defaultValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  presetValues?: Prisma.EstimatorFieldUpdatepresetValuesInput | number[]
+  unitLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   showIf?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   effectType?: Prisma.EnumEffectTypeFieldUpdateOperationsInput | $Enums.EffectType
   effectValue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -932,13 +1061,17 @@ export type EstimatorFieldUncheckedUpdateWithoutOptionsInput = {
   key?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.StringFieldUpdateOperationsInput | string
   helpText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shortHelp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumFieldTypeFieldUpdateOperationsInput | $Enums.FieldType
   required?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isAdvanced?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   min?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   max?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   step?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   defaultValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  presetValues?: Prisma.EstimatorFieldUpdatepresetValuesInput | number[]
+  unitLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   showIf?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   effectType?: Prisma.EnumEffectTypeFieldUpdateOperationsInput | $Enums.EffectType
   effectValue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -952,13 +1085,17 @@ export type EstimatorFieldCreateManyEstimatorServiceInput = {
   key: string
   label: string
   helpText?: string | null
+  shortHelp?: string | null
   type: $Enums.FieldType
   required?: boolean
+  isAdvanced?: boolean
   sortOrder?: number
   min?: number | null
   max?: number | null
   step?: number | null
   defaultValue?: string | null
+  presetValues?: Prisma.EstimatorFieldCreatepresetValuesInput | number[]
+  unitLabel?: string | null
   showIf?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   effectType?: $Enums.EffectType
   effectValue?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -972,13 +1109,17 @@ export type EstimatorFieldUpdateWithoutEstimatorServiceInput = {
   key?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.StringFieldUpdateOperationsInput | string
   helpText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shortHelp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumFieldTypeFieldUpdateOperationsInput | $Enums.FieldType
   required?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isAdvanced?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   min?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   max?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   step?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   defaultValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  presetValues?: Prisma.EstimatorFieldUpdatepresetValuesInput | number[]
+  unitLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   showIf?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   effectType?: Prisma.EnumEffectTypeFieldUpdateOperationsInput | $Enums.EffectType
   effectValue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -993,13 +1134,17 @@ export type EstimatorFieldUncheckedUpdateWithoutEstimatorServiceInput = {
   key?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.StringFieldUpdateOperationsInput | string
   helpText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shortHelp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumFieldTypeFieldUpdateOperationsInput | $Enums.FieldType
   required?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isAdvanced?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   min?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   max?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   step?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   defaultValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  presetValues?: Prisma.EstimatorFieldUpdatepresetValuesInput | number[]
+  unitLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   showIf?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   effectType?: Prisma.EnumEffectTypeFieldUpdateOperationsInput | $Enums.EffectType
   effectValue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -1014,13 +1159,17 @@ export type EstimatorFieldUncheckedUpdateManyWithoutEstimatorServiceInput = {
   key?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.StringFieldUpdateOperationsInput | string
   helpText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shortHelp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumFieldTypeFieldUpdateOperationsInput | $Enums.FieldType
   required?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isAdvanced?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   min?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   max?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   step?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   defaultValue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  presetValues?: Prisma.EstimatorFieldUpdatepresetValuesInput | number[]
+  unitLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   showIf?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   effectType?: Prisma.EnumEffectTypeFieldUpdateOperationsInput | $Enums.EffectType
   effectValue?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
@@ -1066,13 +1215,17 @@ export type EstimatorFieldSelect<ExtArgs extends runtime.Types.Extensions.Intern
   key?: boolean
   label?: boolean
   helpText?: boolean
+  shortHelp?: boolean
   type?: boolean
   required?: boolean
+  isAdvanced?: boolean
   sortOrder?: boolean
   min?: boolean
   max?: boolean
   step?: boolean
   defaultValue?: boolean
+  presetValues?: boolean
+  unitLabel?: boolean
   showIf?: boolean
   effectType?: boolean
   effectValue?: boolean
@@ -1090,13 +1243,17 @@ export type EstimatorFieldSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   key?: boolean
   label?: boolean
   helpText?: boolean
+  shortHelp?: boolean
   type?: boolean
   required?: boolean
+  isAdvanced?: boolean
   sortOrder?: boolean
   min?: boolean
   max?: boolean
   step?: boolean
   defaultValue?: boolean
+  presetValues?: boolean
+  unitLabel?: boolean
   showIf?: boolean
   effectType?: boolean
   effectValue?: boolean
@@ -1112,13 +1269,17 @@ export type EstimatorFieldSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   key?: boolean
   label?: boolean
   helpText?: boolean
+  shortHelp?: boolean
   type?: boolean
   required?: boolean
+  isAdvanced?: boolean
   sortOrder?: boolean
   min?: boolean
   max?: boolean
   step?: boolean
   defaultValue?: boolean
+  presetValues?: boolean
+  unitLabel?: boolean
   showIf?: boolean
   effectType?: boolean
   effectValue?: boolean
@@ -1134,13 +1295,17 @@ export type EstimatorFieldSelectScalar = {
   key?: boolean
   label?: boolean
   helpText?: boolean
+  shortHelp?: boolean
   type?: boolean
   required?: boolean
+  isAdvanced?: boolean
   sortOrder?: boolean
   min?: boolean
   max?: boolean
   step?: boolean
   defaultValue?: boolean
+  presetValues?: boolean
+  unitLabel?: boolean
   showIf?: boolean
   effectType?: boolean
   effectValue?: boolean
@@ -1149,7 +1314,7 @@ export type EstimatorFieldSelectScalar = {
   updatedAt?: boolean
 }
 
-export type EstimatorFieldOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "estimatorServiceId" | "key" | "label" | "helpText" | "type" | "required" | "sortOrder" | "min" | "max" | "step" | "defaultValue" | "showIf" | "effectType" | "effectValue" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["estimatorField"]>
+export type EstimatorFieldOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "estimatorServiceId" | "key" | "label" | "helpText" | "shortHelp" | "type" | "required" | "isAdvanced" | "sortOrder" | "min" | "max" | "step" | "defaultValue" | "presetValues" | "unitLabel" | "showIf" | "effectType" | "effectValue" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["estimatorField"]>
 export type EstimatorFieldInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   estimatorService?: boolean | Prisma.EstimatorServiceDefaultArgs<ExtArgs>
   options?: boolean | Prisma.EstimatorField$optionsArgs<ExtArgs>
@@ -1174,13 +1339,17 @@ export type $EstimatorFieldPayload<ExtArgs extends runtime.Types.Extensions.Inte
     key: string
     label: string
     helpText: string | null
+    shortHelp: string | null
     type: $Enums.FieldType
     required: boolean
+    isAdvanced: boolean
     sortOrder: number
     min: number | null
     max: number | null
     step: number | null
     defaultValue: string | null
+    presetValues: number[]
+    unitLabel: string | null
     showIf: runtime.JsonValue | null
     effectType: $Enums.EffectType
     effectValue: runtime.Decimal | null
@@ -1617,13 +1786,17 @@ export interface EstimatorFieldFieldRefs {
   readonly key: Prisma.FieldRef<"EstimatorField", 'String'>
   readonly label: Prisma.FieldRef<"EstimatorField", 'String'>
   readonly helpText: Prisma.FieldRef<"EstimatorField", 'String'>
+  readonly shortHelp: Prisma.FieldRef<"EstimatorField", 'String'>
   readonly type: Prisma.FieldRef<"EstimatorField", 'FieldType'>
   readonly required: Prisma.FieldRef<"EstimatorField", 'Boolean'>
+  readonly isAdvanced: Prisma.FieldRef<"EstimatorField", 'Boolean'>
   readonly sortOrder: Prisma.FieldRef<"EstimatorField", 'Int'>
   readonly min: Prisma.FieldRef<"EstimatorField", 'Int'>
   readonly max: Prisma.FieldRef<"EstimatorField", 'Int'>
   readonly step: Prisma.FieldRef<"EstimatorField", 'Int'>
   readonly defaultValue: Prisma.FieldRef<"EstimatorField", 'String'>
+  readonly presetValues: Prisma.FieldRef<"EstimatorField", 'Int[]'>
+  readonly unitLabel: Prisma.FieldRef<"EstimatorField", 'String'>
   readonly showIf: Prisma.FieldRef<"EstimatorField", 'Json'>
   readonly effectType: Prisma.FieldRef<"EstimatorField", 'EffectType'>
   readonly effectValue: Prisma.FieldRef<"EstimatorField", 'Decimal'>

@@ -98,6 +98,8 @@ export type EstimatorServiceCountAggregateOutputType = {
   slug: number
   name: number
   description: number
+  includedText: number
+  notIncludedText: number
   pricingMode: number
   unit: number
   baseRate: number
@@ -188,6 +190,8 @@ export type EstimatorServiceCountAggregateInputType = {
   slug?: true
   name?: true
   description?: true
+  includedText?: true
+  notIncludedText?: true
   pricingMode?: true
   unit?: true
   baseRate?: true
@@ -297,6 +301,8 @@ export type EstimatorServiceGroupByOutputType = {
   slug: string
   name: string
   description: string | null
+  includedText: string[]
+  notIncludedText: string[]
   pricingMode: $Enums.PricingMode
   unit: $Enums.AreaUnit
   baseRate: runtime.Decimal
@@ -342,6 +348,8 @@ export type EstimatorServiceWhereInput = {
   slug?: Prisma.StringFilter<"EstimatorService"> | string
   name?: Prisma.StringFilter<"EstimatorService"> | string
   description?: Prisma.StringNullableFilter<"EstimatorService"> | string | null
+  includedText?: Prisma.StringNullableListFilter<"EstimatorService">
+  notIncludedText?: Prisma.StringNullableListFilter<"EstimatorService">
   pricingMode?: Prisma.EnumPricingModeFilter<"EstimatorService"> | $Enums.PricingMode
   unit?: Prisma.EnumAreaUnitFilter<"EstimatorService"> | $Enums.AreaUnit
   baseRate?: Prisma.DecimalFilter<"EstimatorService"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -368,6 +376,8 @@ export type EstimatorServiceOrderByWithRelationInput = {
   slug?: Prisma.SortOrder
   name?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
+  includedText?: Prisma.SortOrder
+  notIncludedText?: Prisma.SortOrder
   pricingMode?: Prisma.SortOrder
   unit?: Prisma.SortOrder
   baseRate?: Prisma.SortOrder
@@ -397,6 +407,8 @@ export type EstimatorServiceWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.EstimatorServiceWhereInput | Prisma.EstimatorServiceWhereInput[]
   name?: Prisma.StringFilter<"EstimatorService"> | string
   description?: Prisma.StringNullableFilter<"EstimatorService"> | string | null
+  includedText?: Prisma.StringNullableListFilter<"EstimatorService">
+  notIncludedText?: Prisma.StringNullableListFilter<"EstimatorService">
   pricingMode?: Prisma.EnumPricingModeFilter<"EstimatorService"> | $Enums.PricingMode
   unit?: Prisma.EnumAreaUnitFilter<"EstimatorService"> | $Enums.AreaUnit
   baseRate?: Prisma.DecimalFilter<"EstimatorService"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -423,6 +435,8 @@ export type EstimatorServiceOrderByWithAggregationInput = {
   slug?: Prisma.SortOrder
   name?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
+  includedText?: Prisma.SortOrder
+  notIncludedText?: Prisma.SortOrder
   pricingMode?: Prisma.SortOrder
   unit?: Prisma.SortOrder
   baseRate?: Prisma.SortOrder
@@ -453,6 +467,8 @@ export type EstimatorServiceScalarWhereWithAggregatesInput = {
   slug?: Prisma.StringWithAggregatesFilter<"EstimatorService"> | string
   name?: Prisma.StringWithAggregatesFilter<"EstimatorService"> | string
   description?: Prisma.StringNullableWithAggregatesFilter<"EstimatorService"> | string | null
+  includedText?: Prisma.StringNullableListFilter<"EstimatorService">
+  notIncludedText?: Prisma.StringNullableListFilter<"EstimatorService">
   pricingMode?: Prisma.EnumPricingModeWithAggregatesFilter<"EstimatorService"> | $Enums.PricingMode
   unit?: Prisma.EnumAreaUnitWithAggregatesFilter<"EstimatorService"> | $Enums.AreaUnit
   baseRate?: Prisma.DecimalWithAggregatesFilter<"EstimatorService"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -474,6 +490,8 @@ export type EstimatorServiceCreateInput = {
   slug: string
   name: string
   description?: string | null
+  includedText?: Prisma.EstimatorServiceCreateincludedTextInput | string[]
+  notIncludedText?: Prisma.EstimatorServiceCreatenotIncludedTextInput | string[]
   pricingMode?: $Enums.PricingMode
   unit?: $Enums.AreaUnit
   baseRate: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -500,6 +518,8 @@ export type EstimatorServiceUncheckedCreateInput = {
   slug: string
   name: string
   description?: string | null
+  includedText?: Prisma.EstimatorServiceCreateincludedTextInput | string[]
+  notIncludedText?: Prisma.EstimatorServiceCreatenotIncludedTextInput | string[]
   pricingMode?: $Enums.PricingMode
   unit?: $Enums.AreaUnit
   baseRate: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -524,6 +544,8 @@ export type EstimatorServiceUpdateInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  includedText?: Prisma.EstimatorServiceUpdateincludedTextInput | string[]
+  notIncludedText?: Prisma.EstimatorServiceUpdatenotIncludedTextInput | string[]
   pricingMode?: Prisma.EnumPricingModeFieldUpdateOperationsInput | $Enums.PricingMode
   unit?: Prisma.EnumAreaUnitFieldUpdateOperationsInput | $Enums.AreaUnit
   baseRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -550,6 +572,8 @@ export type EstimatorServiceUncheckedUpdateInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  includedText?: Prisma.EstimatorServiceUpdateincludedTextInput | string[]
+  notIncludedText?: Prisma.EstimatorServiceUpdatenotIncludedTextInput | string[]
   pricingMode?: Prisma.EnumPricingModeFieldUpdateOperationsInput | $Enums.PricingMode
   unit?: Prisma.EnumAreaUnitFieldUpdateOperationsInput | $Enums.AreaUnit
   baseRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -575,6 +599,8 @@ export type EstimatorServiceCreateManyInput = {
   slug: string
   name: string
   description?: string | null
+  includedText?: Prisma.EstimatorServiceCreateincludedTextInput | string[]
+  notIncludedText?: Prisma.EstimatorServiceCreatenotIncludedTextInput | string[]
   pricingMode?: $Enums.PricingMode
   unit?: $Enums.AreaUnit
   baseRate: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -596,6 +622,8 @@ export type EstimatorServiceUpdateManyMutationInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  includedText?: Prisma.EstimatorServiceUpdateincludedTextInput | string[]
+  notIncludedText?: Prisma.EstimatorServiceUpdatenotIncludedTextInput | string[]
   pricingMode?: Prisma.EnumPricingModeFieldUpdateOperationsInput | $Enums.PricingMode
   unit?: Prisma.EnumAreaUnitFieldUpdateOperationsInput | $Enums.AreaUnit
   baseRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -618,6 +646,8 @@ export type EstimatorServiceUncheckedUpdateManyInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  includedText?: Prisma.EstimatorServiceUpdateincludedTextInput | string[]
+  notIncludedText?: Prisma.EstimatorServiceUpdatenotIncludedTextInput | string[]
   pricingMode?: Prisma.EnumPricingModeFieldUpdateOperationsInput | $Enums.PricingMode
   unit?: Prisma.EnumAreaUnitFieldUpdateOperationsInput | $Enums.AreaUnit
   baseRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -645,6 +675,8 @@ export type EstimatorServiceCountOrderByAggregateInput = {
   slug?: Prisma.SortOrder
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  includedText?: Prisma.SortOrder
+  notIncludedText?: Prisma.SortOrder
   pricingMode?: Prisma.SortOrder
   unit?: Prisma.SortOrder
   baseRate?: Prisma.SortOrder
@@ -764,6 +796,24 @@ export type EstimatorServiceUncheckedUpdateOneWithoutServiceNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.EstimatorServiceUpdateToOneWithWhereWithoutServiceInput, Prisma.EstimatorServiceUpdateWithoutServiceInput>, Prisma.EstimatorServiceUncheckedUpdateWithoutServiceInput>
 }
 
+export type EstimatorServiceCreateincludedTextInput = {
+  set: string[]
+}
+
+export type EstimatorServiceCreatenotIncludedTextInput = {
+  set: string[]
+}
+
+export type EstimatorServiceUpdateincludedTextInput = {
+  set?: string[]
+  push?: string | string[]
+}
+
+export type EstimatorServiceUpdatenotIncludedTextInput = {
+  set?: string[]
+  push?: string | string[]
+}
+
 export type EnumPricingModeFieldUpdateOperationsInput = {
   set?: $Enums.PricingMode
 }
@@ -827,6 +877,8 @@ export type EstimatorServiceCreateWithoutServiceInput = {
   slug: string
   name: string
   description?: string | null
+  includedText?: Prisma.EstimatorServiceCreateincludedTextInput | string[]
+  notIncludedText?: Prisma.EstimatorServiceCreatenotIncludedTextInput | string[]
   pricingMode?: $Enums.PricingMode
   unit?: $Enums.AreaUnit
   baseRate: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -851,6 +903,8 @@ export type EstimatorServiceUncheckedCreateWithoutServiceInput = {
   slug: string
   name: string
   description?: string | null
+  includedText?: Prisma.EstimatorServiceCreateincludedTextInput | string[]
+  notIncludedText?: Prisma.EstimatorServiceCreatenotIncludedTextInput | string[]
   pricingMode?: $Enums.PricingMode
   unit?: $Enums.AreaUnit
   baseRate: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -891,6 +945,8 @@ export type EstimatorServiceUpdateWithoutServiceInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  includedText?: Prisma.EstimatorServiceUpdateincludedTextInput | string[]
+  notIncludedText?: Prisma.EstimatorServiceUpdatenotIncludedTextInput | string[]
   pricingMode?: Prisma.EnumPricingModeFieldUpdateOperationsInput | $Enums.PricingMode
   unit?: Prisma.EnumAreaUnitFieldUpdateOperationsInput | $Enums.AreaUnit
   baseRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -915,6 +971,8 @@ export type EstimatorServiceUncheckedUpdateWithoutServiceInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  includedText?: Prisma.EstimatorServiceUpdateincludedTextInput | string[]
+  notIncludedText?: Prisma.EstimatorServiceUpdatenotIncludedTextInput | string[]
   pricingMode?: Prisma.EnumPricingModeFieldUpdateOperationsInput | $Enums.PricingMode
   unit?: Prisma.EnumAreaUnitFieldUpdateOperationsInput | $Enums.AreaUnit
   baseRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -939,6 +997,8 @@ export type EstimatorServiceCreateWithoutFieldsInput = {
   slug: string
   name: string
   description?: string | null
+  includedText?: Prisma.EstimatorServiceCreateincludedTextInput | string[]
+  notIncludedText?: Prisma.EstimatorServiceCreatenotIncludedTextInput | string[]
   pricingMode?: $Enums.PricingMode
   unit?: $Enums.AreaUnit
   baseRate: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -964,6 +1024,8 @@ export type EstimatorServiceUncheckedCreateWithoutFieldsInput = {
   slug: string
   name: string
   description?: string | null
+  includedText?: Prisma.EstimatorServiceCreateincludedTextInput | string[]
+  notIncludedText?: Prisma.EstimatorServiceCreatenotIncludedTextInput | string[]
   pricingMode?: $Enums.PricingMode
   unit?: $Enums.AreaUnit
   baseRate: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1003,6 +1065,8 @@ export type EstimatorServiceUpdateWithoutFieldsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  includedText?: Prisma.EstimatorServiceUpdateincludedTextInput | string[]
+  notIncludedText?: Prisma.EstimatorServiceUpdatenotIncludedTextInput | string[]
   pricingMode?: Prisma.EnumPricingModeFieldUpdateOperationsInput | $Enums.PricingMode
   unit?: Prisma.EnumAreaUnitFieldUpdateOperationsInput | $Enums.AreaUnit
   baseRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1028,6 +1092,8 @@ export type EstimatorServiceUncheckedUpdateWithoutFieldsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  includedText?: Prisma.EstimatorServiceUpdateincludedTextInput | string[]
+  notIncludedText?: Prisma.EstimatorServiceUpdatenotIncludedTextInput | string[]
   pricingMode?: Prisma.EnumPricingModeFieldUpdateOperationsInput | $Enums.PricingMode
   unit?: Prisma.EnumAreaUnitFieldUpdateOperationsInput | $Enums.AreaUnit
   baseRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1051,6 +1117,8 @@ export type EstimatorServiceCreateWithoutRulesInput = {
   slug: string
   name: string
   description?: string | null
+  includedText?: Prisma.EstimatorServiceCreateincludedTextInput | string[]
+  notIncludedText?: Prisma.EstimatorServiceCreatenotIncludedTextInput | string[]
   pricingMode?: $Enums.PricingMode
   unit?: $Enums.AreaUnit
   baseRate: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1076,6 +1144,8 @@ export type EstimatorServiceUncheckedCreateWithoutRulesInput = {
   slug: string
   name: string
   description?: string | null
+  includedText?: Prisma.EstimatorServiceCreateincludedTextInput | string[]
+  notIncludedText?: Prisma.EstimatorServiceCreatenotIncludedTextInput | string[]
   pricingMode?: $Enums.PricingMode
   unit?: $Enums.AreaUnit
   baseRate: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1115,6 +1185,8 @@ export type EstimatorServiceUpdateWithoutRulesInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  includedText?: Prisma.EstimatorServiceUpdateincludedTextInput | string[]
+  notIncludedText?: Prisma.EstimatorServiceUpdatenotIncludedTextInput | string[]
   pricingMode?: Prisma.EnumPricingModeFieldUpdateOperationsInput | $Enums.PricingMode
   unit?: Prisma.EnumAreaUnitFieldUpdateOperationsInput | $Enums.AreaUnit
   baseRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1140,6 +1212,8 @@ export type EstimatorServiceUncheckedUpdateWithoutRulesInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  includedText?: Prisma.EstimatorServiceUpdateincludedTextInput | string[]
+  notIncludedText?: Prisma.EstimatorServiceUpdatenotIncludedTextInput | string[]
   pricingMode?: Prisma.EnumPricingModeFieldUpdateOperationsInput | $Enums.PricingMode
   unit?: Prisma.EnumAreaUnitFieldUpdateOperationsInput | $Enums.AreaUnit
   baseRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1163,6 +1237,8 @@ export type EstimatorServiceCreateWithoutQuotesInput = {
   slug: string
   name: string
   description?: string | null
+  includedText?: Prisma.EstimatorServiceCreateincludedTextInput | string[]
+  notIncludedText?: Prisma.EstimatorServiceCreatenotIncludedTextInput | string[]
   pricingMode?: $Enums.PricingMode
   unit?: $Enums.AreaUnit
   baseRate: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1188,6 +1264,8 @@ export type EstimatorServiceUncheckedCreateWithoutQuotesInput = {
   slug: string
   name: string
   description?: string | null
+  includedText?: Prisma.EstimatorServiceCreateincludedTextInput | string[]
+  notIncludedText?: Prisma.EstimatorServiceCreatenotIncludedTextInput | string[]
   pricingMode?: $Enums.PricingMode
   unit?: $Enums.AreaUnit
   baseRate: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1227,6 +1305,8 @@ export type EstimatorServiceUpdateWithoutQuotesInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  includedText?: Prisma.EstimatorServiceUpdateincludedTextInput | string[]
+  notIncludedText?: Prisma.EstimatorServiceUpdatenotIncludedTextInput | string[]
   pricingMode?: Prisma.EnumPricingModeFieldUpdateOperationsInput | $Enums.PricingMode
   unit?: Prisma.EnumAreaUnitFieldUpdateOperationsInput | $Enums.AreaUnit
   baseRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1252,6 +1332,8 @@ export type EstimatorServiceUncheckedUpdateWithoutQuotesInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  includedText?: Prisma.EstimatorServiceUpdateincludedTextInput | string[]
+  notIncludedText?: Prisma.EstimatorServiceUpdatenotIncludedTextInput | string[]
   pricingMode?: Prisma.EnumPricingModeFieldUpdateOperationsInput | $Enums.PricingMode
   unit?: Prisma.EnumAreaUnitFieldUpdateOperationsInput | $Enums.AreaUnit
   baseRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1325,6 +1407,8 @@ export type EstimatorServiceSelect<ExtArgs extends runtime.Types.Extensions.Inte
   slug?: boolean
   name?: boolean
   description?: boolean
+  includedText?: boolean
+  notIncludedText?: boolean
   pricingMode?: boolean
   unit?: boolean
   baseRate?: boolean
@@ -1352,6 +1436,8 @@ export type EstimatorServiceSelectCreateManyAndReturn<ExtArgs extends runtime.Ty
   slug?: boolean
   name?: boolean
   description?: boolean
+  includedText?: boolean
+  notIncludedText?: boolean
   pricingMode?: boolean
   unit?: boolean
   baseRate?: boolean
@@ -1375,6 +1461,8 @@ export type EstimatorServiceSelectUpdateManyAndReturn<ExtArgs extends runtime.Ty
   slug?: boolean
   name?: boolean
   description?: boolean
+  includedText?: boolean
+  notIncludedText?: boolean
   pricingMode?: boolean
   unit?: boolean
   baseRate?: boolean
@@ -1398,6 +1486,8 @@ export type EstimatorServiceSelectScalar = {
   slug?: boolean
   name?: boolean
   description?: boolean
+  includedText?: boolean
+  notIncludedText?: boolean
   pricingMode?: boolean
   unit?: boolean
   baseRate?: boolean
@@ -1414,7 +1504,7 @@ export type EstimatorServiceSelectScalar = {
   updatedAt?: boolean
 }
 
-export type EstimatorServiceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "serviceId" | "slug" | "name" | "description" | "pricingMode" | "unit" | "baseRate" | "minCharge" | "minArea" | "maxArea" | "spreadPercent" | "roundTo" | "disclaimer" | "version" | "isActive" | "sortOrder" | "createdAt" | "updatedAt", ExtArgs["result"]["estimatorService"]>
+export type EstimatorServiceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "serviceId" | "slug" | "name" | "description" | "includedText" | "notIncludedText" | "pricingMode" | "unit" | "baseRate" | "minCharge" | "minArea" | "maxArea" | "spreadPercent" | "roundTo" | "disclaimer" | "version" | "isActive" | "sortOrder" | "createdAt" | "updatedAt", ExtArgs["result"]["estimatorService"]>
 export type EstimatorServiceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   service?: boolean | Prisma.EstimatorService$serviceArgs<ExtArgs>
   fields?: boolean | Prisma.EstimatorService$fieldsArgs<ExtArgs>
@@ -1443,6 +1533,8 @@ export type $EstimatorServicePayload<ExtArgs extends runtime.Types.Extensions.In
     slug: string
     name: string
     description: string | null
+    includedText: string[]
+    notIncludedText: string[]
     pricingMode: $Enums.PricingMode
     unit: $Enums.AreaUnit
     baseRate: runtime.Decimal
@@ -1889,6 +1981,8 @@ export interface EstimatorServiceFieldRefs {
   readonly slug: Prisma.FieldRef<"EstimatorService", 'String'>
   readonly name: Prisma.FieldRef<"EstimatorService", 'String'>
   readonly description: Prisma.FieldRef<"EstimatorService", 'String'>
+  readonly includedText: Prisma.FieldRef<"EstimatorService", 'String[]'>
+  readonly notIncludedText: Prisma.FieldRef<"EstimatorService", 'String[]'>
   readonly pricingMode: Prisma.FieldRef<"EstimatorService", 'PricingMode'>
   readonly unit: Prisma.FieldRef<"EstimatorService", 'AreaUnit'>
   readonly baseRate: Prisma.FieldRef<"EstimatorService", 'Decimal'>
