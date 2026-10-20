@@ -50,10 +50,6 @@ async function getStore(): Promise<LoginRateLimitStore> {
   storePromise = (async () => {
     const environment = getEnv();
     if (environment.NODE_ENV === "development" || environment.NODE_ENV === "test") return new InMemoryLoginRateLimitStore();
-    if (environment.UPSTASH_REDIS_REST_URL && environment.UPSTASH_REDIS_REST_TOKEN) {
-      const { UpstashLoginRateLimitStore } = await import("@/lib/rate-limit/upstash-store");
-      return new UpstashLoginRateLimitStore(environment.UPSTASH_REDIS_REST_URL, environment.UPSTASH_REDIS_REST_TOKEN);
-    }
     const { DatabaseLoginRateLimitStore } = await import("@/lib/rate-limit/database-store");
     return new DatabaseLoginRateLimitStore();
   })();

@@ -1,6 +1,5 @@
 import "server-only";
 
-import { getEnv } from "@/lib/env";
 import { type LoginRateLimitStore, type RateLimitBucket, type RateLimitConsumeOptions } from "@/lib/rate-limit/store";
 import type { RateLimitResult } from "@/lib/rate-limit/limiter";
 
@@ -9,13 +8,17 @@ type FetchLike = (input: RequestInfo | URL, init?: RequestInit) => Promise<Respo
 
 const CONSUME_SCRIPT = `local raw=redis.call('GET',KEYS[1]); local now=tonumber(ARGV[1]); local window=tonumber(ARGV[2]); local limit=tonumber(ARGV[3]); local state=raw and cjson.decode(raw) or {count=0,windowStart=now,windowMs=window}; if now-state.windowStart>=window then state={count=0,windowStart=now,windowMs=window}; end; if state.count>=limit then return {0,state.count,state.windowStart+window-now}; end; state.count=state.count+1; if state.count>=limit then state.lockedUntil=state.windowStart+window; else state.lockedUntil=cjson.null; end; redis.call('SET',KEYS[1],cjson.encode(state),'PX',window); return {1,state.count,state.windowStart+window-now};`;
 
+/**
+ * Retained as a standalone adapter for compatibility tests and future migrations.
+ * Production selection is intentionally PostgreSQL-only in login.ts.
+ */
 export class UpstashLoginRateLimitStore implements LoginRateLimitStore {
   readonly name = "upstash" as const;
   private readonly url: string;
   private readonly token: string;
   private readonly fetcher: FetchLike;
 
-  constructor(url = getEnv().UPSTASH_REDIS_REST_URL ?? "", token = getEnv().UPSTASH_REDIS_REST_TOKEN ?? "", fetcher: FetchLike = fetch) {
+  constructor(url = "", token = "", fetcher: FetchLike = fetch) {
     this.url = url.replace(/\/$/, "");
     this.token = token;
     this.fetcher = fetcher;

@@ -79,7 +79,7 @@ Rules:
 - Honeypot field + minimum-fill-time check on public forms; Cloudflare Turnstile (optional) if spam appears.
 - Return generic 429 messages with `Retry-After`.
 - IPs are **hashed with a server secret** before storage (never store raw IPs).
-- Login counters are stored in Upstash Redis when both `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` are configured. Otherwise production uses the `RateLimitBucket` PostgreSQL table; in-memory buckets are local-development/test only. Unknown IP requests use an IP-less request fingerprint plus email/global email-hash buckets and are never put into one shared unknown-IP bucket.
+- Login counters use the `RateLimitBucket` PostgreSQL table in production. In-memory buckets are local-development/test only. Unknown IP requests use an IP-less request fingerprint plus email/global email-hash buckets and are never put into one shared unknown-IP bucket. Redis/Upstash is not used.
 
 ## 7. File uploads (Cloudinary)
 - Only authenticated, authorized users may request a signature; clients send a section enum and the server maps the server-defined folder allowlist (`vakratund/projects`, `vakratund/testimonials`, `vakratund/team`, `vakratund/gallery`, `vakratund/docs`). Free-form folders are rejected. Gallery mutations require `content:write`; SALES is denied.

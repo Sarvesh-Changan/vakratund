@@ -47,7 +47,7 @@ npm run auth:unlock -- --all
 npm run auth:unlock -- --email admin@example.com --force   # production only
 ```
 
-The command uses Upstash when both REST variables are configured; otherwise it uses the database bucket table. Apply the rate-limit migration before using the database fallback in production.
+The command always uses the PostgreSQL `RateLimitBucket` table in production. Apply the rate-limit migration before deploying or using the command in production. Upstash variables are not required and are ignored by the application.
 
 ## CI and production builds
 

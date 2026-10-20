@@ -25,7 +25,7 @@ vakratund-web/                 <- your repo root
 | Neon | PostgreSQL | Phase 4 |
 | Cloudinary | media | Phase 7 |
 | Gmail SMTP | email | Phase 17 |
-| Upstash (optional but recommended) | rate limiting | Phase 19 |
+| Neon PostgreSQL | persistent rate limiting | Phase 19 |
 | Cloudflare Turnstile (optional) | bot protection | Phase 19 |
 | Vercel | hosting | Phase 22 |
 | Domain registrar access | DNS | Phase 22 |
@@ -161,7 +161,7 @@ Tasks:
 4. Implement src/config/permissions.ts (permission map from SECURITY.md §3), can(), requirePermission(), requireRole(), getSession() helpers; unit-test the matrix.
 5. Build /admin/login (accessible form, generic error messages, loading state), logout, change-password, forgot/reset password (email sending can be a stub logging to console in dev; real email in Phase 17).
 6. Protect /admin/(protected) in the layout using server-side session check; add request interception (proxy.ts or middleware.ts depending on installed Next.js version) only as a cheap redirect for unauthenticated users. All Server Actions/handlers must still call requirePermission.
-7. Login rate limiting: implement a pluggable limiter interface in src/lib/rate-limit with an in-memory implementation for dev (Upstash comes in Phase 19). Apply 5 attempts/15 min per IP+email.
+7. Login rate limiting: implement a pluggable limiter interface in src/lib/rate-limit with an in-memory implementation for dev and a PostgreSQL implementation for production. Apply 5 attempts/15 min per IP+email.
 8. Prevent removing/demoting the last active SUPER_ADMIN (service-level guard + test).
 9. Add noindex + no-store headers for /admin.
 Constraints: never log passwords/hashes; sessions via HttpOnly Secure SameSite cookies.
@@ -417,12 +417,12 @@ Done when: Rich Results Test–valid JSON-LD (verify manually), sitemap valid, n
 ---
 
 ## Phase 18 — Security hardening & rate limiting
-**You do first (optional but recommended):** create Upstash Redis; add `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN`.
+**You do first:** ensure the production Neon database is reachable through `DATABASE_URL` and has the rate-limit migration applied with `DIRECT_URL`.
 
 **Prompt**
 ```text
 PHASE 18 — Security hardening per docs/SECURITY.md (full pass).
-1. Implement the Upstash-backed limiter behind the existing interface with in-memory fallback in dev; apply the limits table in SECURITY.md §6 to login, lead forms, estimate API, upload signature, password reset.
+1. Implement the PostgreSQL-backed limiter behind the existing interface with in-memory fallback in dev/test; apply the limits table in SECURITY.md §6 to login, lead forms, estimate API, upload signature, password reset.
 2. Add security headers in next.config (CSP with nonces, HSTS, nosniff, Referrer-Policy, Permissions-Policy, frame-ancestors none); adjust CSP for Cloudinary images, map embed, GA/Turnstile if enabled; confirm no CSP violations in console across all pages.
 3. Optional Turnstile integration on public forms behind an env flag, with server-side verification.
 4. Authorization audit: write an automated test that enumerates all Server Actions/route handlers under admin and asserts they reject unauthenticated and unauthorized roles (use a registry pattern if needed).
@@ -586,8 +586,6 @@ SMTP_USER
 SMTP_PASS
 EMAIL_FROM
 LEAD_NOTIFY_TO
-UPSTASH_REDIS_REST_URL
-UPSTASH_REDIS_REST_TOKEN
 TURNSTILE_SECRET_KEY            # optional
 NEXT_PUBLIC_TURNSTILE_SITE_KEY  # optional
 NEXT_PUBLIC_GA_ID               # optional

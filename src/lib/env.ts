@@ -33,8 +33,6 @@ const baseEnvironmentSchema = z.object({
   EMAIL_FROM: z.string().trim().optional(),
   LEAD_NOTIFY_TO: z.string().trim().optional(),
 
-  UPSTASH_REDIS_REST_URL: z.string().optional(),
-  UPSTASH_REDIS_REST_TOKEN: z.string().optional(),
   TURNSTILE_SECRET_KEY: z.string().optional(),
   NEXT_PUBLIC_TURNSTILE_SITE_KEY: z.string().optional(),
   NEXT_PUBLIC_GA_ID: z.string().optional(),
