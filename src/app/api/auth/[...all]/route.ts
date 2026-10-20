@@ -2,8 +2,10 @@ import { toNextJsHandler } from "better-auth/next-js";
 
 import { auth, isAuthConfigured } from "@/lib/auth/auth";
 import { clearForcedPasswordChange } from "@/lib/auth/session-security";
-import { checkLoginLimit, resetLoginLimit } from "@/lib/rate-limit/login";
+import { checkLoginLimit, recordFailedLogin, resetLoginLimit } from "@/lib/rate-limit/login";
+import { getClientIp } from "@/lib/rate-limit/client-ip";
 import { logActivity } from "@/server/services/activity";
+import { findLockedAccount, notifySuperAdminsOfLockout } from "@/server/services/auth-lockout";
 
 function guard(handler: (request: Request) => Promise<Response>) {
   return async (request: Request): Promise<Response> => {
@@ -13,27 +15,46 @@ function guard(handler: (request: Request) => Promise<Response>) {
     const isLogin = request.method === "POST" && pathname.endsWith("/sign-in/email");
     const isLogout = request.method === "POST" && pathname.endsWith("/sign-out");
     const isPasswordChange = request.method === "POST" && pathname.endsWith("/change-password");
-    const ipAddress = getIpAddress(request);
+    const ipAddress = getClientIp(request);
 
     if (isLogin) {
       const email = await extractEmail(request);
-      const limit = checkLoginLimit(request, email);
+      let limit;
+      try {
+        limit = await checkLoginLimit(request, email);
+      } catch {
+        console.error(JSON.stringify({ event: "auth.rate_limit_unavailable" }));
+        return Response.json({ code: "AUTH_UNAVAILABLE", message: "Authentication is temporarily unavailable." }, { status: 503 });
+      }
       if (!limit.allowed) {
-        await recordActivity({ action: "auth.login.failed", entityType: "Auth", summary: "Failed login attempt", ipAddress });
+        await recordActivity({ action: "auth.lockout", entityType: "Auth", summary: "Sign-in temporarily locked", ipAddress });
         return Response.json(
           { code: "RATE_LIMITED", message: "Too many login attempts. Try again later." },
-          { status: 429, headers: { "Retry-After": String(limit.retryAfterSeconds) } },
+          { status: 429, headers: { "Retry-After": String(limit.retryAfterSeconds), "X-RateLimit-Layer": "application-login-failure", "Cache-Control": "no-store" } },
         );
       }
 
       const response = await handler(request);
       if (response.ok) {
-        resetLoginLimit(request, email);
+        try { await resetLoginLimit(request, email); } catch { console.error(JSON.stringify({ event: "auth.rate_limit_reset_failed" })); }
         await recordActivity({ userId: await extractUserId(response), action: "auth.login", entityType: "Auth", summary: "Successful login", ipAddress });
         return response;
       }
-      await recordActivity({ action: "auth.login.failed", entityType: "Auth", summary: "Failed login attempt", ipAddress });
-      if (response.status >= 400 && response.status < 500) {
+      const failedCredentials = response.status === 401 || response.status === 403;
+      if (failedCredentials) {
+        let failure;
+        try {
+          failure = await recordFailedLogin(request, email);
+        } catch {
+          console.error(JSON.stringify({ event: "auth.rate_limit_unavailable" }));
+          return Response.json({ code: "AUTH_UNAVAILABLE", message: "Authentication is temporarily unavailable." }, { status: 503 });
+        }
+        await recordActivity({ action: "auth.login.failed", entityType: "Auth", summary: "Failed login attempt", ipAddress });
+        if (failure.locked) {
+          const account = await findLockedAccount(email).catch(() => null);
+          await recordActivity({ action: "auth.lockout", entityType: "Auth", entityId: account?.id ?? null, summary: "Sign-in temporarily locked", ipAddress });
+          if (account) await notifySuperAdminsOfLockout(account.maskedEmail);
+        }
         return Response.json({ code: "INVALID_CREDENTIALS", message: "Invalid email or password" }, { status: 401 });
       }
       return response;
@@ -97,10 +118,6 @@ async function extractUserId(response: Response): Promise<string | null> {
     // The audit record intentionally does not depend on response parsing.
   }
   return null;
-}
-
-function getIpAddress(request: Request): string | null {
-  return request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? request.headers.get("x-real-ip");
 }
 
 async function extractEmail(request: Request): Promise<string> {

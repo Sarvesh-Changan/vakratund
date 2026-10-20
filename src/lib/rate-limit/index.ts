@@ -1,4 +1,5 @@
-export { checkLoginLimit, loginKey, resetLoginLimit } from "@/lib/rate-limit/login";
+export { checkLoginLimit, loginKey, recordFailedLogin, resetLoginLimit } from "@/lib/rate-limit/login";
 export { InMemoryRateLimiter, type RateLimitResult, type RateLimiter } from "@/lib/rate-limit/limiter";
 export { checkUploadSignatureLimit } from "@/lib/rate-limit/upload";
 export { checkContactEventLimit, hashRequestIp } from "@/lib/rate-limit/contact-events";
+export { getClientIp, resolveClientIp } from "@/lib/rate-limit/client-ip";

@@ -37,6 +37,18 @@ To rotate either secret, generate a new value and replace only that variable in 
 
 Rotate both independently; never reuse one value for the other.
 
+## Clearing login lockouts
+
+The maintenance command accepts an email or all buckets. It prints only a completion message and refuses production unless explicitly forced:
+
+```bash
+npm run auth:unlock -- --email admin@example.com
+npm run auth:unlock -- --all
+npm run auth:unlock -- --email admin@example.com --force   # production only
+```
+
+The command uses Upstash when both REST variables are configured; otherwise it uses the database bucket table. Apply the rate-limit migration before using the database fallback in production.
+
 ## CI and production builds
 
 CI test jobs receive secrets through GitHub Actions secrets named `BETTER_AUTH_SECRET` and `IP_HASH_SECRET`. The build-only job uses `SKIP_ENV_VALIDATION=1` during Next.js's explicit production build phase so a build does not require runtime secrets. This flag must never be configured in a production runtime environment. A production server must start with real secrets and will reject `SKIP_ENV_VALIDATION=1` outside the build phase.

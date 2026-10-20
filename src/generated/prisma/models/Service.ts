@@ -701,14 +701,6 @@ export type EnumPublishStatusFieldUpdateOperationsInput = {
   set?: $Enums.PublishStatus
 }
 
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type ServiceCreateNestedOneWithoutProjectsInput = {
   create?: Prisma.XOR<Prisma.ServiceCreateWithoutProjectsInput, Prisma.ServiceUncheckedCreateWithoutProjectsInput>
   connectOrCreate?: Prisma.ServiceCreateOrConnectWithoutProjectsInput

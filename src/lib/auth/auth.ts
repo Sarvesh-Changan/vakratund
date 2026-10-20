@@ -70,10 +70,21 @@ function createAuth() {
   },
   advanced: {
     useSecureCookies: runtimeEnv.NODE_ENV === "production",
+    ipAddress: {
+      ipAddressHeaders: ["x-vercel-forwarded-for", "x-forwarded-for", "x-real-ip"],
+    },
     defaultCookieAttributes: {
       httpOnly: true,
       secure: runtimeEnv.NODE_ENV === "production",
       sameSite: "lax",
+    },
+  },
+  rateLimit: {
+    enabled: true,
+    window: 10,
+    max: 100,
+    customRules: {
+      "/sign-in/email": false,
     },
   },
   databaseHooks: {

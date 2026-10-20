@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Button, FormField, Input, fieldDescribedBy } from "@/components/ui";
 
@@ -12,6 +12,18 @@ export function LoginForm() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [retryAfterSeconds, setRetryAfterSeconds] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (retryAfterSeconds === null) return;
+    const timer = window.setInterval(() => setRetryAfterSeconds((value) => {
+      if (value === null) return null;
+      const next = Math.max(0, value - 1);
+      if (next === 0) setError(null);
+      return next;
+    }), 1000);
+    return () => window.clearInterval(timer);
+  }, [retryAfterSeconds]);
 
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -26,9 +38,17 @@ export function LoginForm() {
         body: JSON.stringify({ email, password }),
       });
       if (!response.ok) {
+        if (response.status === 429) {
+          const retryAfter = Number(response.headers.get("Retry-After") ?? "0");
+          const seconds = Number.isFinite(retryAfter) && retryAfter > 0 ? Math.ceil(retryAfter) : 60;
+          setRetryAfterSeconds(seconds);
+          setError(`Too many attempts. Try again in about ${Math.max(1, Math.ceil(seconds / 60))} minutes.`);
+          return;
+        }
         setError("Invalid email or password");
         return;
       }
+      setRetryAfterSeconds(null);
       const body: unknown = await response.json();
       const mustChangePassword = typeof body === "object" && body !== null && "user" in body && typeof body.user === "object" && body.user !== null && "mustChangePassword" in body.user && body.user.mustChangePassword === true;
       router.replace(mustChangePassword ? "/admin/change-password" : "/admin");
@@ -49,7 +69,8 @@ export function LoginForm() {
       <FormField label="Password" htmlFor="admin-password" required>
         <Input id="admin-password" name="password" type="password" value={password} onChange={(event) => setPassword(event.target.value)} autoComplete="current-password" required />
       </FormField>
-      <Button type="submit" className="w-full" loading={loading}>Sign in</Button>
+      {retryAfterSeconds !== null && retryAfterSeconds > 0 ? <p className="text-center text-sm text-ink-muted" aria-live="polite">Try again in {retryAfterSeconds}s.</p> : null}
+      <Button type="submit" className="w-full" loading={loading} disabled={retryAfterSeconds !== null && retryAfterSeconds > 0}>Sign in</Button>
       <p className="text-center text-sm"><Link className="text-brand-deep underline-offset-4 hover:underline" href="/admin/forgot-password">Forgot password?</Link></p>
     </form>
   );

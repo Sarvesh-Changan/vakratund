@@ -6,7 +6,7 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     testTimeout: 15000,
-    pool: 'threads',
+    pool: 'forks',
     fileParallelism: true,
     maxWorkers: 2,
     exclude: [...defaultExclude, "tests/e2e/**"],

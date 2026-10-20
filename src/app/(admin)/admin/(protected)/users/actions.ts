@@ -1,9 +1,13 @@
 "use server";
+import { headers } from "next/headers";
 import { requirePermission } from "@/lib/auth/session";
+import { requireRole } from "@/lib/auth/session";
+import { getClientIp } from "@/lib/rate-limit/client-ip";
 import { createUserSchema, resetUserPasswordSchema, updateUserSchema } from "@/lib/validation/users";
-import { createUser as createRecord, revokeUserSessions, triggerPasswordReset, updateUser as updateRecord } from "@/server/services/users";
+import { createUser as createRecord, revokeUserSessions, triggerPasswordReset, unlockUserLockout, updateUser as updateRecord } from "@/server/services/users";
 function invalid(error: { flatten: () => { fieldErrors: Record<string, string[]> } }) { return { ok: false as const, error: error.flatten().fieldErrors }; }
 export async function createUserAction(input: unknown) { const session = await requirePermission("users:manage"); const parsed = createUserSchema.safeParse(input); if (!parsed.success) return invalid(parsed.error); try { return { ok: true as const, data: await createRecord(parsed.data, session.user.id) }; } catch { return { ok: false as const, error: { _form: ["The user could not be created."] } }; } }
 export async function updateUserAction(input: unknown) { const session = await requirePermission("users:manage"); const parsed = updateUserSchema.safeParse(input); if (!parsed.success) return invalid(parsed.error); try { return { ok: true as const, data: await updateRecord(parsed.data, session.user.id) }; } catch (error) { return { ok: false as const, error: { _form: [error instanceof Error ? error.message : "The user could not be updated."] } }; } }
 export async function revokeUserSessionsAction(input: unknown) { const session = await requirePermission("users:manage"); const parsed = resetUserPasswordSchema.safeParse(input); if (!parsed.success) return invalid(parsed.error); await revokeUserSessions(parsed.data.id, session.user.id); return { ok: true as const }; }
 export async function triggerPasswordResetAction(input: unknown) { const session = await requirePermission("users:manage"); const parsed = resetUserPasswordSchema.safeParse(input); if (!parsed.success) return invalid(parsed.error); try { await triggerPasswordReset(parsed.data.id, session.user.id); return { ok: true as const }; } catch { return { ok: false as const, error: { _form: ["The reset could not be triggered."] } }; } }
+export async function unlockUserLockoutAction(input: unknown) { const session = await requireRole("SUPER_ADMIN"); const parsed = resetUserPasswordSchema.safeParse(input); if (!parsed.success) return invalid(parsed.error); try { await unlockUserLockout(parsed.data.id, session.user.id, getClientIp(new Request("http://localhost", { headers: await headers() }))); return { ok: true as const }; } catch { return { ok: false as const, error: { _form: ["The lockout could not be cleared."] } }; } }

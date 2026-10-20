@@ -20,7 +20,7 @@ The site stores personal data (names, phones, emails of enquirers) and has an ad
 - Email + password via the chosen auth library; DB-backed sessions; cookies: `HttpOnly`, `Secure`, `SameSite=Lax`, `__Host-` prefix where supported.
 - Password hashing with a modern KDF (argon2id or scrypt as provided by the library); never log or return hashes.
 - Password policy: ≥ 12 chars, block top common passwords, no max-length below 128; force change for seeded admin on first login.
-- Login rate limit: 5 attempts / 15 min per (IP + email); generic error message ("Invalid email or password"); temporary lockout with notification to SUPER_ADMIN.
+- Login rate limit: failed credential attempts only; 5 / 15 min per (hashed IP + normalized email), 20 / 15 min per hashed IP, and 10 / hour per normalized email hash. A successful login clears the matching login buckets. The response remains generic ("Invalid email or password") and temporary lockout notifications go to SUPER_ADMIN.
 - Session lifetime 7 days sliding, absolute max 30 days; revoke all sessions on password change/role change/deactivation.
 - Optional TOTP 2FA for SUPER_ADMIN/ADMIN (recommended; ADR if deferred).
 - No public sign-up. Users are created by SUPER_ADMIN only. Password reset via time-limited, single-use token email.
@@ -67,9 +67,11 @@ Rules:
 - CORS: no wildcard; API is same-origin only.
 
 ## 6. Rate limiting & bot protection
-| Endpoint | Limit (per IP hash) |
+| Endpoint / bucket | Limit |
 |---|---|
-| Login | 5 / 15 min (+ per email) |
+| Login: hashed IP + normalized email | 5 failed attempts / 15 min |
+| Login: hashed IP | 20 failed attempts / 15 min |
+| Login: normalized email hash | 10 failed attempts / hour |
 | Lead / quote / contact submit | 5 / 10 min, 20 / day |
 | Estimate calculation API | 60 / min |
 | Upload signature | 30 / hour (authenticated) |
@@ -77,6 +79,7 @@ Rules:
 - Honeypot field + minimum-fill-time check on public forms; Cloudflare Turnstile (optional) if spam appears.
 - Return generic 429 messages with `Retry-After`.
 - IPs are **hashed with a server secret** before storage (never store raw IPs).
+- Login counters are stored in Upstash Redis when both `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` are configured. Otherwise production uses the `RateLimitBucket` PostgreSQL table; in-memory buckets are local-development/test only. Unknown IP requests use an IP-less request fingerprint plus email/global email-hash buckets and are never put into one shared unknown-IP bucket.
 
 ## 7. File uploads (Cloudinary)
 - Only authenticated, authorized users may request a signature; clients send a section enum and the server maps the server-defined folder allowlist (`vakratund/projects`, `vakratund/testimonials`, `vakratund/team`, `vakratund/gallery`, `vakratund/docs`). Free-form folders are rejected. Gallery mutations require `content:write`; SALES is denied.

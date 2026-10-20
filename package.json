@@ -14,6 +14,7 @@
     "check:env": "node --no-warnings=ExperimentalWarning --experimental-strip-types scripts/check-env.ts",
     "test:e2e": "playwright test",
     "email:test": "node --no-warnings=ExperimentalWarning --experimental-strip-types scripts/email-test.ts",
+    "auth:unlock": "node --no-warnings=ExperimentalWarning --experimental-strip-types scripts/auth-unlock.ts",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:deploy": "prisma migrate deploy",

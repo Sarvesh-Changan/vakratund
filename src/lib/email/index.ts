@@ -4,7 +4,7 @@ import { prisma } from "@/lib/db/client";
 import { extractEmailAddress, getEnv, smtpConfigured, splitEmailAddresses } from "@/lib/env";
 import { createSmtpTransport } from "./transport";
 
-export type EmailType = "LEAD_ADMIN_NOTIFICATION" | "LEAD_VISITOR_CONFIRMATION" | "PASSWORD_RESET" | "TEST";
+export type EmailType = "LEAD_ADMIN_NOTIFICATION" | "LEAD_VISITOR_CONFIRMATION" | "PASSWORD_RESET" | "AUTH_LOCKOUT" | "TEST";
 export type SendEmailInput = { to: string | readonly string[]; subject: string; html: string; text: string; replyTo?: string; type: EmailType; leadId?: string };
 export type SendEmailResult = { ok: true } | { ok: false; code: string };
 

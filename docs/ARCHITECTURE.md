@@ -15,7 +15,7 @@
 | Forms | React Hook Form + `@hookform/resolvers` | Reusable form primitives |
 | Motion | `motion` (Framer Motion successor) used sparingly | Meaningful animation, reduced-motion aware |
 | Charts | Recharts (admin only, dynamically imported) | Dashboard analytics |
-| Rate limiting | Upstash Redis (`@upstash/ratelimit`) with in-memory fallback in dev | Edge-friendly |
+| Rate limiting | Upstash Redis REST with PostgreSQL `RateLimitBucket` fallback; in-memory only in dev/test | Atomic serverless lockout state without a mandatory provider |
 | Tests | Vitest (unit), Playwright (e2e) | Fast + realistic |
 | Hosting | Vercel (app) + Neon (db) + Cloudinary + Gmail SMTP | Zero-ops |
 
@@ -154,6 +154,7 @@ Admin requests a section-scoped signature (`/api/upload/sign`, authenticated and
 | `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME` | public | for image URLs |
 | `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, `SMTP_PASS`, `EMAIL_FROM`, `LEAD_NOTIFY_TO` | server | Gmail app-password SMTP; required in production |
 | `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` | server | rate limit |
+| `IP_HASH_SECRET` | server | HMAC key for IP and rate-limit identifiers; must differ from `BETTER_AUTH_SECRET` |
 | `TURNSTILE_SECRET_KEY`, `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | optional | bot protection |
 | `NEXT_PUBLIC_GA_ID` | public | optional |
 All validated at boot by `src/lib/env.ts` (Zod); app fails fast if required vars are missing.

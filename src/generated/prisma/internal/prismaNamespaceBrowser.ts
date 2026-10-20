@@ -56,6 +56,7 @@ export const ModelName = {
   Account: 'Account',
   Verification: 'Verification',
   ActivityLog: 'ActivityLog',
+  RateLimitBucket: 'RateLimitBucket',
   MediaAsset: 'MediaAsset',
   Service: 'Service',
   Project: 'Project',
@@ -174,6 +175,19 @@ export const ActivityLogScalarFieldEnum = {
 } as const
 
 export type ActivityLogScalarFieldEnum = (typeof ActivityLogScalarFieldEnum)[keyof typeof ActivityLogScalarFieldEnum]
+
+
+export const RateLimitBucketScalarFieldEnum = {
+  id: 'id',
+  keyHash: 'keyHash',
+  emailHash: 'emailHash',
+  count: 'count',
+  windowStart: 'windowStart',
+  lockedUntil: 'lockedUntil',
+  updatedAt: 'updatedAt'
+} as const
+
+export type RateLimitBucketScalarFieldEnum = (typeof RateLimitBucketScalarFieldEnum)[keyof typeof RateLimitBucketScalarFieldEnum]
 
 
 export const MediaAssetScalarFieldEnum = {

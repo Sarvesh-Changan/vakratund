@@ -103,6 +103,18 @@ model ActivityLog {
   @@index([userId, createdAt])
 }
 
+model RateLimitBucket {
+  id          String   @id @default(cuid())
+  keyHash     String   @unique
+  emailHash   String?
+  count       Int      @default(0)
+  windowStart DateTime
+  lockedUntil DateTime?
+  updatedAt   DateTime @updatedAt
+  @@index([keyHash])
+  @@index([updatedAt])
+}
+
 // ───────────── Media ─────────────
 model MediaAsset {
   id          String    @id @default(cuid())
