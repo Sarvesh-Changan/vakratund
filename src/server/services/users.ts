@@ -21,6 +21,11 @@ export async function createUser(input: { name: string; email: string; temporary
 }
 export async function updateUser(input: { id: string; name: string; email: string; role: Role; isActive: boolean }, actorId: string): Promise<UserView> { if (!await prisma.user.findUnique({ where: { id: input.id }, select: { id: true } })) throw new Error("User not found."); await updateUserAccess(input.id, input.role, input.isActive); const row = await prisma.user.update({ where: { id: input.id }, data: { name: input.name, email: input.email.toLowerCase() }, select: userSelect }); await logActivity({ userId: actorId, action: "user.update", entityType: "User", entityId: row.id, summary: "Updated staff account", diff: { role: row.role, isActive: row.isActive } }); return view(row); }
 export async function revokeUserSessions(id: string, actorId: string): Promise<void> { await revokeAllSessions(id); await logActivity({ userId: actorId, action: "user.sessions.revoke", entityType: "User", entityId: id, summary: "Revoked staff sessions", diff: { revoked: true } }); }
+export async function revokeOtherUserSessions(userId: string, currentSessionId: string, actorId: string): Promise<number> {
+  const result = await prisma.session.deleteMany({ where: { userId, id: { not: currentSessionId } } });
+  await logActivity({ userId: actorId, action: "auth.sessions.revoke_other", entityType: "User", entityId: userId, summary: "Revoked other sessions", diff: { count: result.count } });
+  return result.count;
+}
 export async function triggerPasswordReset(id: string, actorId: string): Promise<void> { const user = await prisma.user.findUnique({ where: { id }, select: { email: true } }); if (!user) throw new Error("User not found."); await auth.api.requestPasswordReset({ body: { email: user.email, redirectTo: "/admin/reset-password" } }); await revokeAllSessions(id); await logActivity({ userId: actorId, action: "user.password.reset", entityType: "User", entityId: id, summary: "Triggered a password reset", diff: { resetRequested: true } }); }
 export async function listActiveLockouts(users: UserView[]): Promise<UserLockoutView[]> {
   const rows = await Promise.all(users.map(async (user) => {

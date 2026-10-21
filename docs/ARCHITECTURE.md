@@ -130,6 +130,8 @@ Admin requests a section-scoped signature (`/api/upload/sign`, authenticated and
 - `getSession()` and `requireRole(...roles)` helpers used in layouts, actions and handlers.
 - Next.js request interception (`proxy.ts` in current Next.js; `middleware.ts` in older versions — follow installed version's docs) only does a cheap redirect for unauthenticated `/admin/*`; **real authorization is always re-checked server-side**.
 - Roles in `src/config/permissions.ts` as a single permission map (`can(role, 'leads:read')`).
+- `Session.lastActivityAt` is the server-enforced activity marker. Authenticated active page/API requests update it at most once per minute; passive status checks and sign-out do not. `/api/admin/session/status` reports remaining idle/absolute time and `/api/admin/session/extend` is a same-origin, rate-limited explicit extension.
+- The protected admin layout mounts one `IdleSessionGuard`. It coordinates activity, timeout warnings, dirty-form state, logout, and the final redirect across tabs, but the browser is never the authority for expiry.
 
 ## 9. Error handling & logging
 - Server Actions return `{ ok: true, data } | { ok: false, error: { code, message, fieldErrors? } }`.
@@ -150,6 +152,9 @@ Admin requests a section-scoped signature (`/api/upload/sign`, authenticated and
 | `DATABASE_URL` | server | Neon **pooled** connection |
 | `DIRECT_URL` | server | Neon **direct** connection (migrations) |
 | `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL` | server | session signing |
+| `ADMIN_IDLE_TIMEOUT_MINUTES` | server | admin inactivity timeout; default 30 |
+| `ADMIN_IDLE_WARNING_MINUTES` | server | warning period; default 5 and less than timeout |
+| `ADMIN_SESSION_MAX_HOURS` | server | absolute admin session maximum; default 12 |
 | `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET` | server | secret never exposed |
 | `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME` | public | for image URLs |
 | `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, `SMTP_PASS`, `EMAIL_FROM`, `LEAD_NOTIFY_TO` | server | Gmail app-password SMTP; required in production |

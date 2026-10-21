@@ -17,6 +17,9 @@ const baseEnvironmentSchema = z.object({
 
   BETTER_AUTH_SECRET: z.string().optional(),
   BETTER_AUTH_URL: z.string().optional(),
+  ADMIN_IDLE_TIMEOUT_MINUTES: z.coerce.number().int().min(1).max(24 * 60).default(30),
+  ADMIN_IDLE_WARNING_MINUTES: z.coerce.number().int().min(1).max(24 * 60).default(5),
+  ADMIN_SESSION_MAX_HOURS: z.coerce.number().int().min(1).max(24 * 30).default(12),
   SEED_ADMIN_EMAIL: z.string().email().optional(),
   SEED_ADMIN_PASSWORD: z.string().optional(),
 
@@ -77,6 +80,12 @@ export const environmentSchema = baseEnvironmentSchema.superRefine((data, contex
   if (data.BETTER_AUTH_SECRET?.trim() && data.BETTER_AUTH_SECRET.trim() === data.IP_HASH_SECRET?.trim()) {
     context.addIssue({ code: z.ZodIssueCode.custom, message: "BETTER_AUTH_SECRET and IP_HASH_SECRET must be different values.", path: ["BETTER_AUTH_SECRET"] });
     context.addIssue({ code: z.ZodIssueCode.custom, message: "BETTER_AUTH_SECRET and IP_HASH_SECRET must be different values.", path: ["IP_HASH_SECRET"] });
+  }
+  if (data.ADMIN_IDLE_WARNING_MINUTES >= data.ADMIN_IDLE_TIMEOUT_MINUTES) {
+    context.addIssue({ code: z.ZodIssueCode.custom, message: "ADMIN_IDLE_WARNING_MINUTES must be less than ADMIN_IDLE_TIMEOUT_MINUTES.", path: ["ADMIN_IDLE_WARNING_MINUTES"] });
+  }
+  if (data.ADMIN_SESSION_MAX_HOURS * 60 <= data.ADMIN_IDLE_TIMEOUT_MINUTES) {
+    context.addIssue({ code: z.ZodIssueCode.custom, message: "ADMIN_SESSION_MAX_HOURS must exceed ADMIN_IDLE_TIMEOUT_MINUTES.", path: ["ADMIN_SESSION_MAX_HOURS"] });
   }
 
   const fromAddress = data.EMAIL_FROM ? extractEmailAddress(data.EMAIL_FROM) : null;

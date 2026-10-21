@@ -49,6 +49,10 @@ npm run auth:unlock -- --email admin@example.com --force   # production only
 
 The command always uses the PostgreSQL `RateLimitBucket` table in production. Apply the rate-limit migration before deploying or using the command in production. Upstash variables are not required and are ignored by the application.
 
+## Admin session timeout
+
+The production defaults are `ADMIN_IDLE_TIMEOUT_MINUTES=30`, `ADMIN_IDLE_WARNING_MINUTES=5`, and `ADMIN_SESSION_MAX_HOURS=12`. These are validated at startup. Apply the session activity migration with `npm run db:deploy` before enabling the updated deployment. The server rejects expired sessions even if a browser is stale; the browser dialog is only a warning and explicit extension control.
+
 ## CI and production builds
 
 CI test jobs receive secrets through GitHub Actions secrets named `BETTER_AUTH_SECRET` and `IP_HASH_SECRET`. The build-only job uses `SKIP_ENV_VALIDATION=1` during Next.js's explicit production build phase so a build does not require runtime secrets. This flag must never be configured in a production runtime environment. A production server must start with real secrets and will reject `SKIP_ENV_VALIDATION=1` outside the build phase.

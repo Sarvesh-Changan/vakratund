@@ -84,7 +84,20 @@ model User {
   @@index([role, isActive])
 }
 
-// Session, Account, Verification: generate with the auth library CLI and keep field names it requires.
+model Session {
+  id             String   @id
+  expiresAt      DateTime
+  token          String   @unique
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  lastActivityAt DateTime @default(now()) // server-enforced admin idle timeout marker
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, lastActivityAt])
+}
+
+// Account and Verification: generate with the auth library CLI and keep field names it requires.
 
 model ActivityLog {
   id         String   @id @default(cuid())

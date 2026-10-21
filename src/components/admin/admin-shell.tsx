@@ -12,17 +12,23 @@ import { cn } from "@/lib/utils";
 import { ADMIN_NAVIGATION } from "@/components/admin/admin-navigation";
 import { LogoutButton } from "@/app/(admin)/admin/logout-button";
 import { BrandLogo } from "@/components/brand-logo";
+import { IdleSessionGuard } from "./idle-session-guard";
+import { SignOutOtherDevicesButton } from "./sign-out-other-devices-button";
 
 export function AdminShell({
   children,
+  userId,
   name,
   email,
   role,
+  sessionTimeout,
 }: {
   children: React.ReactNode;
+  userId: string;
   name: string;
   email: string;
   role: Role;
+  sessionTimeout: { idleTimeoutSeconds: number; warningSeconds: number; absoluteTimeoutSeconds: number };
 }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
@@ -42,6 +48,7 @@ export function AdminShell({
 
   return (
     <div className="admin-shell admin-theme min-h-screen lg:flex">
+      <IdleSessionGuard userId={userId} {...sessionTimeout} />
       <div
         className={cn(
           "fixed inset-0 z-40 bg-charcoal/50 lg:hidden",
@@ -157,6 +164,7 @@ export function AdminShell({
                   >
                     Change password
                   </Link>
+                  <SignOutOtherDevicesButton />
                 </div>
               </details>
             </div>

@@ -13,21 +13,20 @@ import { getEnv, getRequiredSecret } from "@/lib/env";
 import { sendEmail } from "@/lib/email";
 import { PasswordResetEmail, renderTemplate } from "@/lib/email/templates";
 
-const SEVEN_DAYS_IN_SECONDS = 60 * 60 * 24 * 7;
-const ONE_DAY_IN_SECONDS = 60 * 60 * 24;
-const THIRTY_DAYS_IN_MILLISECONDS = 1000 * 60 * 60 * 24 * 30;
 export function isAuthConfigured(): boolean {
   return Boolean(getEnv().BETTER_AUTH_SECRET);
 }
 
-function capSessionExpiry(expiresAt: Date, createdAt: Date): Date {
-  const absoluteExpiry = createdAt.getTime() + THIRTY_DAYS_IN_MILLISECONDS;
+function capSessionExpiry(expiresAt: Date, createdAt: Date, absoluteTimeoutMs: number): Date {
+  const absoluteExpiry = createdAt.getTime() + absoluteTimeoutMs;
   return new Date(Math.min(expiresAt.getTime(), absoluteExpiry));
 }
 
 function createAuth() {
   const runtimeEnv = getEnv();
   const authSecret = getRequiredSecret("BETTER_AUTH_SECRET");
+  const absoluteSessionTimeoutMs = runtimeEnv.ADMIN_SESSION_MAX_HOURS * 60 * 60 * 1000;
+  const absoluteSessionTimeoutSeconds = runtimeEnv.ADMIN_SESSION_MAX_HOURS * 60 * 60;
   return betterAuth({
   database: prismaAdapter(prisma, { provider: "postgresql" }),
   baseURL: runtimeEnv.BETTER_AUTH_URL ?? runtimeEnv.NEXT_PUBLIC_SITE_URL,
@@ -65,8 +64,11 @@ function createAuth() {
     },
   },
   session: {
-    expiresIn: SEVEN_DAYS_IN_SECONDS,
-    updateAge: ONE_DAY_IN_SECONDS,
+    expiresIn: absoluteSessionTimeoutSeconds,
+    updateAge: 60 * 60,
+    additionalFields: {
+      lastActivityAt: { type: "date", required: false, input: false, returned: false, defaultValue: () => new Date() },
+    },
   },
   advanced: {
     useSecureCookies: runtimeEnv.NODE_ENV === "production",
@@ -116,7 +118,7 @@ function createAuth() {
           await assertActiveUser(session.userId);
           return { data: {
             ...session,
-            expiresAt: capSessionExpiry(session.expiresAt, session.createdAt),
+            expiresAt: capSessionExpiry(session.expiresAt, session.createdAt, absoluteSessionTimeoutMs),
           } };
         },
       },
@@ -129,7 +131,7 @@ function createAuth() {
           return {
             data: {
               ...session,
-              ...(session.expiresAt ? { expiresAt: capSessionExpiry(session.expiresAt, createdAt) } : {}),
+                ...(session.expiresAt ? { expiresAt: capSessionExpiry(session.expiresAt, createdAt, absoluteSessionTimeoutMs) } : {}),
             },
           };
         },

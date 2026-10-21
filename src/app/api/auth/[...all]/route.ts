@@ -2,6 +2,8 @@ import { toNextJsHandler } from "better-auth/next-js";
 
 import { auth, isAuthConfigured } from "@/lib/auth/auth";
 import { clearForcedPasswordChange } from "@/lib/auth/session-security";
+import { clearAuthSessionCookies } from "@/lib/auth/session-timeout";
+import { validateSessionHeaders, type AuthSession } from "@/lib/auth/session";
 import { checkLoginLimit, recordFailedLogin, resetLoginLimit } from "@/lib/rate-limit/login";
 import { getClientIp } from "@/lib/rate-limit/client-ip";
 import { logActivity } from "@/server/services/activity";
@@ -15,6 +17,7 @@ function guard(handler: (request: Request) => Promise<Response>) {
     const isLogin = request.method === "POST" && pathname.endsWith("/sign-in/email");
     const isLogout = request.method === "POST" && pathname.endsWith("/sign-out");
     const isPasswordChange = request.method === "POST" && pathname.endsWith("/change-password");
+    const isGetSession = request.method === "GET" && pathname.endsWith("/get-session");
     const ipAddress = getClientIp(request);
 
     if (isLogin) {
@@ -60,10 +63,19 @@ function guard(handler: (request: Request) => Promise<Response>) {
       return response;
     }
 
-    const sessionBeforeLogout = isLogout ? await getSessionForRequest(request) : null;
-    const sessionBeforePasswordChange = isPasswordChange
-      ? await getSessionForRequest(request)
-      : null;
+    const getSessionValidation = isGetSession ? await validateSessionForRequest(request, "passive") : null;
+    if (getSessionValidation?.expired) {
+      await clearAuthSessionCookies();
+      return Response.json({ code: "SESSION_EXPIRED", message: "Session expired." }, { status: 401, headers: { "Cache-Control": "no-store" } });
+    }
+    const logoutValidation = isLogout ? await validateSessionForRequest(request, "none") : null;
+    const passwordValidation = isPasswordChange ? await validateSessionForRequest(request) : null;
+    if (passwordValidation?.expired) {
+      await clearAuthSessionCookies();
+      return Response.json({ code: "SESSION_EXPIRED", message: "Session expired." }, { status: 401, headers: { "Cache-Control": "no-store" } });
+    }
+    const sessionBeforeLogout = logoutValidation?.session ?? null;
+    const sessionBeforePasswordChange = passwordValidation?.session ?? null;
     const response = await handler(request);
     if (isPasswordChange && response.ok && sessionBeforePasswordChange?.user.id) {
       try {
@@ -99,11 +111,11 @@ async function recordActivity(input: Parameters<typeof logActivity>[0]): Promise
   }
 }
 
-async function getSessionForRequest(request: Request) {
+async function validateSessionForRequest(request: Request, activity: "active" | "passive" | "none" = "active") {
   try {
-    return await auth.api.getSession({ headers: request.headers });
+    return await validateSessionHeaders(request.headers, activity);
   } catch {
-    return null;
+    return { session: null as AuthSession | null, expired: false };
   }
 }
 

@@ -21,7 +21,7 @@ The site stores personal data (names, phones, emails of enquirers) and has an ad
 - Password hashing with a modern KDF (argon2id or scrypt as provided by the library); never log or return hashes.
 - Password policy: ≥ 12 chars, block top common passwords, no max-length below 128; force change for seeded admin on first login.
 - Login rate limit: failed credential attempts only; 5 / 15 min per (hashed IP + normalized email), 20 / 15 min per hashed IP, and 10 / hour per normalized email hash. A successful login clears the matching login buckets. The response remains generic ("Invalid email or password") and temporary lockout notifications go to SUPER_ADMIN.
-- Session lifetime 7 days sliding, absolute max 30 days; revoke all sessions on password change/role change/deactivation.
+- Admin sessions expire after 30 minutes of inactivity, show a warning during the final 5 minutes, and have a 12-hour absolute maximum lifetime. Enforcement is server-side through `Session.lastActivityAt`; status probes do not refresh activity, while an authenticated explicit extension does. Timeout, password change, role change, deactivation, and logout revoke the session as applicable. Public visitors do not have sessions.
 - Optional TOTP 2FA for SUPER_ADMIN/ADMIN (recommended; ADR if deferred).
 - No public sign-up. Users are created by SUPER_ADMIN only. Password reset via time-limited, single-use token email.
 

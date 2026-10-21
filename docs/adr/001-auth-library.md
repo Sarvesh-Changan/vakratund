@@ -17,7 +17,7 @@ The application configuration:
 - Adds a database hook that rejects any Better Auth user-creation attempt. This is defense in depth; the seed and future authenticated admin provisioning use controlled server-side paths.
 - Uses Better Auth's default secure Scrypt password hashing through the documented `password.hash` and `password.verify` hooks, with the application's 12-character policy and common-password deny list applied before hashing.
 - Keeps the Better Auth core tables (`User`, `Session`, `Account`, and `Verification`) in the application schema, retaining all fields required by `DATABASE.md` and adding `User.mustChangePassword`.
-- Configures seven-day sliding sessions (`expiresIn: 7 days`, `updateAge: 1 day`). Session database hooks cap every session at thirty days from its original `createdAt`, providing the required absolute lifetime.
+- Configures database sessions with a 30-minute inactivity policy and a 12-hour absolute maximum. `Session.lastActivityAt` is maintained by application session helpers, with active requests touched at most once per minute and passive status checks left unchanged. Database hooks cap Better Auth's expiry at the configured absolute lifetime.
 - Explicitly sets `HttpOnly`, `SameSite=Lax`, and production-only `Secure` cookie attributes.
 - Requires `BETTER_AUTH_SECRET` whenever authentication is initialized. There is no fallback secret; missing, weak, placeholder, or reused secrets fail with a secret-free configuration error.
 - Configures Better Auth's client-IP source in the same trusted-header order as the application (`x-vercel-forwarded-for`, `x-forwarded-for`, `x-real-ip`). Its general production limiter remains enabled at 100 requests per 10 seconds, but the built-in `/sign-in/email` special rule is disabled because the application limiter is the authoritative failure-only login policy. This avoids Better Auth's default 3 requests per 10 seconds rule counting successful credentials, sessions, or other auth calls against the login lockout.
@@ -41,7 +41,7 @@ The following intentional additions are recorded:
 
 Better Auth owns credential verification, cookie/session endpoints, reset-token handling, and core session persistence. The application owns role authorization, inactive-user checks, bootstrap administration, and security-sensitive user mutations. Public sign-up is unavailable in both the Better Auth route configuration and its user-creation hook.
 
-The absolute 30-day cap is application code because Better Auth exposes sliding expiry (`expiresIn`/`updateAge`) but no separate absolute lifetime option. Any future direct mutation of role, active status, or credentials must call the helpers in `src/lib/auth/session-security.ts` so all sessions are revoked atomically.
+The inactivity check and absolute cap are application code because Better Auth does not provide the product's activity semantics. Any future direct mutation of role, active status, or credentials must call the helpers in `src/lib/auth/session-security.ts` so all sessions are revoked atomically.
 
 ## References
 

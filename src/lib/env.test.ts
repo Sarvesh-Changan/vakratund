@@ -37,6 +37,17 @@ describe("environment secret validation", () => {
   it("accepts two distinct strong secrets", () => {
     const result = parseEnvironment({ NODE_ENV: "development", ...validSecrets() });
     expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data.ADMIN_IDLE_TIMEOUT_MINUTES).toBe(30);
+      expect(result.data.ADMIN_IDLE_WARNING_MINUTES).toBe(5);
+      expect(result.data.ADMIN_SESSION_MAX_HOURS).toBe(12);
+    }
+  });
+
+  it("rejects an invalid timeout relationship", () => {
+    const result = parseEnvironment({ NODE_ENV: "development", ...validSecrets(), ADMIN_IDLE_TIMEOUT_MINUTES: "5", ADMIN_IDLE_WARNING_MINUTES: "5" });
+    expect(result.success).toBe(false);
+    if (!result.success) expect(result.error.issues.some((issue) => issue.path[0] === "ADMIN_IDLE_WARNING_MINUTES")).toBe(true);
   });
 
   it("allows validation to be skipped only for the explicit production build phase", () => {

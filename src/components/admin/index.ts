@@ -1,4 +1,6 @@
 export * from "./admin-shell";
+export * from "./idle-session-guard";
+export * from "./sign-out-other-devices-button";
 export * from "./confirm-dialog";
 export * from "./data-table";
 export * from "./form-section";

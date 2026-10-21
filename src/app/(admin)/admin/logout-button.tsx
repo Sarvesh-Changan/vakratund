@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui";
+import { notifyAdminLogout } from "@/components/admin/admin-session-events";
 
 export function LogoutButton() {
   const router = useRouter();
@@ -26,6 +27,7 @@ export function LogoutButton() {
         return;
       }
 
+      notifyAdminLogout();
       router.replace("/admin/login");
       router.refresh();
     } catch {

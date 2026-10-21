@@ -6,11 +6,11 @@ import { useEffect, useState } from "react";
 
 import { Button, FormField, Input, fieldDescribedBy } from "@/components/ui";
 
-export function LoginForm() {
+export function LoginForm({ nextPath, timedOut = false, idleTimeoutMinutes = 30 }: { nextPath?: string; timedOut?: boolean; idleTimeoutMinutes?: number }) {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(() => timedOut ? `You were signed out after ${idleTimeoutMinutes} minutes of inactivity.` : null);
   const [loading, setLoading] = useState(false);
   const [retryAfterSeconds, setRetryAfterSeconds] = useState<number | null>(null);
 
@@ -51,7 +51,7 @@ export function LoginForm() {
       setRetryAfterSeconds(null);
       const body: unknown = await response.json();
       const mustChangePassword = typeof body === "object" && body !== null && "user" in body && typeof body.user === "object" && body.user !== null && "mustChangePassword" in body.user && body.user.mustChangePassword === true;
-      router.replace(mustChangePassword ? "/admin/change-password" : "/admin");
+      router.replace(mustChangePassword ? "/admin/change-password" : (nextPath ?? "/admin"));
       router.refresh();
     } catch {
       setError("Invalid email or password");

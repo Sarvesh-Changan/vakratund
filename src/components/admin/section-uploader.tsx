@@ -7,6 +7,7 @@ import { saveMediaAsset } from "@/app/(admin)/admin/(protected)/media/actions";
 import { Button, Input } from "@/components/ui";
 import { cloudinaryFolder, cloudinaryResourceType, SECTION_POLICIES, UPLOAD_POLICIES, type UploadKind, type UploadSection, uploadPolicy } from "@/lib/cloudinary/policy";
 import type { MediaAssetView } from "@/server/services/media";
+import { signalAdminActivity } from "./admin-session-events";
 
 type UploadJob = {
   id: string;
@@ -159,6 +160,7 @@ export function SectionUploader({ section, multiple = false, accept, defaultAlt 
   }
 
   async function uploadJob(job: UploadJob): Promise<void> {
+    signalAdminActivity();
     const fallbackAlt = typeof defaultAlt === "function" ? defaultAlt(job.file) : defaultAlt;
     const alt = job.alt.trim() || fallbackAlt.trim();
     if (job.kind === "IMAGE" && !alt) { updateJob(job.id, { status: "error", error: "Alt text is required for images." }); return; }
@@ -169,8 +171,10 @@ export function SectionUploader({ section, multiple = false, accept, defaultAlt 
       const signedBody: unknown = await signResponse.json();
       if (!signResponse.ok || !isSignedResponse(signedBody) || signedBody.section !== section || signedBody.folder !== cloudinaryFolder(section) || signedBody.resource_type !== cloudinaryResourceType(job.kind)) throw new Error("Could not authorize this section upload.");
       signed = signedBody;
-      const uploaded = await uploadToCloudinary(job.file, signed, (progress) => updateJob(job.id, { progress }));
+      signalAdminActivity();
+      const uploaded = await uploadToCloudinary(job.file, signed, (progress) => { updateJob(job.id, { progress }); signalAdminActivity(); });
       updateJob(job.id, { status: "saving", progress: 100 });
+      signalAdminActivity();
       const saved = await saveMediaAsset({ section, publicId: uploaded.public_id, url: uploaded.secure_url, kind: job.kind, format: uploaded.format, bytes: uploaded.bytes, etag: uploaded.etag, width: uploaded.width, height: uploaded.height, alt, caption: job.caption || undefined });
       if (!saved.ok) throw new Error(saved.error.message);
       updateJob(job.id, { status: "done", error: undefined, asset: saved.data });
