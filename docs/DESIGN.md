@@ -105,6 +105,10 @@ Button (primary/secondary/ghost/link, sizes, loading), IconButton, Input, Textar
 
 States required on all interactive components: default, hover, focus-visible (2px contrast-safe outline + offset), active, disabled, loading, error.
 
+### Public navigation
+
+The public header remains a floating pill. At desktop widths, Services is a compact white floating panel centered below its trigger: a short eyebrow and “View all services” link, database-ordered service titles with icon tiles, then quote and call actions. It uses a 2-column grid at `lg` and 3 columns at `xl`, with column-first reading order and a viewport-bounded scrolling fallback. The Services label links to `/services`; its adjacent real button opens the panel. Fine-pointer hover uses a short intent delay and a hover bridge, while keyboard and touch use the button. On mobile and touch-only devices at any width, Services is an accordion in the navigation drawer. Animate opacity and transforms only, keep focus visible, and remove transforms, stagger and height motion for reduced-motion users.
+
 ## 6. Page blueprints
 
 ### Home
