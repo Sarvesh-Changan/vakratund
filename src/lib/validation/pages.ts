@@ -15,11 +15,14 @@ const homeEstimatorSchema = z.object({ eyebrow: text(80), title: text(160), desc
 const processSchema = z.object({ eyebrow: optionalText(80), title: text(120), steps: z.array(z.object({ title: text(80), description: optionalText(240) }).strict()).min(1).max(8) }).strict();
 const ctaSchema = z.object({ title: text(160), description: optionalText(500), primaryCta: text(80), primaryHref: href, secondaryCta: optionalText(80), secondaryHref: href.optional().or(z.literal("")), callCta: optionalText(80), whatsappCta: optionalText(80) }).strict();
 const textSectionSchema = z.object({ title: text(160), body: text(20_000) }).strict();
+const aboutStorySchema = z.object({ title: text(160), body: text(20_000), imageMediaId: z.string().cuid().nullable().optional(), imageAlt: optionalText(300).optional(), imageCaption: optionalText(500).optional() }).strict().superRefine((value, context) => {
+  if (value.imageMediaId && !value.imageAlt?.trim()) context.addIssue({ code: z.ZodIssueCode.custom, path: ["imageAlt"], message: "Alt text is required when a story image is set." });
+});
 const aboutJourneySchema = z.object({ eyebrow: optionalText(80), title: text(120), milestones: z.array(z.object({ year: z.number().int().min(1900).max(2200), title: text(120), description: optionalText(240) }).strict()).max(12) }).strict();
 
 export const pageSectionSchemas = {
   home: { hero: heroSchema, stats: statsSchema, services: homeServicesSchema, projects: homeProjectsSchema, why: homeWhySchema, process: processSchema, specialty: homeSpecialtySchema, faq: homeFaqSchema, estimator: homeEstimatorSchema, cta: ctaSchema },
-  about: { story: textSectionSchema, mission: textSectionSchema, journey: aboutJourneySchema },
+  about: { story: aboutStorySchema, mission: textSectionSchema, journey: aboutJourneySchema },
 } as const;
 
 export const pageSectionInputSchema = z.discriminatedUnion("sectionKey", [
@@ -33,7 +36,7 @@ export const pageSectionInputSchema = z.discriminatedUnion("sectionKey", [
   z.object({ pageKey: z.literal("home"), sectionKey: z.literal("faq"), content: homeFaqSchema, isVisible: z.boolean() }).strict(),
   z.object({ pageKey: z.literal("home"), sectionKey: z.literal("estimator"), content: homeEstimatorSchema, isVisible: z.boolean() }).strict(),
   z.object({ pageKey: z.literal("home"), sectionKey: z.literal("cta"), content: ctaSchema, isVisible: z.boolean() }).strict(),
-  z.object({ pageKey: z.literal("about"), sectionKey: z.literal("story"), content: textSectionSchema, isVisible: z.boolean() }).strict(),
+  z.object({ pageKey: z.literal("about"), sectionKey: z.literal("story"), content: aboutStorySchema, isVisible: z.boolean() }).strict(),
   z.object({ pageKey: z.literal("about"), sectionKey: z.literal("mission"), content: textSectionSchema, isVisible: z.boolean() }).strict(),
   z.object({ pageKey: z.literal("about"), sectionKey: z.literal("journey"), content: aboutJourneySchema, isVisible: z.boolean() }).strict(),
 ]);

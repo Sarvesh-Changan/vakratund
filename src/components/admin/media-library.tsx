@@ -3,6 +3,8 @@
 import { useMemo, useState } from "react";
 
 import {
+  deleteUnusedMediaAssetsAction,
+  findUnusedMediaAssetsAction,
   removeMediaAsset,
   updateMediaMetadata,
 } from "@/app/(admin)/admin/(protected)/media/actions";
@@ -29,6 +31,8 @@ export function MediaLibrary({
   const [section, setSection] = useState("all");
   const [view, setView] = useState<"grid" | "list">("grid");
   const [message, setMessage] = useState<string | null>(null);
+  const [unusedAssets, setUnusedAssets] = useState<MediaAssetView[] | null>(null);
+  const [selectedUnused, setSelectedUnused] = useState<string[]>([]);
   const filtered = useMemo(
     () =>
       assets.filter(
@@ -72,6 +76,23 @@ export function MediaLibrary({
     } else setMessage(result.error.message);
   }
 
+  async function findUnused() {
+    setMessage(null);
+    const result = await findUnusedMediaAssetsAction();
+    setUnusedAssets(result);
+    setSelectedUnused([]);
+    setMessage(`${result.length} unused image${result.length === 1 ? "" : "s"} found.`);
+  }
+
+  async function deleteSelectedUnused() {
+    const result = await deleteUnusedMediaAssetsAction({ ids: selectedUnused });
+    if (!result.ok) { setMessage(result.message); return; }
+    setAssets((current) => current.filter((asset) => !result.deleted.includes(asset.id)));
+    setUnusedAssets((current) => current?.filter((asset) => !result.deleted.includes(asset.id)) ?? null);
+    setSelectedUnused([]);
+    setMessage(`${result.deleted.length} deleted; ${result.blocked.length} kept because they are now referenced.`);
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap gap-3">
@@ -92,6 +113,8 @@ export function MediaLibrary({
           <option value="projects">Projects</option>
           <option value="testimonials">Testimonials</option>
           <option value="gallery">Gallery</option>
+          <option value="services">Services</option>
+          <option value="pages">Pages</option>
           <option value="team">Team</option>
           <option value="docs">Docs</option>
         </Select>
@@ -114,6 +137,8 @@ export function MediaLibrary({
           </Button>
         </div>
       </div>
+      <div className="flex flex-wrap items-center gap-3"><Button type="button" variant="secondary" onClick={() => void findUnused()}>Find unused images</Button>{unusedAssets ? <Button type="button" variant="ghost" className="text-danger" disabled={selectedUnused.length === 0} onClick={() => void deleteSelectedUnused()}>Delete selected ({selectedUnused.length})</Button> : null}</div>
+      {unusedAssets ? <section className="rounded-card border bg-surface p-4" aria-label="Unused images"><h2 className="font-semibold">Unused images</h2>{unusedAssets.length === 0 ? <p className="mt-2 text-sm text-ink-muted">No unused images found.</p> : <ul className="mt-3 divide-y">{unusedAssets.map((asset) => <li key={asset.id} className="flex items-center gap-3 py-3"><input type="checkbox" checked={selectedUnused.includes(asset.id)} onChange={(event) => setSelectedUnused((current) => event.target.checked ? [...current, asset.id] : current.filter((id) => id !== asset.id))} aria-label={`Select ${asset.publicId} for deletion`} /><CloudImage src={asset.url} alt={asset.alt} width={80} height={60} sizes="80px" className="h-14 w-20 rounded-control object-cover" /><span className="min-w-0"><span className="block truncate text-sm font-semibold">{asset.publicId}</span><span className="block text-xs text-ink-muted">{asset.folder ?? "No section folder"}</span></span></li>)}</ul>}</section> : null}
       {message ? (
         <p
           role="status"

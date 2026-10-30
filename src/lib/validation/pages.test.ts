@@ -6,6 +6,12 @@ describe("homepage PageSection content", () => {
     expect(pageSectionSchemas.home.stats.safeParse({ items: [] }).success).toBe(true);
   });
 
+  it("keeps legacy About story content valid and validates an optional image alt", () => {
+    expect(pageSectionSchemas.about.story.safeParse({ title: "Our story", body: "Since 2003." }).success).toBe(true);
+    expect(pageSectionSchemas.about.story.safeParse({ title: "Our story", body: "Since 2003.", imageMediaId: "cmj4media00000000000000001", imageAlt: "Construction work" }).success).toBe(true);
+    expect(pageSectionSchemas.about.story.safeParse({ title: "Our story", body: "Since 2003.", imageMediaId: "cmj4media00000000000000001", imageAlt: "" }).success).toBe(false);
+  });
+
   it("limits the proof row to five admin-entered facts", () => {
     const items = Array.from({ length: 6 }, (_, index) => ({ label: `Fact ${index}`, value: String(index) }));
     expect(pageSectionSchemas.home.stats.safeParse({ items }).success).toBe(false);

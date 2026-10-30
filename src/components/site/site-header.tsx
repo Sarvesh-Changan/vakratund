@@ -10,8 +10,10 @@ import { WhatsAppIcon } from "@/components/ui/whatsapp-icon";
 import { ContactLink, TrackedWhatsAppLink } from "./contact-link";
 import { phoneHref } from "./contact-utils";
 import { BrandLogo } from "@/components/brand-logo";
+import { CloudImage } from "@/components/cloud-image";
+import { ServiceIcon } from "@/components/site/service-icon";
 
-export type HeaderService = { slug: string; title: string; shortDesc: string };
+export type HeaderService = { slug: string; title: string; shortDesc: string; iconKey: string | null; cover: { url: string; alt: string } | null };
 
 export function SiteHeader({ settings, services, overlayAtTop = false }: { settings: ResolvedSiteSettings; services: HeaderService[]; overlayAtTop?: boolean }) {
   const [scrolled, setScrolled] = useState(false);
@@ -115,7 +117,7 @@ export function SiteHeader({ settings, services, overlayAtTop = false }: { setti
             {servicesOpen ? <div id="desktop-services-menu" role="region" aria-labelledby="desktop-services-trigger" className="absolute left-1/2 top-full z-50 mt-3 w-[min(52rem,calc(100vw-2rem))] -translate-x-1/2 rounded-panel border border-line bg-surface p-5 text-ink shadow-raised">
               <div className="mb-4 flex items-end justify-between gap-3 border-b border-line pb-4"><div><p className="eyebrow">What we do</p><h2 className="mt-1 font-heading text-xl font-bold">Services built around your project</h2></div><Link href="/services" onClick={() => setServicesOpen(false)} className="shrink-0 text-sm font-semibold text-brand-deep hover:underline">All services</Link></div>
               <ul className="grid gap-1 sm:grid-cols-2">
-                {services.map((service) => <li key={service.slug}><Link href={`/services/${service.slug}`} onClick={() => setServicesOpen(false)} className="group block rounded-control p-3 hover:bg-surface-alt focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-deep"><span className="font-semibold group-hover:text-brand-deep">{service.title}</span><span className="mt-1 line-clamp-2 block text-sm leading-6 text-ink-muted">{service.shortDesc}</span></Link></li>)}
+                {services.map((service) => <li key={service.slug}><Link href={`/services/${service.slug}`} onClick={() => setServicesOpen(false)} className="group flex gap-3 rounded-control p-3 hover:bg-surface-alt focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-deep">{service.cover ? <CloudImage src={service.cover.url} alt={service.cover.alt} width={64} height={56} sizes="64px" className="size-14 shrink-0 rounded-control object-cover" /> : <span className="home-blueprint-pattern flex size-14 shrink-0 items-center justify-center rounded-control bg-tint text-accent-ink" aria-hidden="true"><ServiceIcon iconKey={service.iconKey} size={22} /></span>}<span><span className="font-semibold group-hover:text-brand-deep">{service.title}</span><span className="mt-1 line-clamp-2 block text-sm leading-6 text-ink-muted">{service.shortDesc}</span></span></Link></li>)}
               </ul>
             </div> : null}
           </div>

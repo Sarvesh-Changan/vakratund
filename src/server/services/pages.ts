@@ -17,6 +17,10 @@ export async function listPageSections(pageKey?: "home" | "about"): Promise<Page
 
 export async function savePageSection(input: PageSectionInput, userId: string): Promise<PageSectionView> {
   const parsed = pageSectionInputSchema.parse(input);
+  if (parsed.pageKey === "about" && parsed.sectionKey === "story" && parsed.content.imageMediaId) {
+    const image = await prisma.mediaAsset.findUnique({ where: { id: parsed.content.imageMediaId }, select: { folder: true, publicId: true, kind: true } });
+    if (!image || image.kind !== "IMAGE" || image.folder !== "vakratund/pages" || !image.publicId.startsWith("vakratund/pages/")) throw new Error("About story image must be uploaded to the pages section.");
+  }
   const row = await prisma.pageSection.upsert({ where: { pageKey_sectionKey: { pageKey: parsed.pageKey, sectionKey: parsed.sectionKey } }, create: { pageKey: parsed.pageKey, sectionKey: parsed.sectionKey, content: parsed.content as Prisma.InputJsonValue, isVisible: parsed.isVisible }, update: { content: parsed.content as Prisma.InputJsonValue, isVisible: parsed.isVisible }, select: sectionSelect });
   await logActivity({ userId, action: "pageSection.save", entityType: "PageSection", entityId: row.id, summary: `Saved ${parsed.pageKey} ${parsed.sectionKey} content section`, diff: { pageKey: parsed.pageKey, sectionKey: parsed.sectionKey, isVisible: parsed.isVisible } });
   return toView(row);

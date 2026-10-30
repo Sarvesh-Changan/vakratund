@@ -8,16 +8,15 @@ import { getPublicSettings } from "@/server/queries/settings";
 import { getVisibleTeamMembers, type PublishedTeamMember } from "@/server/queries/team";
 import { getPublishedTestimonials, type PublishedTestimonial } from "@/server/queries/testimonials";
 import { getPublishedServices } from "@/server/queries/services";
-import { getFeaturedGallery, type PublishedGalleryItem } from "@/server/queries/gallery";
+import { prisma } from "@/lib/db/client";
 
-export type AboutSection = { title: string; body: string };
+export type AboutSection = { title: string; body: string; imageMediaId?: string | null; imageAlt?: string; imageCaption?: string; image?: { url: string; alt: string; width: number | null; height: number | null } | null };
 export type AboutJourney = { eyebrow?: string; title: string; milestones: { year: number; title: string; description?: string }[] };
 export type AboutPageData = {
   settings: ResolvedSiteSettings;
   story: AboutSection | null;
   mission: AboutSection | null;
   journey: AboutJourney | null;
-  aboutImage: PublishedGalleryItem | null;
   serviceCount: number;
   team: PublishedTeamMember[];
   testimonials: PublishedTestimonial[];
@@ -38,19 +37,20 @@ function journeyContent(sections: Awaited<ReturnType<typeof getPublicPageSection
 }
 
 export function emptyAboutPageData(): AboutPageData {
-  return { settings: resolveSiteSettings(null), story: null, mission: null, journey: null, aboutImage: null, serviceCount: 0, team: [], testimonials: [] };
+  return { settings: resolveSiteSettings(null), story: null, mission: null, journey: null, serviceCount: 0, team: [], testimonials: [] };
 }
 
 async function readAboutPageData(): Promise<AboutPageData> {
-  const [settings, sections, team, testimonials, services, gallery] = await Promise.all([
+  const [settings, sections, team, testimonials, services] = await Promise.all([
     getPublicSettings(),
     getPublicPageSections("about"),
     getVisibleTeamMembers(),
     getPublishedTestimonials(),
     getPublishedServices(),
-    getFeaturedGallery().catch(() => []),
   ]);
-  return { settings: resolveSiteSettings(settings), story: sectionContent(sections, "story"), mission: sectionContent(sections, "mission"), journey: journeyContent(sections), aboutImage: gallery.find((item) => item.mediaType === "IMAGE") ?? null, serviceCount: services.length, team, testimonials };
+  const story = sectionContent(sections, "story");
+  const storyAsset = story?.imageMediaId ? await prisma.mediaAsset.findUnique({ where: { id: story.imageMediaId }, select: { url: true, alt: true, width: true, height: true } }) : null;
+  return { settings: resolveSiteSettings(settings), story: story ? { ...story, image: storyAsset ? { ...storyAsset, alt: story.imageAlt || storyAsset.alt } : null } : null, mission: sectionContent(sections, "mission"), journey: journeyContent(sections), serviceCount: services.length, team, testimonials };
 }
 
 export const getAboutPageData = unstable_cache(readAboutPageData, ["about-page"], { tags: ["pages", "settings", "team", "testimonials", "services", "gallery"], revalidate: 3600 });

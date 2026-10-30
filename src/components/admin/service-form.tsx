@@ -5,10 +5,13 @@ import { useRouter } from "next/navigation";
 
 import { Button, Checkbox, FormField, Input, Select, Textarea } from "@/components/ui";
 import { FormSection } from "@/components/admin/form-section";
-import { MediaPicker, type MediaPickerAsset } from "@/components/admin/media-picker";
+import { SectionUploader } from "@/components/admin/section-uploader";
+import { CloudImage } from "@/components/cloud-image";
+import type { MediaAssetView } from "@/server/services/media";
 import { ServiceIcon, serviceIcons } from "@/components/admin/service-icon";
 import { ServiceMarkdownEditor } from "@/components/admin/service-markdown-editor";
 import { createService, updateService } from "@/app/(admin)/admin/(protected)/services/actions";
+import { removeMediaAsset } from "@/app/(admin)/admin/(protected)/media/actions";
 import { SERVICE_GROUPS, SERVICE_ICON_KEYS, type CreateServiceInput } from "@/lib/validation/services";
 import type { ServiceView } from "@/server/services/services";
 
@@ -59,12 +62,13 @@ function fieldError(errors: Record<string, string[]>, field: string): string | u
   return errors[field]?.[0];
 }
 
-export function ServiceForm({ initial, assets }: { initial: ServiceView | null; assets: readonly MediaPickerAsset[] }) {
+export function ServiceForm({ initial, initialCover }: { initial: ServiceView | null; initialCover: MediaAssetView | null }) {
   const router = useRouter();
   const [form, setForm] = useState(() => initialState(initial));
   const [errors, setErrors] = useState<Record<string, string[]>>({});
   const [message, setMessage] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [cover, setCover] = useState<MediaAssetView | null>(initialCover);
   const isEdit = Boolean(initial);
 
   const previewTitle = form.seoTitle || form.title || "Service title";
@@ -105,6 +109,10 @@ export function ServiceForm({ initial, assets }: { initial: ServiceView | null; 
       setMessage(result.error.message);
       return;
     }
+    if (initialCover && initialCover.id !== form.coverId && window.confirm("Delete the previous cover from the media library and Cloudinary if it is no longer used elsewhere?")) {
+      const deletion = await removeMediaAsset({ id: initialCover.id });
+      if (!deletion.ok || ("blocked" in deletion.data && deletion.data.blocked)) setMessage("Service saved. The previous image is still used elsewhere and was kept.");
+    }
     router.push("/admin/services");
     router.refresh();
   }
@@ -127,9 +135,12 @@ export function ServiceForm({ initial, assets }: { initial: ServiceView | null; 
       <FormField label="How we work steps (one per line)" htmlFor="processSteps" hint="Leave blank to use the standard four-step strip." error={fieldError(errors, "processSteps")}><Textarea id="processSteps" rows={4} value={form.processSteps.join("\n")} onChange={(event) => setProcessSteps(event.target.value)} /></FormField>
     </FormSection>
 
-    <FormSection title="Presentation" description="Choose a recognizable Lucide icon and a Cloudinary image from the media library.">
+    <FormSection title="Presentation" description="Choose a recognizable Lucide icon and upload a service cover image.">
       <fieldset><legend className="text-sm font-semibold">Icon</legend><div className="mt-2 grid grid-cols-3 gap-2 sm:grid-cols-6">{SERVICE_ICON_KEYS.map((key) => { const Icon = serviceIcons[key]; const selected = form.iconKey === key; return <button type="button" key={key} onClick={() => setField("iconKey", key)} aria-pressed={selected} className={`flex min-h-16 flex-col items-center justify-center gap-1 rounded-control border p-2 text-xs ${selected ? "border-brand-deep bg-brand/10" : "hover:bg-surface-alt"}`}><Icon size={22} aria-hidden="true" /><span>{key}</span></button>; })}</div></fieldset>
-      <MediaPicker assets={assets} value={form.coverId} onChange={(value) => setField("coverId", typeof value === "string" ? value : null)} label="Cover image" />
+      {cover ? <div className="max-w-2xl"><div className="relative aspect-video overflow-hidden rounded-card border border-line"><CloudImage src={cover.url} alt={cover.alt} fill sizes="(min-width: 1024px) 50vw, 100vw" className="object-cover" /></div>{cover.folder !== "vakratund/services" ? <p className="mt-2 text-sm text-ink-muted">This image is from the shared library. Upload a service image to replace it.</p> : null}<Button type="button" size="sm" variant="ghost" className="mt-2 text-danger" onClick={() => { if (window.confirm("Remove this service cover? You can optionally delete the old asset after saving if it is unused.")) { setField("coverId", null); setCover(null); } }}>Remove</Button></div> : null}
+      <p className="text-xs text-ink-muted">Recommended size: 1600 × 900 px, landscape. Images up to 10 MB.</p>
+      <SectionUploader section="services" multiple={false} previewAspect="4/3" title={cover ? "Replace cover image" : "Cover image"} defaultAlt={() => form.title.trim()} onUploaded={(asset) => { setField("coverId", asset.id); setCover(asset); }} />
+      {fieldError(errors, "coverId") ? <p role="alert" className="text-sm text-danger">{fieldError(errors, "coverId")}</p> : null}
       {selectedIcon ? <p className="flex items-center gap-2 text-sm text-ink-muted"><ServiceIcon iconKey={form.iconKey} /> Selected icon: {form.iconKey}</p> : null}
       <label className="flex items-center gap-3 text-sm font-semibold"><Checkbox checked={form.isFeatured} onChange={(event) => setField("isFeatured", event.target.checked)} /> Feature this service on the homepage</label>
     </FormSection>
@@ -140,7 +151,7 @@ export function ServiceForm({ initial, assets }: { initial: ServiceView | null; 
 
     <FormSection title="Search appearance" description="Search engines may truncate longer values. Keep the important wording at the beginning.">
       <div className="grid gap-5 md:grid-cols-2"><FormField label="SEO title" htmlFor="seoTitle" hint={`${form.seoTitle?.length ?? 0}/60 characters`} error={fieldError(errors, "seoTitle")}><Input id="seoTitle" maxLength={60} value={form.seoTitle} onChange={(event) => setField("seoTitle", event.target.value)} /></FormField><FormField label="SEO description" htmlFor="seoDesc" hint={`${form.seoDesc?.length ?? 0}/160 characters`} error={fieldError(errors, "seoDesc")}><Textarea id="seoDesc" maxLength={160} rows={3} value={form.seoDesc} onChange={(event) => setField("seoDesc", event.target.value)} /></FormField></div>
-      <div className="rounded-control border bg-surface-alt p-4"><p className="text-xs text-ink-muted">Search preview</p><p className="mt-2 truncate text-lg text-blue-700">{previewTitle}</p><p className="truncate text-sm text-success">https://vakratund.example/services/{previewSlug}</p><p className="mt-1 text-sm text-ink-muted">{previewDescription}</p></div>
+      <div className="rounded-control border bg-surface-alt p-4"><p className="text-xs text-ink-muted">Search preview</p><p className="mt-2 truncate text-lg text-blue-700">{previewTitle}</p><p className="truncate text-sm text-success">{process.env.NEXT_PUBLIC_SITE_URL ?? ""}/services/{previewSlug}</p><p className="mt-1 text-sm text-ink-muted">{previewDescription}</p></div>
     </FormSection>
 
     <div className="flex justify-end gap-3"><Button type="button" variant="secondary" onClick={() => router.back()}>Cancel</Button><Button type="submit" loading={saving}>{isEdit ? "Save service" : "Create service"}</Button></div>

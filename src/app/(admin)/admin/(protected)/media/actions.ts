@@ -1,11 +1,39 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { z } from "zod";
 
 import { requirePermission } from "@/lib/auth/session";
 import { env } from "@/lib/env";
 import { createSaveMediaAssetSchema, deleteMediaAssetSchema, updateMediaAssetSchema } from "@/lib/validation/media";
-import { createMediaAsset, deleteMediaAsset, MediaAssetInUseError, updateMediaAsset } from "@/server/services/media";
+import { createMediaAsset, deleteMediaAsset, findUnusedImageAssets, MediaAssetInUseError, updateMediaAsset } from "@/server/services/media";
+import { listMediaAssets } from "@/server/services/media";
+
+const unusedDeleteSchema = z.object({ ids: z.array(z.string().cuid()).min(1).max(200) }).strict();
+
+export async function findUnusedMediaAssetsAction() {
+  await requirePermission("media:write");
+  const assets = await listMediaAssets();
+  return findUnusedImageAssets(assets);
+}
+
+export async function deleteUnusedMediaAssetsAction(input: unknown) {
+  const session = await requirePermission("media:write");
+  const parsed = unusedDeleteSchema.safeParse(input);
+  if (!parsed.success) return { ok: false as const, message: "Select one or more unused images." };
+  const deleted: string[] = [];
+  const blocked: string[] = [];
+  for (const id of parsed.data.ids) {
+    try {
+      await deleteMediaAsset(id, session.user.id);
+      deleted.push(id);
+    } catch (error) {
+      if (error instanceof MediaAssetInUseError) blocked.push(id);
+    }
+  }
+  revalidatePath("/admin/media");
+  return { ok: true as const, deleted, blocked };
+}
 
 export type MediaActionResult<T> =
   | { ok: true; data: T }
@@ -16,7 +44,8 @@ function validationError(error: { flatten: () => { fieldErrors: Record<string, s
 }
 
 export async function saveMediaAsset(input: unknown): Promise<MediaActionResult<Awaited<ReturnType<typeof createMediaAsset>>>> {
-  const session = await requirePermission("media:write");
+  const requestedSection = input && typeof input === "object" && "section" in input ? input.section : null;
+  const session = await requirePermission(requestedSection === "services" || requestedSection === "pages" ? "content:write" : "media:write");
   const parsed = createSaveMediaAssetSchema(env.CLOUDINARY_CLOUD_NAME?.trim() ?? "").safeParse(input);
   if (!parsed.success) return validationError(parsed.error);
   try {

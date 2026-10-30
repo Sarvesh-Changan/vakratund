@@ -4,7 +4,7 @@ import { revalidatePath, revalidateTag } from "next/cache";
 
 import { requirePermission } from "@/lib/auth/session";
 import { createServiceSchema, deleteServiceSchema, reorderServicesSchema, togglePublishServiceSchema, updateServiceSchema } from "@/lib/validation/services";
-import { createService as createServiceRecord, deleteService as deleteServiceRecord, getService, reorderServices as reorderServiceRecords, ServiceNotFoundError, ServiceSlugConflictError, togglePublishService as togglePublishServiceRecord, updateService as updateServiceRecord } from "@/server/services/services";
+import { createService as createServiceRecord, deleteService as deleteServiceRecord, getService, reorderServices as reorderServiceRecords, ServiceCoverInvalidError, ServiceNotFoundError, ServiceSlugConflictError, togglePublishService as togglePublishServiceRecord, updateService as updateServiceRecord } from "@/server/services/services";
 
 export type ServiceActionResult<T> =
   | { ok: true; data: T }
@@ -15,6 +15,7 @@ function validationError(error: { flatten: () => { fieldErrors: Record<string, s
 }
 
 function failure(error: unknown): ServiceActionResult<never> {
+  if (error instanceof ServiceCoverInvalidError) return { ok: false, error: { code: "INVALID_COVER", message: "Upload this image to the services section before saving.", fieldErrors: { coverId: [error.message] } } };
   if (error instanceof ServiceSlugConflictError) return { ok: false, error: { code: "SLUG_NOT_UNIQUE", message: error.message, fieldErrors: { slug: [error.message] } } };
   if (error instanceof ServiceNotFoundError) return { ok: false, error: { code: "NOT_FOUND", message: "The service no longer exists." } };
   return { ok: false, error: { code: "MUTATION_FAILED", message: "The service could not be saved. Please try again." } };
@@ -23,6 +24,8 @@ function failure(error: unknown): ServiceActionResult<never> {
 function revalidateService(slugs: readonly (string | undefined)[]): void {
   revalidateTag("services", "max");
   for (const slug of slugs) if (slug) revalidateTag(`service:${slug}`, "max");
+  revalidateTag("pages", "max");
+  revalidatePath("/about");
   revalidatePath("/admin/services");
 }
 

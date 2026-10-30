@@ -51,6 +51,16 @@ export class ServiceSlugInvalidError extends Error {
   }
 }
 
+export class ServiceCoverInvalidError extends Error {
+  constructor() { super("Choose an image uploaded to the services section."); this.name = "ServiceCoverInvalidError"; }
+}
+
+async function assertServiceCover(coverId: string | null, allowedLegacyCoverId: string | null = null): Promise<void> {
+  if (!coverId || coverId === allowedLegacyCoverId) return;
+  const asset = await prisma.mediaAsset.findUnique({ where: { id: coverId }, select: { folder: true, kind: true, publicId: true } });
+  if (!asset || asset.kind !== "IMAGE" || asset.folder !== "vakratund/services" || !asset.publicId.startsWith("vakratund/services/")) throw new ServiceCoverInvalidError();
+}
+
 const serviceSelect = {
   id: true,
   title: true,
@@ -123,6 +133,7 @@ export async function getService(id: string): Promise<ServiceView | null> {
 
 /** Creates a service and records the actor's sanitized mutation. */
 export async function createService(input: CreateServiceInput, userId: string): Promise<ServiceView> {
+  await assertServiceCover(input.coverId);
   const serviceSlug = await uniqueSlug(input);
   const record = await prisma.service.create({ data: inputData(input, serviceSlug), select: serviceSelect });
   await logActivity({ userId, action: "service.create", entityType: "Service", entityId: record.id, summary: `Created service ${record.title}`, diff: { slug: record.slug, status: record.status, isFeatured: record.isFeatured } });
@@ -131,6 +142,9 @@ export async function createService(input: CreateServiceInput, userId: string): 
 
 /** Updates a service, checking the editable slug against every other service. */
 export async function updateService(input: UpdateServiceInput, userId: string): Promise<ServiceView> {
+  const current = await prisma.service.findUnique({ where: { id: input.id }, select: { coverId: true } });
+  if (!current) throw new ServiceNotFoundError();
+  await assertServiceCover(input.coverId, current.coverId);
   const serviceSlug = await uniqueSlug(input, input.id);
   const record = await prisma.service.update({ where: { id: input.id }, data: inputData(input, serviceSlug), select: serviceSelect });
   await logActivity({ userId, action: "service.update", entityType: "Service", entityId: record.id, summary: `Updated service ${record.title}`, diff: { slug: record.slug, status: record.status, isFeatured: record.isFeatured } });

@@ -24,6 +24,14 @@ describe("media asset validation", () => {
     expect(result.success).toBe(false);
   });
 
+  it.each(["services", "pages"] as const)("accepts an image in the %s folder and rejects other folders/formats", (section) => {
+    const folder = `vakratund/${section}`;
+    expect(schema.safeParse({ ...validImage, section, publicId: `${folder}/cover` }).success).toBe(true);
+    expect(schema.safeParse({ ...validImage, section, publicId: "vakratund/gallery/cover" }).success).toBe(false);
+    expect(schema.safeParse({ ...validImage, section, publicId: `${folder}/cover`, format: "svg" }).success).toBe(false);
+    expect(schema.safeParse({ ...validImage, section, publicId: `${folder}/cover`, kind: "VIDEO", format: "mp4" }).success).toBe(false);
+  });
+
   it("rejects a public ID outside the selected section", () => {
     const result = schema.safeParse({ ...validImage, publicId: "vakratund/team/photo" });
     expect(result.success).toBe(false);

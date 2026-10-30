@@ -62,13 +62,14 @@ async function usageMap(mediaIds: readonly string[]): Promise<Map<string, MediaU
   if (mediaIds.length === 0) return result;
   const assets = await prisma.mediaAsset.findMany({ where: { id: { in: [...mediaIds] } }, select: { id: true, publicId: true } });
   const mediaIdByPublicId = new Map(assets.map((asset) => [asset.publicId, asset.id]));
-  const [projectMedia, galleries, services, teams, testimonials, pageSeo] = await Promise.all([
+  const [projectMedia, galleries, services, teams, testimonials, pageSeo, pageSections] = await Promise.all([
     prisma.projectMedia.findMany({ where: { mediaId: { in: [...mediaIds] } }, select: { mediaId: true, projectId: true } }),
     prisma.galleryItem.findMany({ where: { publicId: { in: assets.map((asset) => asset.publicId) } }, select: { publicId: true, title: true, category: { select: { name: true } } } }),
     prisma.service.findMany({ where: { coverId: { in: [...mediaIds] } }, select: { coverId: true, title: true, slug: true } }),
     prisma.teamMember.findMany({ where: { photoId: { in: [...mediaIds] } }, select: { photoId: true, name: true } }),
     prisma.testimonial.findMany({ where: { photoId: { in: [...mediaIds] } }, select: { photoId: true, name: true } }),
     prisma.pageSeo.findMany({ where: { ogImageId: { in: [...mediaIds] } }, select: { ogImageId: true, path: true } }),
+    prisma.pageSection.findMany({ select: { pageKey: true, sectionKey: true, content: true } }),
   ]);
 
   const projectIds = [...new Set(projectMedia.map((row) => row.projectId))];
@@ -86,6 +87,12 @@ async function usageMap(mediaIds: readonly string[]): Promise<Map<string, MediaU
   for (const row of teams) if (row.photoId) addUsage(result, row.photoId, { type: "Team", label: row.name });
   for (const row of testimonials) if (row.photoId) addUsage(result, row.photoId, { type: "Testimonial", label: row.name, href: `/admin/testimonials` });
   for (const row of pageSeo) if (row.ogImageId) addUsage(result, row.ogImageId, { type: "SEO", label: row.path, href: `/admin/seo` });
+  for (const row of pageSections) {
+    if (!row.content || typeof row.content !== "object" || Array.isArray(row.content)) continue;
+    const content = row.content as Record<string, unknown>;
+    const mediaId = row.pageKey === "about" && row.sectionKey === "story" ? content.imageMediaId : content.backgroundImageId;
+    if (typeof mediaId === "string" && mediaIds.includes(mediaId)) addUsage(result, mediaId, { type: "Page", label: `${row.pageKey} ${row.sectionKey}`, href: "/admin/pages" });
+  }
   return result;
 }
 
@@ -110,15 +117,25 @@ export async function listMediaAssets(filters: { q?: string; section?: string } 
   return records.map((record) => toView(record, usages.get(record.id) ?? []));
 }
 
+export function findUnusedImageAssets(assets: readonly MediaAssetView[]): MediaAssetView[] {
+  return assets.filter((asset) => asset.kind === "IMAGE" && asset.usageCount === 0);
+}
+
 export async function createMediaAsset(input: SaveMediaAssetInput, userId: string): Promise<MediaAssetView> {
   const section = normalizeUploadSection(input.section);
   if (!section) throw new Error("Media section is not allowed.");
+  if (!input.publicId.startsWith(`${cloudinaryFolder(section)}/`)) throw new Error("Media public ID does not match the selected section.");
   const record = await prisma.mediaAsset.create({
     data: { publicId: input.publicId, url: input.url, kind: input.kind, format: input.format, bytes: input.bytes, etag: input.etag, width: input.width ?? null, height: input.height ?? null, alt: input.alt, caption: input.caption ?? null, folder: cloudinaryFolder(section), uploadedBy: userId },
     select: { id: true, kind: true, publicId: true, url: true, format: true, width: true, height: true, bytes: true, etag: true, alt: true, caption: true, folder: true, createdAt: true },
   });
   await logActivity({ userId, action: "media.create", entityType: "MediaAsset", entityId: record.id, summary: "Media asset uploaded", diff: { kind: record.kind, format: record.format, folder: record.folder } });
   return toView(record, []);
+}
+
+export async function getMediaAsset(id: string): Promise<MediaAssetView | null> {
+  const record = await prisma.mediaAsset.findUnique({ where: { id }, select: { id: true, kind: true, publicId: true, url: true, format: true, width: true, height: true, bytes: true, etag: true, alt: true, caption: true, folder: true, createdAt: true } });
+  return record ? toView(record, (await usageMap([id])).get(id) ?? []) : null;
 }
 
 export async function updateMediaAsset(input: { id: string; alt: string; caption?: string }, userId: string): Promise<MediaAssetView> {
@@ -140,9 +157,16 @@ export async function deleteMediaAsset(id: string, userId: string): Promise<{ de
   const record = await prisma.mediaAsset.findUnique({ where: { id }, select: { id: true, publicId: true, kind: true } });
   if (!record) throw new Error("Media asset not found.");
   const usages = await getMediaUsages(id);
-  if (usages.length > 0) throw new MediaAssetInUseError(usages);
+  if (usages.length > 0) {
+    await logActivity({ userId, action: "media.delete.blocked", entityType: "MediaAsset", entityId: id, summary: "Blocked deletion of referenced media", diff: { usageCount: usages.length } });
+    throw new MediaAssetInUseError(usages);
+  }
 
-  await destroyCloudinaryAsset(record.publicId, record.kind);
+  try {
+    await destroyCloudinaryAsset(record.publicId, record.kind);
+  } catch {
+    console.error(JSON.stringify({ event: "media.cloudinary_delete_failed" }));
+  }
   await prisma.mediaAsset.delete({ where: { id } });
   await logActivity({ userId, action: "media.delete", entityType: "MediaAsset", entityId: id, summary: "Media asset deleted", diff: { publicId: record.publicId } });
   return { deleted: true };

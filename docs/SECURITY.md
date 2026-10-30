@@ -82,7 +82,7 @@ Rules:
 - Login counters use the `RateLimitBucket` PostgreSQL table in production. In-memory buckets are local-development/test only. Unknown IP requests use an IP-less request fingerprint plus email/global email-hash buckets and are never put into one shared unknown-IP bucket. Redis/Upstash is not used.
 
 ## 7. File uploads (Cloudinary)
-- Only authenticated, authorized users may request a signature; clients send a section enum and the server maps the server-defined folder allowlist (`vakratund/projects`, `vakratund/testimonials`, `vakratund/team`, `vakratund/gallery`, `vakratund/docs`). Free-form folders are rejected. Gallery mutations require `content:write`; SALES is denied.
+- Only authenticated, authorized users may request a signature; clients send a section enum and the server maps the server-defined folder allowlist (`vakratund/projects`, `vakratund/testimonials`, `vakratund/team`, `vakratund/gallery`, `vakratund/docs`, `vakratund/services`, `vakratund/pages`). Free-form folders are rejected. Services and pages uploads require `content:write`; SALES is denied.
 - Signed upload params include `folder`, `timestamp`, `allowed_formats`, and any other upload fields sent to Cloudinary; the browser reuses the exact signed values and the endpoint resource type matches the media kind.
 - Allowed: `jpg, jpeg, png, webp, avif` (images), `mp4, webm` (video, size-capped), `pdf` (documents, admin only). Max 10 MB image / 50 MB video / 15 MB PDF.
 - API secret only on the server; never exposed to the client.
