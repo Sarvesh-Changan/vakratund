@@ -12,4 +12,9 @@ describe("estimator admin validation", () => {
     expect(estimatorServiceAdminSchema.safeParse({ ...base, fields: [{ ...field, label: "area" }] }).success).toBe(false);
     expect(estimatorServiceAdminSchema.safeParse({ ...base, fields: [{ ...field, isAdvanced: true, required: true }] }).success).toBe(false);
   });
+
+  it("rejects display-only service keys that the editor must strip before save", () => {
+    expect(estimatorServiceAdminSchema.safeParse({ ...base, sortOrder: 0, name: "Interior", slug: "interior" }).success).toBe(false);
+    expect(estimatorServiceAdminSchema.safeParse({ ...base, sortOrder: 0 }).success).toBe(true);
+  });
 });

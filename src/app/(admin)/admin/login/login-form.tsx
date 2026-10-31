@@ -49,6 +49,11 @@ export function LoginForm({ nextPath, timedOut = false, idleTimeoutMinutes = 30 
         return;
       }
       setRetryAfterSeconds(null);
+      try {
+        for (const key of Object.keys(localStorage)) {
+          if (key.startsWith("vakratund:admin:")) localStorage.removeItem(key);
+        }
+      } catch { /* Session keys are a client hint only. */ }
       const body: unknown = await response.json();
       const mustChangePassword = typeof body === "object" && body !== null && "user" in body && typeof body.user === "object" && body.user !== null && "mustChangePassword" in body.user && body.user.mustChangePassword === true;
       router.replace(mustChangePassword ? "/admin/change-password" : (nextPath ?? "/admin"));

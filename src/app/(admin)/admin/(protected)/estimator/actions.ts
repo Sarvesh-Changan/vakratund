@@ -4,7 +4,9 @@ import { revalidatePath, revalidateTag } from "next/cache";
 
 import { requirePermission } from "@/lib/auth/session";
 import { estimatorServiceAdminSchema, locationZonesAdminSchema } from "@/lib/validation/estimator-admin";
-import { saveEstimatorService as saveEstimatorServiceRecord, saveLocationZones as saveLocationZonesRecord } from "@/server/services/estimator-admin";
+import { createEstimatorFromTemplate as createEstimatorFromTemplateRecord, duplicateEstimatorService as duplicateEstimatorServiceRecord, saveEstimatorService as saveEstimatorServiceRecord, saveLocationZones as saveLocationZonesRecord } from "@/server/services/estimator-admin";
+import { estimatorTemplates } from "@/config/estimator-templates";
+import { z } from "zod";
 
 export type EstimatorActionResult<T = undefined> = { ok: true; data: T } | { ok: false; error: { code: string; message: string; fieldErrors?: Record<string, string[]> } };
 
@@ -24,4 +26,20 @@ export async function saveLocationZones(input: unknown): Promise<EstimatorAction
   const parsed = locationZonesAdminSchema.safeParse(input);
   if (!parsed.success) return invalid(parsed.error);
   try { await saveLocationZonesRecord(parsed.data, session.user.id); refresh(); return { ok: true, data: undefined }; } catch { return failed(); }
+}
+
+const createSchema = z.object({ templateId: z.enum(estimatorTemplates.map((template) => template.id) as [string, ...string[]]), name: z.string().trim().min(2).max(160) }).strict();
+export async function createEstimatorFromTemplate(input: unknown): Promise<EstimatorActionResult<{ id: string; slug: string }>> {
+  const session = await requirePermission("estimator:write");
+  const parsed = createSchema.safeParse(input);
+  if (!parsed.success) return invalid(parsed.error);
+  try { const data = await createEstimatorFromTemplateRecord(parsed.data.templateId as never, parsed.data.name, session.user.id); refresh(); return { ok: true, data }; } catch { return failed(); }
+}
+
+const duplicateSchema = z.object({ id: z.string().trim().min(1).max(100) }).strict();
+export async function duplicateEstimatorService(input: unknown): Promise<EstimatorActionResult<{ id: string; slug: string }>> {
+  const session = await requirePermission("estimator:write");
+  const parsed = duplicateSchema.safeParse(input);
+  if (!parsed.success) return invalid(parsed.error);
+  try { const data = await duplicateEstimatorServiceRecord(parsed.data.id, session.user.id); refresh(); return { ok: true, data }; } catch { return failed(); }
 }

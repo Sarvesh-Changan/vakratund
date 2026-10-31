@@ -1,4 +1,4 @@
-import { conditionMatches } from "./conditions";
+import { conditionMatches } from "./conditions.ts";
 import type { Answers, EstimatorConfig, Field, FieldError, Option, ValidationResult } from "./types";
 
 function isEmpty(value: Answers[string]): boolean {

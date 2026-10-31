@@ -7,6 +7,9 @@ import {
   type EstimatorServiceAdminInput,
   type LocationZoneAdminInput,
 } from "@/lib/validation/estimator-admin";
+import { estimatorTemplates, type EstimatorTemplateId } from "@/config/estimator-templates";
+import { slugify } from "@/lib/utils";
+import { estimatorConfigChanged, locationZoneConfigChanged, type StoredEstimatorService } from "@/server/estimator/admin/changes";
 
 export type EstimatorAdminService = EstimatorServiceAdminInput & {
   slug: string;
@@ -39,6 +42,16 @@ type AdminClause = {
     "equals" | "notEquals" | "in" | "notIn" | "gt" | "gte" | "lt" | "lte";
   value: string | number | boolean;
 };
+
+function simpleCondition(value: unknown): boolean {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+  const record = value as Record<string, unknown>;
+  if (Array.isArray(record.any)) return false;
+  if (Array.isArray(record.all)) return record.all.length > 0 && record.all.every(simpleCondition);
+  if (typeof record.field !== "string") return false;
+  const operators = ["equals", "notEquals", "in", "notIn", "gt", "gte", "lt", "lte"].filter((key) => key in record);
+  return operators.length === 1 && !Array.isArray(record[operators[0]!]) || operators.length === 1 && Array.isArray(record[operators[0]!]) && (record[operators[0]!] as unknown[]).length === 1;
+}
 
 function toClauses(condition: unknown): AdminClause[] {
   const record =
@@ -92,6 +105,7 @@ export async function getEstimatorAdminData(): Promise<EstimatorAdminData> {
       id: service.id,
       slug: service.slug,
       name: service.name,
+      description: service.description,
       isActive: service.isActive,
       pricingMode: String(
         service.pricingMode,
@@ -124,7 +138,8 @@ export async function getEstimatorAdminData(): Promise<EstimatorAdminData> {
         defaultValue: field.defaultValue,
         presetValues: field.presetValues,
         unitLabel: field.unitLabel,
-        showIf: toClauses(field.showIf)[0] ?? null,
+        showIf: simpleCondition(field.showIf) && toClauses(field.showIf).length === 1 ? toClauses(field.showIf)[0] ?? null : null,
+        advancedShowIf: field.showIf && (!simpleCondition(field.showIf) || toClauses(field.showIf).length !== 1) ? field.showIf as unknown as EstimatorAdminService["fields"][number]["advancedShowIf"] : undefined,
         effectType: String(
           field.effectType,
         ) as EstimatorAdminService["fields"][number]["effectType"],
@@ -142,23 +157,20 @@ export async function getEstimatorAdminData(): Promise<EstimatorAdminData> {
         })),
         isActive: field.isActive,
       })),
-      rules: service.rules.flatMap((rule) => {
+      rules: service.rules.map((rule) => {
         const clauses = toClauses(rule.condition);
-        return clauses.length
-          ? [
-              {
+        return {
                 id: rule.id,
                 name: rule.name,
                 order: rule.order,
-                condition: { all: clauses },
+                condition: { all: clauses.length ? clauses : [{ field: "legacy", operator: "equals", value: "" }] },
+                advancedCondition: simpleCondition(rule.condition) ? undefined : rule.condition as unknown as EstimatorAdminService["rules"][number]["advancedCondition"],
                 effectType: String(
                   rule.effectType,
                 ) as EstimatorAdminService["rules"][number]["effectType"],
                 effectValue: Number(rule.effectValue),
                 isActive: rule.isActive,
-              },
-            ]
-          : [];
+              };
       }),
     })),
     zones: zones.map((zone) => ({
@@ -190,10 +202,13 @@ export async function saveEstimatorService(
       include: adminInclude,
     });
     if (!before) throw new Error("Estimator service not found.");
+    if (!estimatorConfigChanged(before as unknown as StoredEstimatorService, input)) return { version: before.version };
     const version = nextEstimatorVersion(before.version);
     const updated = await tx.estimatorService.update({
       where: { id: input.id },
       data: {
+        ...(input.name ? { name: input.name } : {}),
+        ...(input.description !== undefined ? { description: input.description } : {}),
         isActive: input.isActive,
         pricingMode: input.pricingMode,
         unit: input.unit,
@@ -232,9 +247,11 @@ export async function saveEstimatorService(
           defaultValue: field.defaultValue || null,
           presetValues: field.presetValues,
           unitLabel: field.unitLabel || null,
-          showIf: field.showIf
-            ? (clausesToCondition([field.showIf]) as Prisma.InputJsonValue)
-            : undefined,
+          showIf: field.advancedShowIf
+            ? (field.advancedShowIf as Prisma.InputJsonValue)
+            : field.showIf
+              ? (clausesToCondition([field.showIf]) as Prisma.InputJsonValue)
+              : undefined,
           effectType: field.effectType,
           effectValue: field.effectValue,
           isActive: field.isActive,
@@ -264,9 +281,7 @@ export async function saveEstimatorService(
           estimatorServiceId: input.id,
           name: rule.name,
           order: rule.order,
-          condition: clausesToCondition(
-            rule.condition.all,
-          ) as Prisma.InputJsonValue,
+          condition: (rule.advancedCondition ?? clausesToCondition(rule.condition.all)) as Prisma.InputJsonValue,
           effectType: rule.effectType,
           effectValue: rule.effectValue,
           isActive: rule.isActive,
@@ -306,6 +321,7 @@ export async function saveLocationZones(
 ): Promise<void> {
   await prisma.$transaction(async (tx) => {
     const before = await tx.locationZone.findMany();
+    if (!locationZoneConfigChanged(before, input.zones)) return;
     const incomingIds = new Set(
       input.zones.flatMap((zone) => (zone.id ? [zone.id] : [])),
     );
@@ -346,5 +362,33 @@ export async function saveLocationZones(
         },
       },
     });
+  });
+}
+
+export async function createEstimatorFromTemplate(templateId: EstimatorTemplateId, name: string, userId: string): Promise<{ id: string; slug: string }> {
+  const template = estimatorTemplates.find((item) => item.id === templateId);
+  if (!template) throw new Error("Choose a valid estimator starting point.");
+  const slug = `${slugify(name)}-${Date.now()}`;
+  return prisma.$transaction(async (tx) => {
+    const service = await tx.estimatorService.create({ data: { slug, name, description: template.config.description, includedText: [...(template.config.includedText ?? [])], notIncludedText: [...(template.config.notIncludedText ?? [])], pricingMode: template.config.pricingMode, unit: template.config.unit, baseRate: template.config.baseRate, minCharge: template.config.minCharge, minArea: template.config.minArea, maxArea: template.config.maxArea, spreadPercent: template.config.spreadPercent, roundTo: template.config.roundTo, disclaimer: template.config.disclaimer, version: 1, isActive: false, sortOrder: 9999 } });
+    for (const field of template.config.fields) {
+      await tx.estimatorField.create({ data: { estimatorServiceId: service.id, key: field.key, label: field.label, type: field.type, required: field.required, isAdvanced: field.isAdvanced ?? false, sortOrder: field.sortOrder, min: field.min, max: field.max, step: field.step ?? null, defaultValue: field.defaultValue ?? null, presetValues: field.presetValues ?? [], unitLabel: field.unitLabel ?? null, effectType: field.effectType, effectValue: field.effectValue, options: { create: field.options.map((option) => ({ value: option.value, label: option.label, description: option.description ?? "TODO(client): approve this price change.", effectType: option.effectType, effectValue: option.effectValue, sortOrder: option.sortOrder, isActive: true })) } } });
+    }
+    await tx.activityLog.create({ data: { userId, action: "estimator.create", entityType: "EstimatorService", entityId: service.id, summary: `Created estimator ${slug} from template`, diff: { template: templateId, name } } });
+    return { id: service.id, slug };
+  });
+}
+
+export async function duplicateEstimatorService(id: string, userId: string): Promise<{ id: string; slug: string }> {
+  return prisma.$transaction(async (tx) => {
+    const source = await tx.estimatorService.findUnique({ where: { id }, include: adminInclude });
+    if (!source) throw new Error("Estimator service not found.");
+    const name = `${source.name} copy`;
+    const slug = `${slugify(name)}-${Date.now()}`;
+    const copy = await tx.estimatorService.create({ data: { slug, name, description: source.description, includedText: source.includedText, notIncludedText: source.notIncludedText, pricingMode: source.pricingMode, unit: source.unit, baseRate: source.baseRate, minCharge: source.minCharge, minArea: source.minArea, maxArea: source.maxArea, spreadPercent: source.spreadPercent, roundTo: source.roundTo, disclaimer: source.disclaimer, version: 1, isActive: false, sortOrder: 9999 } });
+    for (const field of source.fields) await tx.estimatorField.create({ data: { estimatorServiceId: copy.id, key: field.key, label: field.label, helpText: field.helpText, shortHelp: field.shortHelp, type: field.type, required: field.required, isAdvanced: field.isAdvanced, sortOrder: field.sortOrder, min: field.min, max: field.max, step: field.step, defaultValue: field.defaultValue, presetValues: field.presetValues, unitLabel: field.unitLabel, showIf: field.showIf ?? undefined, effectType: field.effectType, effectValue: field.effectValue, isActive: field.isActive, options: { create: field.options.map((option) => ({ value: option.value, label: option.label, description: option.description, effectType: option.effectType, effectValue: option.effectValue, sortOrder: option.sortOrder, isActive: option.isActive })) } } });
+    for (const rule of source.rules) await tx.pricingRule.create({ data: { estimatorServiceId: copy.id, name: rule.name, order: rule.order, condition: rule.condition as Prisma.InputJsonValue, effectType: rule.effectType, effectValue: rule.effectValue, isActive: rule.isActive } });
+    await tx.activityLog.create({ data: { userId, action: "estimator.duplicate", entityType: "EstimatorService", entityId: copy.id, summary: `Duplicated estimator ${source.slug}`, diff: { sourceId: source.id, name } } });
+    return { id: copy.id, slug };
   });
 }

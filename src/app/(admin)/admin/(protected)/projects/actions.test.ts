@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 const requirePermission = vi.hoisted(() => vi.fn());
 const createProjectRecord = vi.hoisted(() => vi.fn());
 
-vi.mock("next/cache", () => ({ revalidatePath: vi.fn(), revalidateTag: vi.fn() }));
+vi.mock("next/cache", () => ({ revalidatePath: vi.fn(), revalidateTag: vi.fn(), updateTag: vi.fn() }));
 vi.mock("@/lib/auth/session", () => ({ requirePermission }));
 vi.mock("@/server/services/projects", () => ({
   createProject: createProjectRecord,

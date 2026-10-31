@@ -71,9 +71,6 @@ export function ServiceForm({ initial, initialCover }: { initial: ServiceView | 
   const [cover, setCover] = useState<MediaAssetView | null>(initialCover);
   const isEdit = Boolean(initial);
 
-  const previewTitle = form.seoTitle || form.title || "Service title";
-  const previewDescription = form.seoDesc || form.shortDesc || "Your service description will appear here.";
-  const previewSlug = form.slug || "service-slug";
   const selectedIcon = useMemo(() => form.iconKey && serviceIcons[form.iconKey], [form.iconKey]);
 
   function setField<K extends keyof ServiceFormState>(field: K, value: ServiceFormState[K]) {
@@ -147,11 +144,6 @@ export function ServiceForm({ initial, initialCover }: { initial: ServiceView | 
 
     <FormSection title="Publication and ordering">
       <div className="grid gap-5 md:grid-cols-2"><FormField label="Status" htmlFor="status" required error={fieldError(errors, "status")}><Select id="status" value={form.status} onChange={(event) => setField("status", event.target.value as ServiceFormState["status"])}><option value="DRAFT">Draft</option><option value="PUBLISHED">Published</option><option value="ARCHIVED">Archived</option></Select></FormField><FormField label="Order" htmlFor="sortOrder" hint="Lower numbers appear first." error={fieldError(errors, "sortOrder")}><Input id="sortOrder" type="number" min={0} value={form.sortOrder} onChange={(event) => setField("sortOrder", Number(event.target.value))} /></FormField></div>
-    </FormSection>
-
-    <FormSection title="Search appearance" description="Search engines may truncate longer values. Keep the important wording at the beginning.">
-      <div className="grid gap-5 md:grid-cols-2"><FormField label="SEO title" htmlFor="seoTitle" hint={`${form.seoTitle?.length ?? 0}/60 characters`} error={fieldError(errors, "seoTitle")}><Input id="seoTitle" maxLength={60} value={form.seoTitle} onChange={(event) => setField("seoTitle", event.target.value)} /></FormField><FormField label="SEO description" htmlFor="seoDesc" hint={`${form.seoDesc?.length ?? 0}/160 characters`} error={fieldError(errors, "seoDesc")}><Textarea id="seoDesc" maxLength={160} rows={3} value={form.seoDesc} onChange={(event) => setField("seoDesc", event.target.value)} /></FormField></div>
-      <div className="rounded-control border bg-surface-alt p-4"><p className="text-xs text-ink-muted">Search preview</p><p className="mt-2 truncate text-lg text-blue-700">{previewTitle}</p><p className="truncate text-sm text-success">{process.env.NEXT_PUBLIC_SITE_URL ?? ""}/services/{previewSlug}</p><p className="mt-1 text-sm text-ink-muted">{previewDescription}</p></div>
     </FormSection>
 
     <div className="flex justify-end gap-3"><Button type="button" variant="secondary" onClick={() => router.back()}>Cancel</Button><Button type="submit" loading={saving}>{isEdit ? "Save service" : "Create service"}</Button></div>

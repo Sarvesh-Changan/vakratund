@@ -338,6 +338,8 @@ model PageSeo {
   updatedAt   DateTime @updatedAt
 }
 
+The admin page for editing `PageSeo` records has been retired. Keep this table and its existing values intact; public metadata may still read them. No migration or data cleanup is needed.
+
 model SiteSetting {                      // singleton row id = "singleton"
   id             String   @id @default("singleton")
   businessName   String
@@ -573,6 +575,8 @@ model Quote {
 6. Lead duplicates: when a lead with the same phone exists within 30 days, set `isDuplicate = true` (still store).
 7. Admin deletes of leads are soft deletes (`deletedAt`). Hard purge only via documented retention job.
 8. `ActivityLog` is append-only; no update/delete endpoints.
+
+Estimator configuration changes must remain additive. The admin simplification uses the existing service, field, option, rule and location records; it adds no required columns. `Quote.configSnapshot`, `configHash`, saved range and breakdown remain historical and are never rewritten by estimator normalization. See [ESTIMATOR_CONFIG.md](ESTIMATOR_CONFIG.md) for the calculation-order reference and cleanup guarantees.
 
 ## 5. Seed plan (`prisma/seed.ts`, idempotent via `upsert`)
 1. SiteSetting (from `CONTENT.md`: name, tagline, phones, founded 2003; `TODO(client)` for address/email).

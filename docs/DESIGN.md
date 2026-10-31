@@ -154,6 +154,10 @@ Fixed bottom bar: **Call · WhatsApp · Get Quote**; hides on scroll down, shows
 - Photos with burned-in text/watermarks (from the PDF) must be replaced by originals; if unavoidable, crop.
 - Alt text describes content and context (e.g., "Waterproofing coating being applied on a terrace in Thane").
 
+### Original illustrations
+
+Use hand-built, original inline SVG scenes only for editorial fallbacks and design-system previews; never copy, trace, or embed third-party artwork. Keep each illustration source under about 8 KB, use only theme CSS variables or `currentColor`, and avoid external requests, raster embeds, scripts, and `foreignObject`. Give meaningful illustrations an accessible image role, title, and description; mark purely decorative instances hidden from assistive technology. SVG is not an upload format: Cloudinary uploads remain limited to the image allowlist in `SECURITY.md` section 7. Illustrations reveal once using the shared motion preference and remain static when reduced motion is requested.
+
 ## 9. Voice & copy
 Plain, specific, professional. Use numbers and facts (years, sqft, storeys). Avoid hype. Primary CTA verbs: "Get Free Quote", "Request Site Inspection", "Call Now", "Download Company Profile". Keep the estimator disclaimer visible: *"Indicative estimate. Final quotation after site inspection."*
 
@@ -165,6 +169,10 @@ Plain, specific, professional. Use numbers and facts (years, sqft, storeys). Avo
 - No information by color alone (status badges include text/icon).
 
 ## 11. Admin UI
+
+### Estimator administration
+
+Use one service editor with six numbered sections and a sticky live preview on wide screens; stack the preview after the form at tablet widths. Use plain vocabulary from `src/config/estimator-vocabulary.ts` for stored question types and price changes. Advice uses written status as well as color. Keep up/down buttons wherever order can change, and explain each amount with a short example or unit. Preserve the placeholder-price warning and ADMIN/SUPER_ADMIN authorization.
 - Clean, dense, utilitarian; left sidebar (collapses to drawer on mobile), top bar with user menu.
 - Dashboard cards + charts; tables with search/filter/sort/pagination, bulk actions where useful.
 - Forms: sticky save bar, dirty-state warning, and inline validation.

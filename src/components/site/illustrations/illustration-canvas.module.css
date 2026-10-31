@@ -1,0 +1,87 @@
+.illustration {
+  display: block;
+  width: 100%;
+  height: 100%;
+  color: var(--ink);
+}
+
+.gridLine {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1;
+  opacity: 0.18;
+}
+
+.linework {
+  fill: none;
+  stroke: var(--ink);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 3;
+}
+
+.fineLine {
+  fill: none;
+  stroke: var(--ink);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+  opacity: 0.62;
+}
+
+.accentLine {
+  fill: none;
+  stroke: var(--accent);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 4;
+}
+
+.mintLine {
+  fill: none;
+  stroke: var(--accent-2);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 4;
+}
+
+.solidAccent { fill: var(--accent); }
+.solidMint { fill: var(--accent-2); }
+.surfaceFill { fill: var(--bg); }
+.tintFill { fill: var(--tint); }
+
+.animatedLine { stroke-dasharray: 10000; stroke-dashoffset: 0; }
+.floor { opacity: 1; transform: translateY(0); }
+.floorOne { --floor-delay: 90ms; }
+.floorTwo { --floor-delay: 180ms; }
+.floorThree { --floor-delay: 270ms; }
+.floorFour { --floor-delay: 360ms; }
+.craneArm { transform-box: view-box; transform-origin: 250px 140px; }
+
+.motionPending .animatedLine { stroke-dashoffset: 10000; }
+.motionPending .floor { opacity: 0; transform: translateY(8px); }
+.motionPending .craneArm { transform: rotate(-2deg); }
+
+.motionEntered .animatedLine { transition: stroke-dashoffset 850ms cubic-bezier(0.22, 1, 0.36, 1); stroke-dashoffset: 0; }
+.motionEntered .floor { transition: opacity 380ms cubic-bezier(0.22, 1, 0.36, 1), transform 380ms cubic-bezier(0.22, 1, 0.36, 1); transition-delay: var(--floor-delay, 0ms); }
+.motionEntered .craneArm { animation: craneSettle 620ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+@keyframes craneSettle {
+  0% { transform: rotate(-2deg); }
+  62% { transform: rotate(1deg); }
+  100% { transform: rotate(0deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .illustration *,
+  .motionPending .floor,
+  .motionPending .craneArm,
+  .motionPending .animatedLine {
+    animation: none;
+    transition: none;
+    transform: none;
+  }
+
+  .motionPending .floor { opacity: 1; }
+  .motionPending .animatedLine { stroke-dashoffset: 0; }
+}

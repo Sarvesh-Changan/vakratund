@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 
 import { requirePermission } from "@/lib/auth/session";
 import { createProjectSchema, deleteProjectSchema, reorderProjectsSchema, togglePublishProjectSchema, updateProjectSchema } from "@/lib/validation/projects";
@@ -23,8 +23,11 @@ function failure(error: unknown): ProjectActionResult<never> {
 }
 
 function revalidateProject(slugs: readonly (string | undefined)[]): void {
-  revalidateTag("projects", "max");
-  for (const slug of slugs) if (slug) revalidateTag(`project:${slug}`, "max");
+  updateTag("projects");
+  for (const slug of new Set(slugs.filter((value): value is string => Boolean(value)))) {
+    updateTag(`project:${slug}`);
+    revalidatePath(`/projects/${slug}`);
+  }
   revalidatePath("/admin/projects");
   revalidatePath("/projects");
 }

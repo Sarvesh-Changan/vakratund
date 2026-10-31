@@ -39,3 +39,5 @@ fields are never required. `isAdvanced` is intended for optional extras, not for
 fields needed to calculate a safe result. The admin builder warns when a service
 exceeds five core questions but does not silently change the administrator’s
 configuration.
+
+Keep service basics, price, visitor questions, special conditions, location surcharges, and included/excluded copy together. Admin wording comes from `src/config/estimator-vocabulary.ts`. Seeded baseline totals are captured under `src/server/estimator/__golden__/`; review the quote compatibility requirement before changing them. See [ESTIMATOR_ADMIN_GUIDE.md](ESTIMATOR_ADMIN_GUIDE.md) for owner-facing instructions.

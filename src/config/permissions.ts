@@ -8,7 +8,6 @@ export type Permission =
   | "estimator:write"
   | "content:write"
   | "media:write"
-  | "seo:write"
   | "settings:write"
   | "users:manage"
   | "activity:read"
@@ -23,7 +22,6 @@ export const PERMISSIONS = [
   "estimator:write",
   "content:write",
   "media:write",
-  "seo:write",
   "settings:write",
   "users:manage",
   "activity:read",
@@ -42,7 +40,6 @@ export const permissionMatrix = {
     "estimator:write": true,
     "content:write": true,
     "media:write": true,
-    "seo:write": true,
     "settings:write": true,
     "users:manage": true,
     "activity:read": true,
@@ -57,7 +54,6 @@ export const permissionMatrix = {
     "estimator:write": true,
     "content:write": true,
     "media:write": true,
-    "seo:write": true,
     "settings:write": true,
     "users:manage": false,
     "activity:read": true,
@@ -72,7 +68,6 @@ export const permissionMatrix = {
     "estimator:write": false,
     "content:write": true,
     "media:write": true,
-    "seo:write": true,
     "settings:write": false,
     "users:manage": false,
     "activity:read": false,
@@ -87,7 +82,6 @@ export const permissionMatrix = {
     "estimator:write": false,
     "content:write": false,
     "media:write": false,
-    "seo:write": false,
     "settings:write": false,
     "users:manage": false,
     "activity:read": false,

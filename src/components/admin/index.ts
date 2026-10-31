@@ -21,7 +21,6 @@ export * from "./testimonial-form";
 export * from "./faq-form";
 export * from "./team-form";
 export * from "./pages-content-editor";
-export * from "./seo-editor";
 export * from "./settings-form";
 export * from "./users-manager";
 export * from "./lead-actions";

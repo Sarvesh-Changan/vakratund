@@ -80,7 +80,7 @@ Rules:
 │  │  │  ├─ estimate/ (page, thank-you)
 │  │  ├─ (admin)/admin/
 │  │  │  ├─ login/ (public)
-│  │  │  └─ (protected)/ dashboard leads quotes estimator projects services testimonials faqs gallery media pages seo settings users activity
+│  │  │  └─ (protected)/ dashboard leads quotes estimator projects services testimonials faqs gallery media pages settings users activity
 │  │  ├─ api/ health/ estimate/ leads/ upload/sign/ auth/[...all]/
 │  │  ├─ sitemap.ts robots.ts not-found.tsx error.tsx
 │  ├─ components/{ui,site,admin,forms,seo}/

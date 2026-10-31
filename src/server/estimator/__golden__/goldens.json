@@ -1,0 +1,14 @@
+{
+  "building-construction": { "cases": 40, "low": 0, "high": 0, "breakdownTotal": 0 },
+  "pmc-turnkey-project-development": { "cases": 40, "low": null, "high": null, "breakdownTotal": 0 },
+  "redevelopment-project-management": { "cases": 40, "low": null, "high": null, "breakdownTotal": 0 },
+  "structural-repairs-rehabilitation": { "cases": 40, "low": null, "high": null, "breakdownTotal": 0 },
+  "piling-foundation": { "cases": 40, "low": null, "high": null, "breakdownTotal": 0 },
+  "waterproofing-solutions": { "cases": 40, "low": 0, "high": 0, "breakdownTotal": 0 },
+  "damp-proofing": { "cases": 40, "low": 0, "high": 0, "breakdownTotal": 0 },
+  "painting-works": { "cases": 40, "low": 0, "high": 0, "breakdownTotal": 0 },
+  "plumbing-drainage": { "cases": 40, "low": null, "high": null, "breakdownTotal": 0 },
+  "interior-works": { "cases": 40, "low": 0, "high": 0, "breakdownTotal": 0 },
+  "road-works": { "cases": 40, "low": null, "high": null, "breakdownTotal": 0 },
+  "fabrication-porta-house": { "cases": 40, "low": 0, "high": 0, "breakdownTotal": 0 }
+}

@@ -190,5 +190,7 @@ async function readPublishedProject(slug: string): Promise<PublishedProject | nu
 }
 
 export function getPublishedProject(slug: string): Promise<PublishedProject | null> {
-  return unstable_cache(() => readPublishedProject(slug), ["published-project", slug], { tags: ["projects", `project:${slug}`], revalidate: 3600 })();
+  // Project detail pages must reflect the exact attached media set after an admin edit.
+  // Keep the listing queries cached, but always read the detail relation from the database.
+  return readPublishedProject(slug);
 }

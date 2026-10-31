@@ -8,7 +8,7 @@ const roles: readonly Role[] = ["SUPER_ADMIN", "ADMIN", "EDITOR", "SALES"];
 const expected: Record<Role, readonly Permission[]> = {
   SUPER_ADMIN: [...PERMISSIONS],
   ADMIN: PERMISSIONS.filter((permission) => permission !== "users:manage"),
-  EDITOR: ["content:write", "media:write", "seo:write", "dashboard:content"],
+  EDITOR: ["content:write", "media:write", "dashboard:content"],
   SALES: ["leads:read", "leads:write", "dashboard:leads"],
 };
 

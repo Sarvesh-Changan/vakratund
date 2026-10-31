@@ -37,7 +37,6 @@ Single source: `src/config/permissions.ts`; helper `can(role, permission)` and `
 | Estimator config & pricing | ✅ | ✅ | ❌ | ❌ |
 | Projects/Services/Gallery/Media | ✅ | ✅ | ✅ | ❌ |
 | FAQ/Testimonials/Team/Pages | ✅ | ✅ | ✅ | ❌ |
-| SEO | ✅ | ✅ | ✅ | ❌ |
 | Site settings | ✅ | ✅ | ❌ | ❌ |
 | Users & roles | ✅ | ❌ | ❌ | ❌ |
 | Activity log | ✅ | ✅ (read) | ❌ | ❌ |
@@ -109,6 +108,7 @@ Rules:
 - Config snapshot stored with the quote (tamper-evident via `configHash`).
 - Validate answers against the config (option membership, numeric ranges, visibility rules).
 - Admin pricing edits: ADMIN+ only, logged with before/after diff, version bump.
+- Estimator administration remains restricted by `estimator:write` (ADMIN and SUPER_ADMIN); EDITOR and SALES must be denied by page and mutation checks. Cleanup tools are dry-run by default and may update configuration only after comparing generated estimates; they never modify historical quotes.
 
 ## 11. Logging, monitoring, audit
 - `ActivityLog` for all admin mutations (who/what/when, sanitized diff). Append-only.

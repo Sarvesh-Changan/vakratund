@@ -27,7 +27,7 @@ import {
   getPublishedProjects,
 } from "@/server/queries/projects";
 
-export const revalidate = 3600;
+export const dynamic = "force-dynamic";
 
 export async function generateStaticParams() {
   try {
@@ -70,6 +70,7 @@ export default async function ProjectRoute({
   const { slug } = await params;
   const project = await getPublishedProject(slug).catch(() => null);
   if (!project) notFound();
+  const galleryMedia = project.media.filter((media) => media.kind === "IMAGE" || media.kind === "VIDEO");
   const images = project.media.filter((media) => media.kind === "IMAGE");
   const before = project.media.find((media) => media.isBefore && media.kind === "IMAGE");
   const after = project.media.find((media) => media.isAfter && media.kind === "IMAGE");
@@ -154,7 +155,7 @@ export default async function ProjectRoute({
             >
               <ArrowLeft size={16} aria-hidden="true" /> Back to projects
             </Link>
-            <section className="mt-10 rounded-panel border border-line bg-tint p-5 lg:sticky lg:top-28">
+            <section className="mt-10 rounded-panel border border-line bg-tint p-5">
               <SectionHeading
                 eyebrow="Project facts"
                 title="Scope and delivery"
@@ -195,10 +196,10 @@ export default async function ProjectRoute({
               />
             ) : null}
             {before && after ? <section className="mt-14"><SectionHeading eyebrow="Transformation" title="Before and after" /><div className="mt-8"><ProjectBeforeAfter before={before} after={after} /></div></section> : null}
-            {images.length > 0 ? (
+            {galleryMedia.length > 0 ? (
               <section className="mt-14">
-                <SectionHeading eyebrow="Gallery" title="Project images" />
-                <div className="mt-8"><ProjectMediaLightbox images={images} /></div>
+                <SectionHeading eyebrow="Gallery" title="Project images and videos" />
+                <div className="mt-8"><ProjectMediaLightbox media={galleryMedia} /></div>
               </section>
             ) : null}
           </article>

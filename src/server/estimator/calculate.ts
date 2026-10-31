@@ -1,5 +1,5 @@
-import { conditionMatches } from "./conditions";
-import { validateAnswers, visibleFields } from "./validate";
+import { conditionMatches } from "./conditions.ts";
+import { validateAnswers, visibleFields } from "./validate.ts";
 import type { Answers, BreakdownLineItem, EffectType, EstimatorConfig, Field, Option, EstimateResult } from "./types";
 
 const CENTS = 100;
@@ -55,11 +55,16 @@ function areaFrom(answers: Answers, key: string): number {
   return typeof answers[key] === "number" && Number.isFinite(answers[key]) ? answers[key] as number : 0;
 }
 
+const effectApplication: Record<EffectType, (amount: number, value: number, area: number) => number> = {
+  NONE: (amount) => amount,
+  SET_BASE_RATE: (_amount, value, area) => cents(value * area),
+  ADD_PER_UNIT: (amount, value, area) => amount + cents(value * area),
+  ADD_FLAT: (amount, value) => amount + cents(value),
+  MULTIPLY_PERCENT: (amount, value) => applyPercent(amount, value),
+};
+
 function applyEffect(amount: number, effectType: EffectType, effectValue: number, area: number): number {
-  if (effectType === "ADD_PER_UNIT") return amount + cents(effectValue * area);
-  if (effectType === "ADD_FLAT") return amount + cents(effectValue);
-  if (effectType === "MULTIPLY_PERCENT") return applyPercent(amount, effectValue);
-  return amount;
+  return effectApplication[effectType](amount, effectValue, area);
 }
 
 function effectDetail(effectType: EffectType, value: number): string {

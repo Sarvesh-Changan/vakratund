@@ -66,7 +66,7 @@ integrations, native apps. Keep data model extensible for them.
 | EST-5 | Lead capture | After seeing the estimate: name, phone (India format), email, location, requirements, consent checkbox. |
 | EST-6 | Persistence | Lead + Quote stored with an immutable **config snapshot** so later price edits never change old quotes. |
 | EST-7 | Notifications | Admin email on new lead; visitor confirmation email with estimate summary. |
-| EST-8 | Admin control | Admin edits services, fields, options, rates, multipliers, rules, spread %, minimum charge, disclaimer without code; includes a **test sandbox** to preview calculations. |
+| EST-8 | Admin control | ADMIN+ manages services, visitor questions and choices, location surcharges and special conditions in plain language, with templates, a live test preview, impact samples and a publish checklist. Existing quote snapshots remain unchanged. |
 | EST-9 | Safety | All inputs validated server-side; area min/max enforced; rate limited; no price shown if configuration is incomplete. |
 
 ### 5.3 Lead generation
@@ -85,15 +85,16 @@ integrations, native apps. Keep data model extensible for them.
 | ADM-1 | Dashboard | Leads by day/status/source, conversion rate, top pages, recent leads, quotes value range, quick actions. |
 | ADM-2 | Leads & Quotes | List, filter, search, detail, status change, notes, assign, export. |
 | ADM-3 | Estimator | CRUD for services, fields, options, location zones, rules; sandbox; version bump on publish. |
-| ADM-4 | Projects | CRUD, drag-order, featured, publish/draft, media attach, SEO. |
-| ADM-5 | Services | CRUD, order, FAQs, SEO, icon/image. |
+| ADM-4 | Projects | CRUD, drag-order, featured, publish/draft, media attach. |
+| ADM-5 | Services | CRUD, order, FAQs, icon/image. |
 | ADM-6 | Testimonials, FAQs, Team | CRUD, order, publish. |
 | ADM-8 | Gallery & Media | Signed Cloudinary image/video uploads with category/year assignment, duplicate detection, publish/featured/cover controls, year management, library and usage-safe deletion. |
 | ADM-9 | Pages/content | Edit Home hero, stats, About text, CTA copy via structured sections (no HTML injection). |
-| ADM-10 | SEO | Per-page and per-entity title/description/OG image/canonical/noindex; sitemap and robots preview. |
 | ADM-11 | Settings | Business info, phones, email, address, hours, social links, WhatsApp number/message, email recipients. |
 | ADM-12 | Users & roles | SUPER_ADMIN manages users; roles SUPER_ADMIN, ADMIN, EDITOR, SALES; deactivate users; password reset. |
 | ADM-13 | Activity log | Who did what, when; filterable; immutable. |
+
+Public metadata, sitemap, robots rules, canonical links, and structured data remain part of the website. The dedicated admin SEO editor and its editing controls are not included; existing stored metadata continues to be read where configured.
 
 ### 5.5 Role access (summary; full matrix in `SECURITY.md`)
 SUPER_ADMIN everything · ADMIN everything except user management · EDITOR content only (no leads, no estimator pricing) · SALES leads/quotes only.

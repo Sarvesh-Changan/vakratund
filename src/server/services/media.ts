@@ -86,7 +86,7 @@ async function usageMap(mediaIds: readonly string[]): Promise<Map<string, MediaU
   for (const row of services) if (row.coverId) addUsage(result, row.coverId, { type: "Service", label: row.title, href: `/admin/services/${row.slug}` });
   for (const row of teams) if (row.photoId) addUsage(result, row.photoId, { type: "Team", label: row.name });
   for (const row of testimonials) if (row.photoId) addUsage(result, row.photoId, { type: "Testimonial", label: row.name, href: `/admin/testimonials` });
-  for (const row of pageSeo) if (row.ogImageId) addUsage(result, row.ogImageId, { type: "SEO", label: row.path, href: `/admin/seo` });
+  for (const row of pageSeo) if (row.ogImageId) addUsage(result, row.ogImageId, { type: "Page metadata", label: row.path });
   for (const row of pageSections) {
     if (!row.content || typeof row.content !== "object" || Array.isArray(row.content)) continue;
     const content = row.content as Record<string, unknown>;

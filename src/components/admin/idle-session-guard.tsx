@@ -28,21 +28,22 @@ function formatCountdown(seconds: number): string {
   return `${minutes}:${String(remainder).padStart(2, "0")}`;
 }
 
-export function IdleSessionGuard({ userId, idleTimeoutSeconds, warningSeconds, absoluteTimeoutSeconds }: { userId: string; idleTimeoutSeconds: number; warningSeconds: number; absoluteTimeoutSeconds: number }) {
+export function IdleSessionGuard({ userId, idleTimeoutSeconds, warningSeconds }: { userId: string; idleTimeoutSeconds: number; warningSeconds: number; absoluteTimeoutSeconds: number }) {
   const activityKey = `${ACTIVITY_KEY_PREFIX}${userId}`;
   const startKey = `${START_KEY_PREFIX}${userId}`;
   const channelRef = useRef<BroadcastChannel | null>(null);
   const lastSignalRef = useRef(0);
+  const lastTouchRef = useRef(0);
   const signingOutRef = useRef(false);
   const dialogRef = useRef<HTMLDivElement>(null);
-  const [lastActivityAt, setLastActivityAt] = useState(() => typeof window === "undefined" ? 0 : readTimestamp(activityKey) ?? Date.now());
-  const [sessionStartedAt] = useState(() => typeof window === "undefined" ? 0 : readTimestamp(startKey) ?? Date.now());
+  const [lastActivityAt, setLastActivityAt] = useState(0);
   const [serverDeadlines, setServerDeadlines] = useState<{ idle?: number; absolute?: number }>({});
   const [now, setNow] = useState(0);
+  const [ready, setReady] = useState(false);
   const [dirty, setDirty] = useState(false);
   const [saving, setSaving] = useState(false);
 
-  const state = idleSessionState({ now, lastActivityAt, serverIdleDeadlineAt: serverDeadlines.idle, serverAbsoluteDeadlineAt: serverDeadlines.absolute ?? (sessionStartedAt ? sessionStartedAt + absoluteTimeoutSeconds * 1000 : undefined) }, idleTimeoutSeconds * 1000, warningSeconds * 1000);
+  const state = idleSessionState({ now, lastActivityAt, serverIdleDeadlineAt: serverDeadlines.idle, serverAbsoluteDeadlineAt: serverDeadlines.absolute }, idleTimeoutSeconds * 1000, warningSeconds * 1000);
   const remainingSeconds = Math.ceil(state.remainingMs / 1000);
   const dialogOpen = state.state === "warning";
   const announcement = remainingSeconds === warningSeconds || remainingSeconds === 60 || remainingSeconds === 10 ? `Your session expires in ${formatCountdown(remainingSeconds)}.` : "";
@@ -83,6 +84,15 @@ export function IdleSessionGuard({ userId, idleTimeoutSeconds, warningSeconds, a
     setLastActivityAt(current);
     try { localStorage.setItem(activityKey, String(current)); } catch { /* ignore */ }
     publish({ type: "activity", at: current });
+    if (current - lastTouchRef.current < 60_000) return;
+    lastTouchRef.current = current;
+    void fetch("/api/admin/session/extend", { method: "POST", headers: { "Content-Type": "application/json" }, credentials: "same-origin", body: "{}" }).then(async (response) => {
+      if (!response.ok) return;
+      const remaining = await response.json() as Partial<ServerRemaining>;
+      if (typeof remaining.idleRemainingSeconds !== "number" || typeof remaining.absoluteRemainingSeconds !== "number") return;
+      const touched = Date.now();
+      setServerDeadlines({ idle: touched + remaining.idleRemainingSeconds * 1000, absolute: touched + remaining.absoluteRemainingSeconds * 1000 });
+    }).catch(() => { /* Heartbeat failures leave server enforcement in place. */ });
   }, [activityKey, dialogOpen, publish]);
 
   const extend = useCallback(async () => {
@@ -100,8 +110,23 @@ export function IdleSessionGuard({ userId, idleTimeoutSeconds, warningSeconds, a
   }, [activityKey, forceSignOut, publish]);
 
   useEffect(() => {
-    const started = sessionStartedAt || Date.now();
-    try { localStorage.setItem(startKey, String(started)); } catch { /* ignore */ }
+    const initialize = window.setTimeout(() => {
+      const current = Date.now();
+      const storedActivity = readTimestamp(activityKey);
+      const activityAt = Math.max(storedActivity ?? 0, current);
+      setLastActivityAt(activityAt);
+      setNow(current);
+      setReady(true);
+      try {
+        localStorage.setItem(activityKey, String(activityAt));
+        localStorage.setItem(startKey, String(readTimestamp(startKey) ?? current));
+      } catch { /* Storage is an enhancement; server enforcement remains authoritative. */ }
+    }, 0);
+    return () => window.clearTimeout(initialize);
+  }, [activityKey, startKey]);
+
+  useEffect(() => {
+    if (!ready) return;
     const initialSync = window.setTimeout(() => void syncServer(), 0);
     const timer = window.setInterval(() => setNow(Date.now()), 1000);
     const refresh = () => { setNow(Date.now()); void syncServer(); };
@@ -119,11 +144,12 @@ export function IdleSessionGuard({ userId, idleTimeoutSeconds, warningSeconds, a
     let channel: BroadcastChannel | null = null;
     try { channel = new BroadcastChannel(CHANNEL_NAME); channelRef.current = channel; channel.onmessage = (event: MessageEvent<SessionEvent>) => { if (event.data?.type === "logout") forceSignOut("logout"); if (event.data?.type === "activity") setLastActivityAt((value) => Math.max(value, event.data.at)); }; } catch { channelRef.current = null; }
     return () => { window.clearTimeout(initialSync); window.clearInterval(timer); activityEvents.forEach((event) => window.removeEventListener(event, recordActivity)); window.removeEventListener("pageshow", refresh); window.removeEventListener("focus", refresh); window.removeEventListener(ADMIN_ACTIVITY_EVENT, recordActivity); window.removeEventListener(ADMIN_DIRTY_EVENT, onDirty); window.removeEventListener(ADMIN_LOGOUT_EVENT, onLogout); window.removeEventListener("storage", onStorage); channel?.close(); channelRef.current = null; };
-  }, [activityKey, forceSignOut, recordActivity, sessionStartedAt, startKey, syncServer]);
+  }, [activityKey, forceSignOut, ready, recordActivity, syncServer]);
 
   useEffect(() => {
+    if (!ready) return;
     if (state.state === "expired") forceSignOut("timeout");
-  }, [forceSignOut, remainingSeconds, state.state, warningSeconds]);
+  }, [forceSignOut, ready, remainingSeconds, state.state, warningSeconds]);
 
   useEffect(() => { if (dialogOpen) dialogRef.current?.querySelector<HTMLButtonElement>("button")?.focus(); }, [dialogOpen]);
 
