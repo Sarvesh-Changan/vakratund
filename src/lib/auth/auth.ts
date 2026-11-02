@@ -27,9 +27,31 @@ function createAuth() {
   const authSecret = getRequiredSecret("BETTER_AUTH_SECRET");
   const absoluteSessionTimeoutMs = runtimeEnv.ADMIN_SESSION_MAX_HOURS * 60 * 60 * 1000;
   const absoluteSessionTimeoutSeconds = runtimeEnv.ADMIN_SESSION_MAX_HOURS * 60 * 60;
+
+  const vercelUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : undefined;
+
+  const baseURL =
+    runtimeEnv.BETTER_AUTH_URL && !runtimeEnv.BETTER_AUTH_URL.includes("localhost")
+      ? runtimeEnv.BETTER_AUTH_URL
+      : vercelUrl ?? runtimeEnv.BETTER_AUTH_URL ?? runtimeEnv.NEXT_PUBLIC_SITE_URL;
+
+  const trustedOrigins = [
+    runtimeEnv.BETTER_AUTH_URL,
+    runtimeEnv.NEXT_PUBLIC_SITE_URL,
+    baseURL,
+    "https://vakratund.vercel.app",
+    "https://*.vercel.app",
+    ...(vercelUrl ? [vercelUrl] : []),
+  ].filter((origin): origin is string => typeof origin === "string" && origin.length > 0);
+
   return betterAuth({
   database: prismaAdapter(prisma, { provider: "postgresql" }),
-  baseURL: runtimeEnv.BETTER_AUTH_URL ?? runtimeEnv.NEXT_PUBLIC_SITE_URL,
+  baseURL,
+  trustedOrigins,
   secret: authSecret,
   emailAndPassword: {
     enabled: true,

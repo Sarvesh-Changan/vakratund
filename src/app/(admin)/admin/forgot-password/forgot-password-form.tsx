@@ -20,7 +20,7 @@ export function ForgotPasswordForm() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "same-origin",
-        body: JSON.stringify({ email, redirectTo: `${window.location.origin}/admin/reset-password` }),
+        body: JSON.stringify({ email, redirectTo: "/admin/reset-password" }),
       });
       if (!response.ok) throw new Error("request-failed");
       setSubmitted(true);
