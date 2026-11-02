@@ -16,6 +16,7 @@
     "test:e2e": "playwright test",
     "email:test": "node --no-warnings=ExperimentalWarning --experimental-strip-types scripts/email-test.ts",
     "auth:unlock": "node --no-warnings=ExperimentalWarning --experimental-strip-types scripts/auth-unlock.ts",
+    "auth:super-admin": "node --no-warnings=ExperimentalWarning --experimental-strip-types scripts/update-super-admin.ts",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:deploy": "prisma migrate deploy",
