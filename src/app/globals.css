@@ -217,6 +217,25 @@
   }
 }
 
+/* Home map orbit animations */
+@keyframes home-orbit-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes home-orbit-pulse {
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.08);
+  }
+}
+
 @media (min-width: 1024px) {
   @media (prefers-reduced-motion: no-preference) {
     .hero-drift-left {
@@ -226,6 +245,25 @@
     .hero-drift-right {
       animation: hero-line-drift-right 24s ease-in-out infinite alternate;
       will-change: transform;
+    }
+
+    /* Home map orbit: counter-rotating rings around the center badge */
+    .home-orbit-ring-1 {
+      animation: home-orbit-spin 60s linear infinite;
+      transform-box: fill-box;
+      transform-origin: 250px 250px;
+    }
+    .home-orbit-ring-2 {
+      animation: home-orbit-spin 80s linear infinite reverse;
+      transform-box: fill-box;
+      transform-origin: 250px 250px;
+    }
+
+    /* Subtle pulse on the center badge */
+    .home-orbit-pulse {
+      animation: home-orbit-pulse 3s ease-in-out infinite;
+      transform-box: fill-box;
+      transform-origin: center;
     }
   }
 }
