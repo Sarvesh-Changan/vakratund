@@ -5,7 +5,7 @@ import { HomeSlider } from "@/components/site/home-slider";
 import type { PublicHomeSlide } from "@/server/queries/home-slides";
 
 // Mock CloudImage
-vi.mock("@/components/media/cloud-image", () => ({
+vi.mock("@/components/cloud-image", () => ({
   CloudImage: ({ alt, publicId }: { alt: string; publicId: string }) => (
     // eslint-disable-next-line @next/next/no-img-element
     <img src={`https://res.cloudinary.com/test/${publicId}`} alt={alt} data-testid="cloud-image" />
@@ -71,12 +71,12 @@ describe("HomeSlider public component", () => {
     expect(images.length).toBe(5);
   });
 
-  it("renders Marquee with correct speed setting when there are 7 or more slides", () => {
+  it("renders exactly one Marquee with correct speed setting when there are 7 or more slides", () => {
     const slides = Array.from({ length: 8 }, (_, i) => makeSlide(i + 1));
     render(<HomeSlider slides={slides} showcase={{ speed: "fast", pauseOnHover: true }} />);
 
     const marquees = screen.getAllByTestId("marquee-wrapper");
-    expect(marquees.length).toBeGreaterThanOrEqual(1);
+    expect(marquees.length).toBe(1);
     expect(marquees[0]?.getAttribute("data-speed")).toBe("80");
   });
 
@@ -93,15 +93,14 @@ describe("HomeSlider public component", () => {
     expect(screen.getByTestId("marquee-wrapper").getAttribute("data-speed")).toBe("80");
   });
 
-  it("renders dual rows (second row opposite direction) when 10 or more slides on desktop", () => {
+  it("renders a single continuous marquee strip (one slider, not two rows) when 10 or more slides", () => {
     const slides = Array.from({ length: 10 }, (_, i) => makeSlide(i + 1));
     render(<HomeSlider slides={slides} />);
 
     const marquees = screen.getAllByTestId("marquee-wrapper");
-    // Should have primary row and desktop reverse row
-    expect(marquees.length).toBe(2);
+    // Single slider only — no second counter-scrolling row
+    expect(marquees.length).toBe(1);
     expect(marquees[0]?.getAttribute("data-direction")).toBe("left");
-    expect(marquees[1]?.getAttribute("data-direction")).toBe("right");
   });
 
   it("renders link when linkUrl is set and decorative/caption when not", () => {

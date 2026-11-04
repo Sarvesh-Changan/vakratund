@@ -110,16 +110,7 @@ export function HomeSlider({ slides, showcase }: HomeSliderProps) {
     );
   }
 
-  // 7+ slides: Marquee continuous moving strip
-  // If 10 or more slides, generate second row with offset starting order
-  const secondRowSlides =
-    slides.length >= 10
-      ? [
-          ...slides.slice(Math.floor(slides.length / 2)),
-          ...slides.slice(0, Math.floor(slides.length / 2)),
-        ]
-      : [];
-
+  // 7+ slides: single continuous moving strip (one slider, not two rows)
   return (
     <section
       aria-label="Project photo showcase"
@@ -138,41 +129,19 @@ export function HomeSlider({ slides, showcase }: HomeSliderProps) {
         </Container>
       ) : null}
 
-      <div className="space-y-4">
-        {/* First Row (Left moving) */}
-        <Marquee
-          speed={speedPx}
-          direction="left"
-          gap={16}
-          pauseOnHover={pauseOnHover}
-          showPauseButton={true}
-          label="Project photos showcase row 1"
-          fixedHeightClass="h-[180px] sm:h-[240px] lg:h-[280px]"
-        >
-          {slides.map((slide, index) => (
-            <SlideCard key={`r1-${slide.id}`} slide={slide} priority={index < 2} />
-          ))}
-        </Marquee>
-
-        {/* Second Row on Desktop (Right moving, opposite direction) for 10+ slides */}
-        {secondRowSlides.length >= 10 ? (
-          <div className="hidden lg:block">
-            <Marquee
-              speed={speedPx}
-              direction="right"
-              gap={16}
-              pauseOnHover={pauseOnHover}
-              showPauseButton={false}
-              label="Project photos showcase row 2"
-              fixedHeightClass="h-[280px]"
-            >
-              {secondRowSlides.map((slide) => (
-                <SlideCard key={`r2-${slide.id}`} slide={slide} priority={false} />
-              ))}
-            </Marquee>
-          </div>
-        ) : null}
-      </div>
+      <Marquee
+        speed={speedPx}
+        direction="left"
+        gap={16}
+        pauseOnHover={pauseOnHover}
+        showPauseButton={true}
+        label="Project photos showcase"
+        fixedHeightClass="h-[180px] sm:h-[240px] lg:h-[280px]"
+      >
+        {slides.map((slide, index) => (
+          <SlideCard key={slide.id} slide={slide} priority={index < 2} />
+        ))}
+      </Marquee>
     </section>
   );
 }
