@@ -25,10 +25,10 @@ export function SiteFooter({ settings, services }: { settings: ResolvedSiteSetti
 
       <footer className="bg-charcoal text-white">
         <div className="mx-auto grid max-w-[1440px] gap-x-8 gap-y-12 px-4 py-14 sm:px-6 sm:grid-cols-2 md:grid-cols-3 lg:px-8 xl:grid-cols-[1.4fr_1.55fr_.8fr_1.2fr_1.15fr_1fr] xl:gap-x-6 xl:py-16">
-          <section aria-labelledby="footer-about-heading">
+          <section aria-labelledby="footer-about-heading" className="text-center">
             <h2 id="footer-about-heading" className="font-heading text-sm font-bold uppercase tracking-[0.14em] text-brand">About</h2>
             <Link href="/" className="mt-4 inline-flex items-center gap-2 font-heading text-lg font-bold"><BrandLogo width={42} height={42} className="size-10 shrink-0" />{settings.businessName}</Link>
-            <p className="mt-4 max-w-sm text-sm leading-7 text-white/65">{settings.tagline}. Civil engineering, project management and turnkey construction across Thane and Mumbai.</p>
+            <p className="mt-4 text-sm leading-7 text-white/65">{settings.tagline}. Civil engineering, project management and turnkey construction across Thane and Mumbai.</p>
           </section>
 
           <nav aria-labelledby="footer-services-heading"><h2 id="footer-services-heading" className="font-heading text-sm font-bold uppercase tracking-[0.14em] text-brand">Services</h2><ul className="mt-5 space-y-3">{services.map((service) => <li key={service.slug}><Link href={`/services/${service.slug}`} className="text-sm leading-6 text-white/70 transition-colors hover:text-white">{service.title}</Link></li>)}</ul></nav>

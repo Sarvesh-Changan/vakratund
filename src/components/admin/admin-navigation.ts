@@ -13,6 +13,8 @@ export const ADMIN_NAVIGATION: readonly AdminNavigationItem[] = [
   { label: "FAQs", href: "/admin/faqs", permissions: ["content:write"] },
   { label: "Team", href: "/admin/team", permissions: ["content:write"] },
   { label: "Gallery", href: "/admin/gallery", permissions: ["content:write"] },
+  { label: "Home slider", href: "/admin/home-slider", permissions: ["content:write"] },
   { label: "Pages", href: "/admin/pages", permissions: ["content:write"] },
+  { label: "SEO", href: "/admin/seo", permissions: ["content:write"] },
   { label: "Activity", href: "/admin/activity", permissions: ["activity:read"] },
 ];

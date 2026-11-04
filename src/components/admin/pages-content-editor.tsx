@@ -11,7 +11,7 @@ type Section = { pageKey: string; sectionKey: string; content: unknown; isVisibl
 
 const sections = [
   { pageKey: "home", sectionKey: "hero" },
-  { pageKey: "home", sectionKey: "stats" },
+  { pageKey: "home", sectionKey: "showcase" },
   { pageKey: "home", sectionKey: "services" },
   { pageKey: "home", sectionKey: "projects" },
   { pageKey: "home", sectionKey: "why" },
@@ -27,7 +27,7 @@ const sections = [
 
 const defaults: Record<string, Record<string, unknown>> = {
   "home:hero": { eyebrow: "", title: "", description: "", trustChips: ["MSME registered", "Insured workforce", "Since 2003"], primaryCta: "Get Free Quote", primaryHref: "/estimate", secondaryCta: "Call Now", secondaryHref: "", backgroundImageId: null },
-  "home:stats": { items: [] },
+  "home:showcase": { eyebrow: "", heading: "", speed: "normal", pauseOnHover: true },
   "home:services": { eyebrow: "Services", title: "Our services", description: "", viewAllLabel: "View all services", serviceLinkLabel: "Explore service" },
   "home:projects": { eyebrow: "Featured work", title: "Selected projects", description: "", viewAllLabel: "View all projects" },
   "home:why": { eyebrow: "Leadership", title: "Why Vakratund", description: "", quote: "" },
@@ -38,7 +38,6 @@ const defaults: Record<string, Record<string, unknown>> = {
   "home:cta": { title: "", description: "", primaryCta: "Get Free Quote", primaryHref: "/estimate", secondaryCta: "", secondaryHref: "", callCta: "Call Now", whatsappCta: "Chat on WhatsApp" },
   "about:story": { title: "Our story", body: "", imageMediaId: null, imageAlt: "", imageCaption: "" },
   "about:mission": { title: "Our mission", body: "" },
-  "about:journey": { eyebrow: "Since 2003", title: "Our journey", milestones: [] },
 };
 
 function TextField({ label, value, onChange, area = false, hint }: { label: string; value: string; onChange: (value: string) => void; area?: boolean; hint?: string }) {
@@ -69,7 +68,6 @@ export function PagesContentEditor({ initial, assets = [], phoneHref = "/contact
     {message ? <p role="status" className="text-sm">{message}</p> : null}
     {rows.map((row, index) => {
       const content = row.content as Record<string, unknown>;
-      const items = Array.isArray(content.items) ? content.items as { label: string; value: string }[] : [];
       const steps = Array.isArray(content.steps) ? content.steps as { title: string; description: string }[] : [];
       const trustChips = Array.isArray(content.trustChips) ? content.trustChips as string[] : [];
       const milestones = Array.isArray(content.milestones) ? content.milestones as { year: number; title: string; description: string }[] : [];
@@ -83,7 +81,21 @@ export function PagesContentEditor({ initial, assets = [], phoneHref = "/contact
           <TextField label="Trust chips (one per line, up to 3)" value={trustChips.join("\n")} onChange={(value) => update(index, { trustChips: value.split("\n").map((item) => item.trim()).filter(Boolean).slice(0, 3) })} area hint="Use approved credentials and facts only." />
           <div className="grid gap-3 sm:grid-cols-2"><TextField label="Primary CTA" value={String(content.primaryCta ?? "")} onChange={(value) => update(index, { primaryCta: value })} /><TextField label="Primary URL" value={String(content.primaryHref ?? "/estimate")} onChange={(value) => update(index, { primaryHref: value })} /><TextField label="Secondary CTA" value={String(content.secondaryCta ?? "")} onChange={(value) => update(index, { secondaryCta: value })} /><TextField label="Secondary URL" value={String(content.secondaryHref ?? "")} onChange={(value) => update(index, { secondaryHref: value })} /></div>
         </> : null}
-        {row.sectionKey === "stats" ? <TextField label="Proof statistics (label:value per line)" value={items.map((item) => `${item.label}:${item.value}`).join("\n")} onChange={(value) => update(index, { items: value.split("\n").filter(Boolean).slice(0, 5).map((line) => { const parts = line.split(":"); return { label: (parts.shift() ?? "").trim(), value: parts.join(":").trim() }; }) })} area hint="Leave blank to hide the row. Enter only verified numeric facts; use a separate label for each project-specific figure. Up to 5 cards. TODO(client): confirm additional KPIs before adding them." /> : null}
+        {row.sectionKey === "showcase" ? <div className="grid gap-3 sm:grid-cols-2">
+          <TextField label="Eyebrow" value={String(content.eyebrow ?? "")} onChange={(value) => update(index, { eyebrow: value })} />
+          <TextField label="Heading" value={String(content.heading ?? "")} onChange={(value) => update(index, { heading: value })} />
+          <label className="block space-y-1 text-sm font-medium">Speed
+            <select value={String(content.speed ?? "normal")} onChange={(e) => update(index, { speed: e.target.value })} className="w-full rounded-control border p-2">
+              <option value="slow">Slow (30 px/s)</option>
+              <option value="normal">Normal (50 px/s)</option>
+              <option value="fast">Fast (80 px/s)</option>
+            </select>
+          </label>
+          <label className="flex items-center gap-2 pt-6 text-sm font-medium">
+            <input type="checkbox" checked={Boolean(content.pauseOnHover ?? true)} onChange={(e) => update(index, { pauseOnHover: e.target.checked })} />
+            Pause on hover
+          </label>
+        </div> : null}
         {["services", "projects"].includes(row.sectionKey) ? <div className="grid gap-3 sm:grid-cols-2"><TextField label="Eyebrow" value={String(content.eyebrow ?? "")} onChange={(value) => update(index, { eyebrow: value })} /><TextField label="Section title" value={String(content.title ?? "")} onChange={(value) => update(index, { title: value })} /><TextField label="Description" value={String(content.description ?? "")} onChange={(value) => update(index, { description: value })} area /><TextField label="View all link label" value={String(content.viewAllLabel ?? "")} onChange={(value) => update(index, { viewAllLabel: value })} />{row.sectionKey === "services" ? <TextField label="Service card link label" value={String(content.serviceLinkLabel ?? "")} onChange={(value) => update(index, { serviceLinkLabel: value })} /> : null}</div> : null}
         {row.sectionKey === "why" ? <div className="grid gap-3"><TextField label="Eyebrow" value={String(content.eyebrow ?? "")} onChange={(value) => update(index, { eyebrow: value })} /><TextField label="Section title" value={String(content.title ?? "")} onChange={(value) => update(index, { title: value })} /><TextField label="Supporting copy" value={String(content.description ?? "")} onChange={(value) => update(index, { description: value })} area /><TextField label="Approved proprietor quote (optional)" value={String(content.quote ?? "")} onChange={(value) => update(index, { quote: value })} area hint="Leave empty until the proprietor approves an exact quote. Do not draft one here." /></div> : null}
         {row.sectionKey === "process" ? <div className="grid gap-3"><TextField label="Eyebrow" value={String(content.eyebrow ?? "")} onChange={(value) => update(index, { eyebrow: value })} /><TextField label="Title" value={String(content.title ?? "")} onChange={(value) => update(index, { title: value })} /><TextField label="Steps (title:description per line)" value={steps.map((step) => `${step.title}:${step.description}`).join("\n")} onChange={(value) => update(index, { steps: value.split("\n").filter(Boolean).map((line) => { const parts = line.split(":"); return { title: (parts.shift() ?? "").trim(), description: parts.join(":").trim() }; }) })} area /></div> : null}

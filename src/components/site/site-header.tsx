@@ -88,7 +88,7 @@ export function SiteHeader({ settings, services, overlayAtTop = false }: { setti
       <div className="relative z-50 mx-auto flex h-full items-center justify-between gap-3 px-3 sm:px-5 lg:px-6">
         <Link href="/" onClick={() => setMenuOpen(false)} className="group flex min-h-11 shrink-0 items-center gap-2 rounded-control" aria-label={`${settings.businessName} home`}>
           <BrandLogo width={42} height={42} priority className="size-10 shrink-0" />
-          <span className="max-w-[11rem] font-heading text-sm font-bold leading-tight tracking-tight sm:max-w-none sm:text-base">{settings.businessName.replace(/^M\/s\.\s*/, "")}</span>
+          <span className="brand-wordmark max-w-[12rem] text-[13px] font-bold leading-none tracking-tight sm:max-w-none sm:text-base">{settings.businessName.replace(/^M\/s\.\s*/, "")}</span>
         </Link>
 
         <nav className={cn("hidden items-center gap-0.5 lg:flex", styles.desktopNav)} aria-label="Main">
@@ -113,6 +113,12 @@ export function SiteHeader({ settings, services, overlayAtTop = false }: { setti
 
       <div data-menu-open={menuOpen} className={cn("fixed inset-0 z-40 overflow-y-auto overscroll-contain bg-dark px-5 pb-10 pt-24 text-white shadow-raised lg:hidden", styles.mobileDrawer, menuOpen ? "site-mobile-navigation-open block" : "hidden")}>
         <div ref={menuPanelRef} id="mobile-navigation" role="dialog" aria-modal="true" aria-label="Main menu" className="mx-auto flex min-h-full max-w-2xl flex-col">
+          <div className="mb-2 flex items-center gap-2 border-b border-white/10 pb-4">
+            <BrandLogo width={36} height={36} className="size-9 shrink-0" />
+            <span className="brand-wordmark text-base font-bold text-white">
+              {settings.businessName.replace(/^M\/s\.\s*/, "")}
+            </span>
+          </div>
           <nav aria-label="Main" className="flex flex-col">
             {primaryNavigation.map((item, index) => <Link key={item.href} href={item.href} style={{ animationDelay: `${index * 45}ms` }} className="site-mobile-menu-link border-b border-white/10 py-4 font-heading text-2xl font-semibold text-white" onClick={() => setMenuOpen(false)}>{item.label}</Link>)}
             <MobileServicesAccordion services={services} onRoute={() => setMenuOpen(false)} />

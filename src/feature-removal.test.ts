@@ -48,10 +48,11 @@ describe("retired editorial surface", () => {
 describe("admin sidebar navigation", () => {
   it("does not expose hidden admin modules while preserving the remaining modules", () => {
     const hiddenModules = ["Media", "Settings", "Users"];
-    const visibleModules = ["Dashboard", "Leads", "Quotes", "Estimator", "Projects", "Services", "Testimonials", "FAQs", "Team", "Gallery", "Pages", "SEO", "Activity"];
+    const visibleModules = ["Dashboard", "Leads", "Quotes", "Estimator", "Projects", "Services", "Testimonials", "FAQs", "Team", "Gallery", "Home slider", "Pages", "SEO", "Activity"];
 
     expect(ADMIN_NAVIGATION.map((item) => item.label)).not.toEqual(expect.arrayContaining(hiddenModules));
     expect(ADMIN_NAVIGATION.map((item) => item.label)).toEqual(expect.arrayContaining(visibleModules));
+    expect(ADMIN_NAVIGATION.some((item) => item.href === "/admin/home-slider")).toBe(true);
     expect(ADMIN_NAVIGATION.map((item) => item.href)).not.toEqual(expect.arrayContaining([
       "/admin/media",
       "/admin/settings",
@@ -59,3 +60,17 @@ describe("admin sidebar navigation", () => {
     ]));
   });
 });
+
+describe("home stats band removal", () => {
+  it("does not include stats section in home page sections configuration", async () => {
+    const { pageSectionSchemas } = await import("@/lib/validation/pages");
+    expect("stats" in pageSectionSchemas.home).toBe(false);
+    expect("showcase" in pageSectionSchemas.home).toBe(true);
+  });
+
+  it("deprecated HomeStats component renders null", async () => {
+    const { HomeStats } = await import("@/components/site/home-stats");
+    expect(HomeStats()).toBeNull();
+  });
+});
+

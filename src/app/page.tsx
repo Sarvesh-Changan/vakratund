@@ -3,6 +3,7 @@ import { HomePage } from "@/components/site/home-page";
 import { SiteShell } from "@/components/site/site-shell";
 import { buildMetadata } from "@/lib/seo/metadata";
 import { getHomePageData } from "@/server/queries/home";
+import { getActiveHomeSlides } from "@/server/queries/home-slides";
 import { getPublicSeo } from "@/server/queries/seo";
 
 export const revalidate = 3600;
@@ -13,6 +14,9 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Home() {
-  const data = await getHomePageData();
-  return <SiteShell settings={data.settings} services={data.services} overlayHeader><HomePage data={data} /></SiteShell>;
+  const [data, slides] = await Promise.all([
+    getHomePageData(),
+    getActiveHomeSlides(),
+  ]);
+  return <SiteShell settings={data.settings} services={data.services} overlayHeader><HomePage data={data} slides={slides} /></SiteShell>;
 }

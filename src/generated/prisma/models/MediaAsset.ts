@@ -306,6 +306,7 @@ export type MediaAssetWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"MediaAsset"> | Date | string
   projectMedia?: Prisma.ProjectMediaListRelationFilter
   testimonialPhotos?: Prisma.TestimonialListRelationFilter
+  homeSlides?: Prisma.HomeSlideListRelationFilter
 }
 
 export type MediaAssetOrderByWithRelationInput = {
@@ -326,6 +327,7 @@ export type MediaAssetOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   projectMedia?: Prisma.ProjectMediaOrderByRelationAggregateInput
   testimonialPhotos?: Prisma.TestimonialOrderByRelationAggregateInput
+  homeSlides?: Prisma.HomeSlideOrderByRelationAggregateInput
 }
 
 export type MediaAssetWhereUniqueInput = Prisma.AtLeast<{
@@ -349,6 +351,7 @@ export type MediaAssetWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"MediaAsset"> | Date | string
   projectMedia?: Prisma.ProjectMediaListRelationFilter
   testimonialPhotos?: Prisma.TestimonialListRelationFilter
+  homeSlides?: Prisma.HomeSlideListRelationFilter
 }, "id" | "publicId">
 
 export type MediaAssetOrderByWithAggregationInput = {
@@ -413,6 +416,7 @@ export type MediaAssetCreateInput = {
   updatedAt?: Date | string
   projectMedia?: Prisma.ProjectMediaCreateNestedManyWithoutMediaInput
   testimonialPhotos?: Prisma.TestimonialCreateNestedManyWithoutPhotoInput
+  homeSlides?: Prisma.HomeSlideCreateNestedManyWithoutMediaInput
 }
 
 export type MediaAssetUncheckedCreateInput = {
@@ -433,6 +437,7 @@ export type MediaAssetUncheckedCreateInput = {
   updatedAt?: Date | string
   projectMedia?: Prisma.ProjectMediaUncheckedCreateNestedManyWithoutMediaInput
   testimonialPhotos?: Prisma.TestimonialUncheckedCreateNestedManyWithoutPhotoInput
+  homeSlides?: Prisma.HomeSlideUncheckedCreateNestedManyWithoutMediaInput
 }
 
 export type MediaAssetUpdateInput = {
@@ -453,6 +458,7 @@ export type MediaAssetUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   projectMedia?: Prisma.ProjectMediaUpdateManyWithoutMediaNestedInput
   testimonialPhotos?: Prisma.TestimonialUpdateManyWithoutPhotoNestedInput
+  homeSlides?: Prisma.HomeSlideUpdateManyWithoutMediaNestedInput
 }
 
 export type MediaAssetUncheckedUpdateInput = {
@@ -473,6 +479,7 @@ export type MediaAssetUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   projectMedia?: Prisma.ProjectMediaUncheckedUpdateManyWithoutMediaNestedInput
   testimonialPhotos?: Prisma.TestimonialUncheckedUpdateManyWithoutPhotoNestedInput
+  homeSlides?: Prisma.HomeSlideUncheckedUpdateManyWithoutMediaNestedInput
 }
 
 export type MediaAssetCreateManyInput = {
@@ -647,6 +654,20 @@ export type MediaAssetUpdateOneWithoutTestimonialPhotosNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.MediaAssetUpdateToOneWithWhereWithoutTestimonialPhotosInput, Prisma.MediaAssetUpdateWithoutTestimonialPhotosInput>, Prisma.MediaAssetUncheckedUpdateWithoutTestimonialPhotosInput>
 }
 
+export type MediaAssetCreateNestedOneWithoutHomeSlidesInput = {
+  create?: Prisma.XOR<Prisma.MediaAssetCreateWithoutHomeSlidesInput, Prisma.MediaAssetUncheckedCreateWithoutHomeSlidesInput>
+  connectOrCreate?: Prisma.MediaAssetCreateOrConnectWithoutHomeSlidesInput
+  connect?: Prisma.MediaAssetWhereUniqueInput
+}
+
+export type MediaAssetUpdateOneRequiredWithoutHomeSlidesNestedInput = {
+  create?: Prisma.XOR<Prisma.MediaAssetCreateWithoutHomeSlidesInput, Prisma.MediaAssetUncheckedCreateWithoutHomeSlidesInput>
+  connectOrCreate?: Prisma.MediaAssetCreateOrConnectWithoutHomeSlidesInput
+  upsert?: Prisma.MediaAssetUpsertWithoutHomeSlidesInput
+  connect?: Prisma.MediaAssetWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.MediaAssetUpdateToOneWithWhereWithoutHomeSlidesInput, Prisma.MediaAssetUpdateWithoutHomeSlidesInput>, Prisma.MediaAssetUncheckedUpdateWithoutHomeSlidesInput>
+}
+
 export type MediaAssetCreateWithoutProjectMediaInput = {
   id?: string
   kind?: $Enums.MediaKind
@@ -664,6 +685,7 @@ export type MediaAssetCreateWithoutProjectMediaInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   testimonialPhotos?: Prisma.TestimonialCreateNestedManyWithoutPhotoInput
+  homeSlides?: Prisma.HomeSlideCreateNestedManyWithoutMediaInput
 }
 
 export type MediaAssetUncheckedCreateWithoutProjectMediaInput = {
@@ -683,6 +705,7 @@ export type MediaAssetUncheckedCreateWithoutProjectMediaInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   testimonialPhotos?: Prisma.TestimonialUncheckedCreateNestedManyWithoutPhotoInput
+  homeSlides?: Prisma.HomeSlideUncheckedCreateNestedManyWithoutMediaInput
 }
 
 export type MediaAssetCreateOrConnectWithoutProjectMediaInput = {
@@ -718,6 +741,7 @@ export type MediaAssetUpdateWithoutProjectMediaInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   testimonialPhotos?: Prisma.TestimonialUpdateManyWithoutPhotoNestedInput
+  homeSlides?: Prisma.HomeSlideUpdateManyWithoutMediaNestedInput
 }
 
 export type MediaAssetUncheckedUpdateWithoutProjectMediaInput = {
@@ -737,6 +761,7 @@ export type MediaAssetUncheckedUpdateWithoutProjectMediaInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   testimonialPhotos?: Prisma.TestimonialUncheckedUpdateManyWithoutPhotoNestedInput
+  homeSlides?: Prisma.HomeSlideUncheckedUpdateManyWithoutMediaNestedInput
 }
 
 export type MediaAssetCreateWithoutTestimonialPhotosInput = {
@@ -756,6 +781,7 @@ export type MediaAssetCreateWithoutTestimonialPhotosInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   projectMedia?: Prisma.ProjectMediaCreateNestedManyWithoutMediaInput
+  homeSlides?: Prisma.HomeSlideCreateNestedManyWithoutMediaInput
 }
 
 export type MediaAssetUncheckedCreateWithoutTestimonialPhotosInput = {
@@ -775,6 +801,7 @@ export type MediaAssetUncheckedCreateWithoutTestimonialPhotosInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   projectMedia?: Prisma.ProjectMediaUncheckedCreateNestedManyWithoutMediaInput
+  homeSlides?: Prisma.HomeSlideUncheckedCreateNestedManyWithoutMediaInput
 }
 
 export type MediaAssetCreateOrConnectWithoutTestimonialPhotosInput = {
@@ -810,6 +837,7 @@ export type MediaAssetUpdateWithoutTestimonialPhotosInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   projectMedia?: Prisma.ProjectMediaUpdateManyWithoutMediaNestedInput
+  homeSlides?: Prisma.HomeSlideUpdateManyWithoutMediaNestedInput
 }
 
 export type MediaAssetUncheckedUpdateWithoutTestimonialPhotosInput = {
@@ -829,6 +857,103 @@ export type MediaAssetUncheckedUpdateWithoutTestimonialPhotosInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   projectMedia?: Prisma.ProjectMediaUncheckedUpdateManyWithoutMediaNestedInput
+  homeSlides?: Prisma.HomeSlideUncheckedUpdateManyWithoutMediaNestedInput
+}
+
+export type MediaAssetCreateWithoutHomeSlidesInput = {
+  id?: string
+  kind?: $Enums.MediaKind
+  publicId: string
+  url: string
+  format?: string | null
+  width?: number | null
+  height?: number | null
+  bytes?: number | null
+  alt: string
+  caption?: string | null
+  folder?: string | null
+  etag?: string | null
+  uploadedBy?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  projectMedia?: Prisma.ProjectMediaCreateNestedManyWithoutMediaInput
+  testimonialPhotos?: Prisma.TestimonialCreateNestedManyWithoutPhotoInput
+}
+
+export type MediaAssetUncheckedCreateWithoutHomeSlidesInput = {
+  id?: string
+  kind?: $Enums.MediaKind
+  publicId: string
+  url: string
+  format?: string | null
+  width?: number | null
+  height?: number | null
+  bytes?: number | null
+  alt: string
+  caption?: string | null
+  folder?: string | null
+  etag?: string | null
+  uploadedBy?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  projectMedia?: Prisma.ProjectMediaUncheckedCreateNestedManyWithoutMediaInput
+  testimonialPhotos?: Prisma.TestimonialUncheckedCreateNestedManyWithoutPhotoInput
+}
+
+export type MediaAssetCreateOrConnectWithoutHomeSlidesInput = {
+  where: Prisma.MediaAssetWhereUniqueInput
+  create: Prisma.XOR<Prisma.MediaAssetCreateWithoutHomeSlidesInput, Prisma.MediaAssetUncheckedCreateWithoutHomeSlidesInput>
+}
+
+export type MediaAssetUpsertWithoutHomeSlidesInput = {
+  update: Prisma.XOR<Prisma.MediaAssetUpdateWithoutHomeSlidesInput, Prisma.MediaAssetUncheckedUpdateWithoutHomeSlidesInput>
+  create: Prisma.XOR<Prisma.MediaAssetCreateWithoutHomeSlidesInput, Prisma.MediaAssetUncheckedCreateWithoutHomeSlidesInput>
+  where?: Prisma.MediaAssetWhereInput
+}
+
+export type MediaAssetUpdateToOneWithWhereWithoutHomeSlidesInput = {
+  where?: Prisma.MediaAssetWhereInput
+  data: Prisma.XOR<Prisma.MediaAssetUpdateWithoutHomeSlidesInput, Prisma.MediaAssetUncheckedUpdateWithoutHomeSlidesInput>
+}
+
+export type MediaAssetUpdateWithoutHomeSlidesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumMediaKindFieldUpdateOperationsInput | $Enums.MediaKind
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  url?: Prisma.StringFieldUpdateOperationsInput | string
+  format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  width?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  height?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  bytes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  alt?: Prisma.StringFieldUpdateOperationsInput | string
+  caption?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  folder?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  etag?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  uploadedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  projectMedia?: Prisma.ProjectMediaUpdateManyWithoutMediaNestedInput
+  testimonialPhotos?: Prisma.TestimonialUpdateManyWithoutPhotoNestedInput
+}
+
+export type MediaAssetUncheckedUpdateWithoutHomeSlidesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumMediaKindFieldUpdateOperationsInput | $Enums.MediaKind
+  publicId?: Prisma.StringFieldUpdateOperationsInput | string
+  url?: Prisma.StringFieldUpdateOperationsInput | string
+  format?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  width?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  height?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  bytes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  alt?: Prisma.StringFieldUpdateOperationsInput | string
+  caption?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  folder?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  etag?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  uploadedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  projectMedia?: Prisma.ProjectMediaUncheckedUpdateManyWithoutMediaNestedInput
+  testimonialPhotos?: Prisma.TestimonialUncheckedUpdateManyWithoutPhotoNestedInput
 }
 
 
@@ -839,11 +964,13 @@ export type MediaAssetUncheckedUpdateWithoutTestimonialPhotosInput = {
 export type MediaAssetCountOutputType = {
   projectMedia: number
   testimonialPhotos: number
+  homeSlides: number
 }
 
 export type MediaAssetCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   projectMedia?: boolean | MediaAssetCountOutputTypeCountProjectMediaArgs
   testimonialPhotos?: boolean | MediaAssetCountOutputTypeCountTestimonialPhotosArgs
+  homeSlides?: boolean | MediaAssetCountOutputTypeCountHomeSlidesArgs
 }
 
 /**
@@ -870,6 +997,13 @@ export type MediaAssetCountOutputTypeCountTestimonialPhotosArgs<ExtArgs extends 
   where?: Prisma.TestimonialWhereInput
 }
 
+/**
+ * MediaAssetCountOutputType without action
+ */
+export type MediaAssetCountOutputTypeCountHomeSlidesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.HomeSlideWhereInput
+}
+
 
 export type MediaAssetSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -889,6 +1023,7 @@ export type MediaAssetSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   updatedAt?: boolean
   projectMedia?: boolean | Prisma.MediaAsset$projectMediaArgs<ExtArgs>
   testimonialPhotos?: boolean | Prisma.MediaAsset$testimonialPhotosArgs<ExtArgs>
+  homeSlides?: boolean | Prisma.MediaAsset$homeSlidesArgs<ExtArgs>
   _count?: boolean | Prisma.MediaAssetCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["mediaAsset"]>
 
@@ -950,6 +1085,7 @@ export type MediaAssetOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs
 export type MediaAssetInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   projectMedia?: boolean | Prisma.MediaAsset$projectMediaArgs<ExtArgs>
   testimonialPhotos?: boolean | Prisma.MediaAsset$testimonialPhotosArgs<ExtArgs>
+  homeSlides?: boolean | Prisma.MediaAsset$homeSlidesArgs<ExtArgs>
   _count?: boolean | Prisma.MediaAssetCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type MediaAssetIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -960,6 +1096,7 @@ export type $MediaAssetPayload<ExtArgs extends runtime.Types.Extensions.Internal
   objects: {
     projectMedia: Prisma.$ProjectMediaPayload<ExtArgs>[]
     testimonialPhotos: Prisma.$TestimonialPayload<ExtArgs>[]
+    homeSlides: Prisma.$HomeSlidePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1373,6 +1510,7 @@ export interface Prisma__MediaAssetClient<T, Null = never, ExtArgs extends runti
   readonly [Symbol.toStringTag]: "PrismaPromise"
   projectMedia<T extends Prisma.MediaAsset$projectMediaArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MediaAsset$projectMediaArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectMediaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   testimonialPhotos<T extends Prisma.MediaAsset$testimonialPhotosArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MediaAsset$testimonialPhotosArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TestimonialPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  homeSlides<T extends Prisma.MediaAsset$homeSlidesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MediaAsset$homeSlidesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$HomeSlidePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1855,6 +1993,30 @@ export type MediaAsset$testimonialPhotosArgs<ExtArgs extends runtime.Types.Exten
   take?: number
   skip?: number
   distinct?: Prisma.TestimonialScalarFieldEnum | Prisma.TestimonialScalarFieldEnum[]
+}
+
+/**
+ * MediaAsset.homeSlides
+ */
+export type MediaAsset$homeSlidesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the HomeSlide
+   */
+  select?: Prisma.HomeSlideSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the HomeSlide
+   */
+  omit?: Prisma.HomeSlideOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.HomeSlideInclude<ExtArgs> | null
+  where?: Prisma.HomeSlideWhereInput
+  orderBy?: Prisma.HomeSlideOrderByWithRelationInput | Prisma.HomeSlideOrderByWithRelationInput[]
+  cursor?: Prisma.HomeSlideWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.HomeSlideScalarFieldEnum | Prisma.HomeSlideScalarFieldEnum[]
 }
 
 /**

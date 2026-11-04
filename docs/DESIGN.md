@@ -28,6 +28,10 @@ The live palette follows the reference's observed white → cool tint → dark e
 | `--glow-2` | `#F8D7B6` | peach glow |
 | `--glow-3` | `#BFEEDD` | mint glow |
 | `--brand-signature` | `#D87400` | logo mark dot only in this accent set |
+| `--hero-bg` | `#FBDDBB` | warm peach canvas for home hero (dark: `#231C18`) |
+| `--hero-line` | `#E8C9AA` | delicate line-art & grid for hero (dark: `#4A3B32`) |
+| `--hero-ink` | `#232429` | dark charcoal primary text & buttons in hero (dark: `#FDF2E9`) |
+| `--hero-ink-muted` | `#5D534A` | warm muted text for eyebrow & sub-line in hero (dark: `#C5B2A3`) |
 
 `bg-glow-radial` uses the soft glow colors. `bg-cta-gradient` and `.section-gradient` use lavender → pale pink → mint. The old warm-construction values are removed; compatibility class names such as `bg-brand` resolve to the new semantic tokens so existing page markup does not need a layout rewrite.
 
@@ -61,6 +65,12 @@ Ratios below use the final light-theme hex tokens and WCAG 2 relative luminance.
 | `--dark` / `--glow-1` | 11.61:1 | Pass |
 | `--dark` / `--glow-2` | 12.52:1 | Pass |
 | `--dark` / `--glow-3` | 13.41:1 | Pass |
+| `--hero-ink` / `--hero-bg` | 11.92:1 | Pass (AAA) |
+| `--hero-ink-muted` / `--hero-bg` | 5.77:1 | Pass (AA) |
+| white / `--hero-ink` (primary button) | 15.49:1 | Pass (AAA) |
+| `--hero-ink` / `--hero-bg` (secondary button) | 11.92:1 | Pass (AAA) |
+| `--hero-ink` (dark mode) / `--hero-bg` (dark mode) | 15.23:1 | Pass (AAA) |
+| `--hero-ink-muted` (dark mode) / `--hero-bg` (dark mode) | 8.21:1 | Pass (AAA) |
 
 ### Button rules
 
@@ -72,6 +82,7 @@ Ratios below use the final light-theme hex tokens and WCAG 2 relative luminance.
 - All buttons are pill-shaped, at least 44px high, use the shared contrast-safe focus ring, lift 1–2px on public hover and nudge the arrow. Admin retains focus visibility but disables lift and transitions.
 
 ## 3. Typography (`next/font`, self-hosted)
+- Brand wordmark: **Allerta Stencil** (`--font-brand`, weight 400, display swap, fallback to `--font-sora`). Matches the industrial utility stencil cutouts in Screenshot 1 ("STENCIL: Utility & Function"). License: **SIL Open Font License (OFL 1.1)**. Styled through `.brand-wordmark`, calibrated to fit without wrapping down to 360px viewport.
 - Headings: **Sora** (600/700) — confident weights, tight negative tracking, engineered feel.
 - Body/UI: **Inter** (400/500/600).
 - Optional numerals/stats: Sora tabular figures.
@@ -105,6 +116,16 @@ Button (primary/secondary/ghost/link, sizes, loading), IconButton, Input, Textar
 
 States required on all interactive components: default, hover, focus-visible (2px contrast-safe outline + offset), active, disabled, loading, error.
 
+### Motion & Marquee Component
+
+The reusable `<Marquee>` component (`src/components/motion/marquee.tsx`) powers continuous, steady-rate horizontal tickers (credibility chips and upcoming image sliders):
+- **Constant speed**: Linear easing with animation duration computed strictly as `contentWidth / speed` (default 40px/s for chips).
+- **Smooth resize adaptation**: Debounced `ResizeObserver` recalculates duration upon content or font load changes while preserving the existing scroll position via negative animation delay (no visual jump).
+- **Seamless loop**: Tracks render identical primary and duplicate sets translated by exactly `-50%` (`translate3d(-50%, 0, 0)`), where the duplicate set is strictly `aria-hidden="true"` and `inert`.
+- **Accessibility & Pause**: Pauses automatically on pointer hover, focus-within, and background tab (`visibilitychange`). Features a prominent, accessible WCAG 2.2.2 Pause/Play button with live `aria-label` and `aria-pressed` states.
+- **Reduced motion**: Respects `prefers-reduced-motion: reduce` by disabling animation, omitting the duplicate DOM set, and rendering a static, accessible horizontally scrollable or wrapping row.
+- **Visuals**: Applies soft gradient fade masks at both edges to prevent abrupt clipping.
+
 ### Public navigation
 
 The public header remains a floating pill. At desktop widths, Services is a compact white floating panel centered below its trigger: a short eyebrow and “View all services” link, database-ordered service titles with icon tiles, then quote and call actions. It uses a 2-column grid at `lg` and 3 columns at `xl`, with column-first reading order and a viewport-bounded scrolling fallback. The Services label links to `/services`; its adjacent real button opens the panel. Fine-pointer hover uses a short intent delay and a hover bridge, while keyboard and touch use the button. On mobile and touch-only devices at any width, Services is an accordion in the navigation drawer. Animate opacity and transforms only, keep focus visible, and remove transforms, stagger and height motion for reduced-motion users.
@@ -114,7 +135,7 @@ The public header remains a floating pill. At desktop widths, Services is a comp
 ### Home
 1. **Header** (transparent over hero → solid on scroll): logo, nav, phone, "Get Free Quote" button.
 2. **Hero** (full-bleed building photo with charcoal gradient): H1 "Building trust since 2003" (editable), subtext on PMC / repair / redevelopment, CTAs *Get Free Quote* + *Call Now*, trust chips (MSME Registered · Insured workforce · 20+ years).
-3. **Stats strip**: Years (since 2003), Projects completed, Sq.ft constructed, Societies served (counter animation once, respects reduced motion).
+3. **Photo showcase slider**: Continuous horizontal strip powered by `<Marquee>` (steady speed tokens: slow 30 px/s, normal 50 px/s, fast 80 px/s; 4:3 cards with large rounded corners, 180px mobile, 240px tablet, 280px desktop, dual-direction counter-scrolling rows on desktop with 10+ slides; pauses on hover/focus and features WCAG pause toggle; renders static responsive grid for 4-6 slides, hidden below 4 slides; static horizontal scroll under `prefers-reduced-motion: reduce`). Replaced the legacy stats band.
 4. **Services grid** (11 cards, icon + short copy, "View all").
 5. **Featured projects** (3–6 cards with status badge).
 6. **Why choose us / process** (Survey → Plan → Execute → Handover), timeline.

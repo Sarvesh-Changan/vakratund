@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { Allerta_Stencil } from "next/font/google";
 import { DEFAULT_OG_IMAGE_PATH, getSiteUrl } from "@/lib/seo/metadata";
 import "./globals.css";
-import "@/components/motion/motion.css";
 
 const inter = localFont({
   src: "../../node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2",
@@ -18,6 +18,12 @@ const sora = localFont({
   variable: "--font-sora",
   display: "swap",
 });
+const brandFont = Allerta_Stencil({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-brand",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(getSiteUrl()),
@@ -28,5 +34,5 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en" data-scroll-behavior="smooth" className={`${inter.variable} ${sora.variable}`}><body className="min-h-screen">{children}</body></html>;
+  return <html lang="en" data-scroll-behavior="smooth" className={`${inter.variable} ${sora.variable} ${brandFont.variable}`}><body className="min-h-screen">{children}</body></html>;
 }

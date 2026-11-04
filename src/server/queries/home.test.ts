@@ -4,9 +4,14 @@ vi.mock("server-only", () => ({}));
 vi.mock("next/cache", () => ({ unstable_cache: (fn: () => unknown) => fn }));
 vi.mock("@/lib/db/client", () => ({ prisma: {} }));
 
-import { normalizeHomeCta, normalizeHomeHero, normalizeHomeProcess } from "@/server/queries/home";
+import { normalizeHomeCta, normalizeHomeHero, normalizeHomeProcess, normalizeHomeShowcase } from "@/server/queries/home";
 
 describe("home PageSection normalization", () => {
+  it("normalizes home showcase slider settings", () => {
+    const showcase = normalizeHomeShowcase({ eyebrow: "Gallery", heading: "Work", speed: "fast", pauseOnHover: false });
+    expect(showcase).toEqual({ eyebrow: "Gallery", heading: "Work", speed: "fast", pauseOnHover: false });
+  });
+
   it("supplies route defaults for legacy hero content", () => {
     const hero = normalizeHomeHero({ eyebrow: "Eyebrow", title: "Title", description: "Description", primaryCta: "Quote", secondaryCta: "Call" });
     expect(hero).toMatchObject({ primaryHref: "/estimate", secondaryHref: "/contact", backgroundImageId: null });

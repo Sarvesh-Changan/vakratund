@@ -41,7 +41,7 @@ export async function POST(request: Request) {
     if (!parsed.success) return NextResponse.json({ error: "Invalid upload request." }, { status: 400 });
     const section = normalizeUploadSection(parsed.data.section);
     if (!section) return NextResponse.json({ error: "Upload section is not allowed." }, { status: 400 });
-    if (section === "services" || section === "pages") await requirePermission("content:write", { mode: "api" });
+    if (section === "services" || section === "pages" || section === "home") await requirePermission("content:write", { mode: "api" });
     if (!uploadPolicy(section, parsed.data.kind)) return NextResponse.json({ error: "This media kind is not allowed in the selected section." }, { status: 400 });
 
     const signed = signUploadParameters(section, parsed.data.kind);

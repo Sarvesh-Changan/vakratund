@@ -23,6 +23,7 @@
     "db:studio": "prisma studio",
     "db:reset": "node scripts/db-reset.mjs",
     "db:seed": "node --no-warnings=ExperimentalWarning --experimental-strip-types prisma/seed.ts",
+    "home-slider:seed": "node --no-warnings=ExperimentalWarning --experimental-strip-types scripts/seed-home-slider.ts",
     "estimator:simplify": "node --no-warnings=ExperimentalWarning --experimental-strip-types scripts/estimator-simplify.ts",
     "estimator:audit": "node --no-warnings=ExperimentalWarning --experimental-strip-types scripts/estimator-audit.ts",
     "estimator:normalize": "node --no-warnings=ExperimentalWarning --experimental-strip-types scripts/estimator-normalize.ts"

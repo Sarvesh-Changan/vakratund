@@ -22,13 +22,14 @@
 .motion-mask[data-motion-enabled="true"][data-motion-entered="false"] .motion-mask-content { transform: scale(1.025); }
 .motion-mask[data-motion-enabled="true"][data-motion-entered="true"] .motion-mask-curtain { transform: scaleX(0); }
 
-.motion-marquee { overflow: hidden; }
-.motion-marquee-track { display: flex; width: max-content; animation: motion-marquee var(--motion-duration, 36s) linear infinite var(--motion-direction, normal); }
-.motion-marquee-track > * { flex: none; }
-.motion-marquee[data-motion-enabled="false"] .motion-marquee-track,
-.motion-marquee:hover .motion-marquee-track,
-.motion-marquee:focus-within .motion-marquee-track { animation-play-state: paused; }
-@keyframes motion-marquee { to { transform: translateX(-50%); } }
+.motion-marquee { position: relative; overflow: hidden; contain: layout paint; }
+.motion-marquee-track { display: flex; width: max-content; will-change: transform; animation: motion-marquee var(--marquee-duration, 30s) linear infinite var(--marquee-direction, normal); animation-delay: var(--marquee-delay, 0s); animation-play-state: var(--marquee-play-state, running); }
+.motion-marquee:hover .motion-marquee-track.motion-marquee-hover-pause,
+.motion-marquee-track.motion-marquee-hover-pause:hover,
+.motion-marquee:focus-within .motion-marquee-track,
+.motion-marquee-track:focus-within { animation-play-state: paused !important; }
+.motion-marquee-track.motion-marquee-static { animation: none !important; transform: none !important; width: 100%; }
+@keyframes motion-marquee { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(-50%, 0, 0); } }
 
 .motion-parallax[data-motion-active="true"] { transform: translateY(var(--motion-parallax-y, 0px)); will-change: transform; }
 @supports (animation-timeline: view()) {

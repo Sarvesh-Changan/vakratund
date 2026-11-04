@@ -167,3 +167,8 @@ export type Quote = Prisma.QuoteModel
  * 
  */
 export type EmailLog = Prisma.EmailLogModel
+/**
+ * Model HomeSlide
+ * 
+ */
+export type HomeSlide = Prisma.HomeSlideModel

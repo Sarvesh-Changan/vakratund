@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "../components/motion/motion.css";
 
 :root {
   color-scheme: light;
@@ -17,6 +18,11 @@
   --glow-3: #bfeedd;
   --focus-ring: #5b4bd8;
   --brand-signature: #d87400;
+  /* Hero color tokens (Sampled from Screenshot 3 peach reference) */
+  --hero-bg: #fbddbb;
+  --hero-line: #e8c9aa;
+  --hero-ink: #232429;
+  --hero-ink-muted: #5d534a;
   /* Compatibility aliases keep existing page markup on the new palette. */
   --surface: var(--bg);
   --surface-alt: var(--tint);
@@ -93,6 +99,10 @@
   --accent-2: #9bf0cf;
   --accent-2-ink: #173a32;
   --focus-ring: #c8c1ff;
+  --hero-bg: #231c18;
+  --hero-line: #4a3b32;
+  --hero-ink: #fdf2e9;
+  --hero-ink-muted: #c5b2a3;
   --surface: var(--bg);
   --surface-alt: var(--tint);
   --ink-on-dark: #ffffff;
@@ -174,8 +184,50 @@
   --radius-pill: var(--radius-pill);
   --shadow-soft: var(--elevation-soft);
   --shadow-raised: var(--elevation-raised);
+  --color-hero-bg: var(--hero-bg);
+  --color-hero-line: var(--hero-line);
+  --color-hero-ink: var(--hero-ink);
+  --color-hero-ink-muted: var(--hero-ink-muted);
   --font-sans: var(--font-inter);
   --font-heading: var(--font-sora);
+  --font-brand: var(--font-brand, var(--font-sora));
+}
+
+.brand-wordmark {
+  font-family: var(--font-brand), var(--font-sora), system-ui, sans-serif;
+  letter-spacing: -0.025em;
+  white-space: nowrap;
+}
+
+@keyframes hero-line-drift-left {
+  0%, 100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(12px, -10px, 0);
+  }
+}
+
+@keyframes hero-line-drift-right {
+  0%, 100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(-10px, 14px, 0);
+  }
+}
+
+@media (min-width: 1024px) {
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-drift-left {
+      animation: hero-line-drift-left 20s ease-in-out infinite alternate;
+      will-change: transform;
+    }
+    .hero-drift-right {
+      animation: hero-line-drift-right 24s ease-in-out infinite alternate;
+      will-change: transform;
+    }
+  }
 }
 
 @utility section-space {

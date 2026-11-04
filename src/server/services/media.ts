@@ -62,7 +62,7 @@ async function usageMap(mediaIds: readonly string[]): Promise<Map<string, MediaU
   if (mediaIds.length === 0) return result;
   const assets = await prisma.mediaAsset.findMany({ where: { id: { in: [...mediaIds] } }, select: { id: true, publicId: true } });
   const mediaIdByPublicId = new Map(assets.map((asset) => [asset.publicId, asset.id]));
-  const [projectMedia, galleries, services, teams, testimonials, pageSeo, pageSections] = await Promise.all([
+  const [projectMedia, galleries, services, teams, testimonials, pageSeo, pageSections, homeSlides] = await Promise.all([
     prisma.projectMedia.findMany({ where: { mediaId: { in: [...mediaIds] } }, select: { mediaId: true, projectId: true } }),
     prisma.galleryItem.findMany({ where: { publicId: { in: assets.map((asset) => asset.publicId) } }, select: { publicId: true, title: true, category: { select: { name: true } } } }),
     prisma.service.findMany({ where: { coverId: { in: [...mediaIds] } }, select: { coverId: true, title: true, slug: true } }),
@@ -70,6 +70,7 @@ async function usageMap(mediaIds: readonly string[]): Promise<Map<string, MediaU
     prisma.testimonial.findMany({ where: { photoId: { in: [...mediaIds] } }, select: { photoId: true, name: true } }),
     prisma.pageSeo.findMany({ where: { ogImageId: { in: [...mediaIds] } }, select: { ogImageId: true, path: true } }),
     prisma.pageSection.findMany({ select: { pageKey: true, sectionKey: true, content: true } }),
+    prisma.homeSlide.findMany({ where: { mediaId: { in: [...mediaIds] } }, select: { mediaId: true, alt: true, title: true } }),
   ]);
 
   const projectIds = [...new Set(projectMedia.map((row) => row.projectId))];
@@ -86,6 +87,7 @@ async function usageMap(mediaIds: readonly string[]): Promise<Map<string, MediaU
   for (const row of services) if (row.coverId) addUsage(result, row.coverId, { type: "Service", label: row.title, href: `/admin/services/${row.slug}` });
   for (const row of teams) if (row.photoId) addUsage(result, row.photoId, { type: "Team", label: row.name });
   for (const row of testimonials) if (row.photoId) addUsage(result, row.photoId, { type: "Testimonial", label: row.name, href: `/admin/testimonials` });
+  for (const row of homeSlides) addUsage(result, row.mediaId, { type: "Home slide", label: row.title || row.alt, href: "/admin/home-slider" });
   for (const row of pageSeo) if (row.ogImageId) addUsage(result, row.ogImageId, { type: "Page metadata", label: row.path });
   for (const row of pageSections) {
     if (!row.content || typeof row.content !== "object" || Array.isArray(row.content)) continue;

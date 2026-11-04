@@ -20,5 +20,11 @@ function BadgeList({ items }: { items: string[] }) {
 export function HomeCredibilityStrip({ hero, settings, services }: { hero: HomeHero; settings: ResolvedSiteSettings; services: PublishedService[] }) {
   const items = labels(hero, settings, services);
   if (items.length === 0) return null;
-  return <section aria-label="Company credentials" className="section-light overflow-hidden border-b py-4 sm:py-5"><div className="mx-auto hidden max-w-wide justify-center px-4 lg:flex lg:px-8"><BadgeList items={items} /></div><div className="lg:hidden"><Marquee label="Company credentials" durationSeconds={34}><div className="px-4"><BadgeList items={items} /></div></Marquee></div></section>;
+  return (
+    <section aria-label="Company credentials" className="section-light overflow-hidden border-b py-3 sm:py-4">
+      <Marquee speed={40} direction="left" gap={16} pauseOnHover label="Company credentials">
+        <BadgeList items={items} />
+      </Marquee>
+    </section>
+  );
 }

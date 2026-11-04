@@ -80,7 +80,8 @@ export const ModelName = {
   LocationZone: 'LocationZone',
   PricingRule: 'PricingRule',
   Quote: 'Quote',
-  EmailLog: 'EmailLog'
+  EmailLog: 'EmailLog',
+  HomeSlide: 'HomeSlide'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -630,6 +631,26 @@ export const EmailLogScalarFieldEnum = {
 } as const
 
 export type EmailLogScalarFieldEnum = (typeof EmailLogScalarFieldEnum)[keyof typeof EmailLogScalarFieldEnum]
+
+
+export const HomeSlideScalarFieldEnum = {
+  id: 'id',
+  mediaId: 'mediaId',
+  alt: 'alt',
+  title: 'title',
+  caption: 'caption',
+  linkUrl: 'linkUrl',
+  isActive: 'isActive',
+  sortOrder: 'sortOrder',
+  isPlaceholder: 'isPlaceholder',
+  sourceName: 'sourceName',
+  sourceUrl: 'sourceUrl',
+  license: 'license',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type HomeSlideScalarFieldEnum = (typeof HomeSlideScalarFieldEnum)[keyof typeof HomeSlideScalarFieldEnum]
 
 
 export const SortOrder = {

@@ -148,8 +148,29 @@ model MediaAsset {
 
   projectMedia       ProjectMedia[]
   testimonialPhotos  Testimonial[] @relation("TestimonialPhoto")
+  homeSlides         HomeSlide[]
   @@index([folder, createdAt])
   @@index([etag])
+}
+
+model HomeSlide {
+  id            String      @id @default(cuid())
+  mediaId       String
+  media         MediaAsset  @relation(fields: [mediaId], references: [id], onDelete: Restrict)
+  alt           String
+  title         String?
+  caption       String?
+  linkUrl       String?
+  isActive      Boolean     @default(true)
+  sortOrder     Int
+  isPlaceholder Boolean     @default(false)
+  sourceName    String?
+  sourceUrl     String?
+  license       String?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@index([isActive, sortOrder])
 }
 
 // ───────────── Content ─────────────

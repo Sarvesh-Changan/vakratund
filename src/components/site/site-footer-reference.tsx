@@ -16,14 +16,14 @@ export function SiteFooterReference({
   return (
     <footer className="section-light border-t">
       <div className="mx-auto grid max-w-wide gap-12 px-4 py-16 sm:px-6 md:grid-cols-2 lg:grid-cols-4 lg:px-8 lg:py-24">
-        <section aria-labelledby="footer-about-heading">
+        <section aria-labelledby="footer-about-heading" className="text-center">
           <h2
             id="footer-about-heading"
             className="font-heading text-sm font-bold uppercase tracking-[0.14em] text-accent-ink"
           >
             {settings.businessName}
           </h2>
-          <p className="mt-5 max-w-xs text-sm leading-7 text-ink-muted">
+          <p className="mt-5 text-sm leading-7 text-ink-muted">
             {settings.tagline}
           </p>
           <ul className="mt-6 space-y-2 text-xs text-ink-muted">

@@ -591,16 +591,14 @@ const pageSections = [
     },
   },
   {
-    id: "seed-section-home-stats",
+    id: "seed-section-home-showcase",
     pageKey: "home",
-    sectionKey: "stats",
+    sectionKey: "showcase",
     content: {
-      items: [
-        { label: "Established", value: "2003" },
-        { label: "Residential & commercial building area", value: "~15,000 sq.ft." },
-        { label: "Commercial building & strong room area", value: "~25,000 sq.ft." },
-        { label: "Residential building area", value: "~17,000 sq.ft." },
-      ],
+      eyebrow: "",
+      heading: "",
+      speed: "normal",
+      pauseOnHover: true,
     },
   },
   {

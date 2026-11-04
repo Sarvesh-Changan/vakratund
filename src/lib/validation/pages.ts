@@ -5,7 +5,7 @@ const optionalText = (max: number) => z.string().trim().max(max).refine((value) 
 const href = z.string().trim().max(300).regex(/^(\/|https:\/\/|tel:|mailto:)/, "Use an internal path or a secure URL.");
 
 const heroSchema = z.object({ eyebrow: optionalText(160), title: optionalText(160), description: optionalText(500), trustChips: z.array(text(80)).max(3).optional(), primaryCta: text(80), primaryHref: href, secondaryCta: text(80), secondaryHref: href, backgroundImageId: z.string().cuid().nullable() }).strict();
-const statsSchema = z.object({ items: z.array(z.object({ label: text(80), value: text(80) }).strict()).max(5) }).strict();
+const homeShowcaseSchema = z.object({ eyebrow: optionalText(80), heading: optionalText(160), speed: z.enum(["slow", "normal", "fast"]).default("normal"), pauseOnHover: z.boolean().default(true) }).strict();
 const homeProjectsSchema = z.object({ eyebrow: optionalText(80), title: text(160), description: optionalText(500), viewAllLabel: text(80) }).strict();
 const homeServicesSchema = z.object({ eyebrow: optionalText(80), title: text(160), description: optionalText(500), viewAllLabel: text(80), serviceLinkLabel: text(80) }).strict();
 const homeWhySchema = z.object({ eyebrow: optionalText(80), title: text(160), description: optionalText(500), quote: optionalText(1000) }).strict();
@@ -21,13 +21,13 @@ const aboutStorySchema = z.object({ title: text(160), body: text(20_000), imageM
 const aboutJourneySchema = z.object({ eyebrow: optionalText(80), title: text(120), milestones: z.array(z.object({ year: z.number().int().min(1900).max(2200), title: text(120), description: optionalText(240) }).strict()).max(12) }).strict();
 
 export const pageSectionSchemas = {
-  home: { hero: heroSchema, stats: statsSchema, services: homeServicesSchema, projects: homeProjectsSchema, why: homeWhySchema, process: processSchema, specialty: homeSpecialtySchema, faq: homeFaqSchema, estimator: homeEstimatorSchema, cta: ctaSchema },
+  home: { hero: heroSchema, showcase: homeShowcaseSchema, services: homeServicesSchema, projects: homeProjectsSchema, why: homeWhySchema, process: processSchema, specialty: homeSpecialtySchema, faq: homeFaqSchema, estimator: homeEstimatorSchema, cta: ctaSchema },
   about: { story: aboutStorySchema, mission: textSectionSchema, journey: aboutJourneySchema },
 } as const;
 
 export const pageSectionInputSchema = z.discriminatedUnion("sectionKey", [
   z.object({ pageKey: z.literal("home"), sectionKey: z.literal("hero"), content: heroSchema, isVisible: z.boolean() }).strict(),
-  z.object({ pageKey: z.literal("home"), sectionKey: z.literal("stats"), content: statsSchema, isVisible: z.boolean() }).strict(),
+  z.object({ pageKey: z.literal("home"), sectionKey: z.literal("showcase"), content: homeShowcaseSchema, isVisible: z.boolean() }).strict(),
   z.object({ pageKey: z.literal("home"), sectionKey: z.literal("services"), content: homeServicesSchema, isVisible: z.boolean() }).strict(),
   z.object({ pageKey: z.literal("home"), sectionKey: z.literal("projects"), content: homeProjectsSchema, isVisible: z.boolean() }).strict(),
   z.object({ pageKey: z.literal("home"), sectionKey: z.literal("why"), content: homeWhySchema, isVisible: z.boolean() }).strict(),

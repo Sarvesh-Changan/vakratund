@@ -2,8 +2,10 @@ import { describe, expect, it } from "vitest";
 import { pageSectionInputSchema, pageSectionSchemas } from "./pages";
 
 describe("homepage PageSection content", () => {
-  it("allows an empty stats row without inventing placeholder numbers", () => {
-    expect(pageSectionSchemas.home.stats.safeParse({ items: [] }).success).toBe(true);
+  it("validates showcase slider section settings with defaults and speed options", () => {
+    expect(pageSectionSchemas.home.showcase.safeParse({ speed: "normal", pauseOnHover: true }).success).toBe(true);
+    expect(pageSectionSchemas.home.showcase.safeParse({ eyebrow: "Gallery", heading: "Our Site Work", speed: "fast", pauseOnHover: false }).success).toBe(true);
+    expect(pageSectionSchemas.home.showcase.safeParse({ speed: "lightning" }).success).toBe(false);
   });
 
   it("keeps legacy About story content valid and validates an optional image alt", () => {
@@ -12,9 +14,8 @@ describe("homepage PageSection content", () => {
     expect(pageSectionSchemas.about.story.safeParse({ title: "Our story", body: "Since 2003.", imageMediaId: "cmj4media00000000000000001", imageAlt: "" }).success).toBe(false);
   });
 
-  it("limits the proof row to five admin-entered facts", () => {
-    const items = Array.from({ length: 6 }, (_, index) => ({ label: `Fact ${index}`, value: String(index) }));
-    expect(pageSectionSchemas.home.stats.safeParse({ items }).success).toBe(false);
+  it("accepts showcase slider section in pageSectionInputSchema", () => {
+    expect(pageSectionInputSchema.safeParse({ pageKey: "home", sectionKey: "showcase", isVisible: true, content: { eyebrow: "", heading: "", speed: "slow", pauseOnHover: true } }).success).toBe(true);
   });
 
   it("accepts editable hero trust chips and featured-project copy", () => {

@@ -121,3 +121,33 @@ Standalone commands use the same precedence as Next.js: shell variables first, t
 - To verify the seeded account in Prisma Studio, run `npm run db:studio`, open `User`, and confirm the configured admin row has role `SUPER_ADMIN`, `isActive` set to `true`, `emailVerified` set to `true`, and `mustChangePassword` set to `true`. Open the related `Account` row and confirm a credential account exists; never inspect, copy, or export its password hash.
 | EmailLog shows `FAILED` | SMTP or recipient failure | Inspect the non-PII `errorCode`, correct configuration, and use the lead detail retry action. |
 
+## Home slider deployment, seeding, and maintenance
+
+### 1. Database migration
+Apply the `HomeSlide` migration to production safely:
+```bash
+npx prisma migrate deploy
+```
+This applies `prisma/migrations/20261104000100_add_home_slides/migration.sql` creating the `HomeSlide` table and its foreign keys (`onDelete: Restrict` on `MediaAsset`).
+
+### 2. Seeding starter photos
+To populate the 10 free-license placeholder images into Cloudinary folder `vakratund/home` and create the `HomeSlide` and `MediaAsset` records:
+```bash
+# Dry run to verify URLs and environment configuration without uploading
+npm run home-slider:seed -- --dry-run
+
+# Production/live seed execution
+npm run home-slider:seed
+```
+The script is strictly idempotent: it skips entries whose source URLs or asset public IDs already exist. It downloads sequentially with throttling, enforces a 10MB limit and image MIME validation, computes ETags, uploads to Cloudinary, and sets `isPlaceholder: true`.
+
+### 3. Replacing sample photos before launch
+All seeded photos carry `isPlaceholder: true`. The Admin dashboard and `/admin/home-slider` display a guidance banner and counter showing how many sample photos remain active.
+1. Log in to the Admin Dashboard as `EDITOR`, `ADMIN`, or `SUPER_ADMIN`.
+2. Navigate to **Home slider** (`/admin/home-slider`).
+3. Click **+ Add images** or click the Edit button on a slide marked with the **Sample photo** badge.
+4. Upload high-resolution, client-owned project photos into the `vakratund/home` folder.
+5. Provide a descriptive `alt` text and optional link or caption.
+6. Delete or deactivate the placeholder slides. When all placeholder slides are removed/replaced, the advisory banner automatically dismisses.
+
+

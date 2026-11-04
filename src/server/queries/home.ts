@@ -15,7 +15,7 @@ import { getVisibleTeamMembers } from "@/server/queries/team";
 import { getPublishedTestimonials } from "@/server/queries/testimonials";
 
 export type HomeHero = z.infer<typeof pageSectionSchemas.home.hero>;
-export type HomeStats = z.infer<typeof pageSectionSchemas.home.stats>;
+export type HomeShowcase = z.infer<typeof pageSectionSchemas.home.showcase>;
 export type HomeWhySection = z.infer<typeof pageSectionSchemas.home.why>;
 export type HomeProcess = z.infer<typeof pageSectionSchemas.home.process>;
 export type HomeSpecialtySection = z.infer<typeof pageSectionSchemas.home.specialty>;
@@ -30,7 +30,8 @@ export type HomePageData = {
   hero: HomeHero;
   heroVisible: boolean;
   heroImage: HomeHeroImage | null;
-  stats: HomeStats | null;
+  showcase: HomeShowcase | null;
+  showcaseVisible: boolean;
   whySection: HomeWhySection | null;
   whyVisible: boolean;
   process: HomeProcess | null;
@@ -69,8 +70,8 @@ export function normalizeHomeHero(value: Prisma.JsonValue, phone = ""): HomeHero
   return result.success ? result.data : null;
 }
 
-function normalizeStats(value: Prisma.JsonValue): HomeStats | null {
-  const result = pageSectionSchemas.home.stats.safeParse(value);
+export function normalizeHomeShowcase(value: Prisma.JsonValue): HomeShowcase | null {
+  const result = pageSectionSchemas.home.showcase.safeParse(value);
   return result.success ? result.data : null;
 }
 
@@ -120,7 +121,7 @@ function fallbackHero(settings: ResolvedSiteSettings): HomeHero {
 
 function fallbackHomePageData(): HomePageData {
   const settings = resolveSiteSettings(null);
-  return { settings, hero: fallbackHero(settings), heroVisible: true, heroImage: null, stats: null, whySection: null, whyVisible: false, process: null, specialtySection: null, specialtyVisible: false, faqSection: null, faqVisible: false, estimatorSection: null, estimatorVisible: false, cta: null, services: [], featuredGallery: [], publishedProjectCount: 0, structuralService: null, testimonials: [], faqs: [], team: [] };
+  return { settings, hero: fallbackHero(settings), heroVisible: true, heroImage: null, showcase: null, showcaseVisible: true, whySection: null, whyVisible: false, process: null, specialtySection: null, specialtyVisible: false, faqSection: null, faqVisible: false, estimatorSection: null, estimatorVisible: false, cta: null, services: [], featuredGallery: [], publishedProjectCount: 0, structuralService: null, testimonials: [], faqs: [], team: [] };
 }
 
 async function readHomePageData(): Promise<HomePageData> {
@@ -139,7 +140,7 @@ async function readHomePageData(): Promise<HomePageData> {
     const heroSection = sections.find((section) => section.sectionKey === "hero");
     const parsedHero = heroSection ? normalizeHomeHero(heroSection.content, settings.phones[0] ?? "") : null;
     const hero = parsedHero?.title?.trim() ? parsedHero : fallbackHero(settings);
-    const statsSection = sections.find((section) => section.sectionKey === "stats");
+    const showcaseSection = sections.find((section) => section.sectionKey === "showcase");
     const whySection = sections.find((section) => section.sectionKey === "why");
     const processSection = sections.find((section) => section.sectionKey === "process");
     const specialtySection = sections.find((section) => section.sectionKey === "specialty");
@@ -153,7 +154,8 @@ async function readHomePageData(): Promise<HomePageData> {
       hero,
       heroVisible: heroSection?.isVisible ?? true,
       heroImage,
-      stats: statsSection?.isVisible ? normalizeStats(statsSection.content) : null,
+      showcase: showcaseSection?.isVisible ? normalizeHomeShowcase(showcaseSection.content) : null,
+      showcaseVisible: showcaseSection?.isVisible ?? true,
       whySection: whySection?.isVisible ? normalizeHomeWhy(whySection.content) : null,
       whyVisible: whySection?.isVisible ?? false,
       process: processSection?.isVisible ? normalizeHomeProcess(processSection.content) : null,
@@ -178,4 +180,4 @@ async function readHomePageData(): Promise<HomePageData> {
   }
 }
 
-export const getHomePageData = unstable_cache(readHomePageData, ["home-page"], { tags: ["settings", "pages", "services", "projects", "gallery", "testimonials", "faqs", "team"], revalidate: 3600 });
+export const getHomePageData = unstable_cache(readHomePageData, ["home-page"], { tags: ["settings", "pages", "services", "projects", "gallery", "testimonials", "faqs", "team", "homeSlider"], revalidate: 3600 });

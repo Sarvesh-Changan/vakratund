@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const UPLOAD_SECTIONS = ["projects", "testimonials", "team", "gallery", "docs", "services", "pages"] as const;
+export const UPLOAD_SECTIONS = ["projects", "testimonials", "team", "gallery", "docs", "services", "pages", "home"] as const;
 export type UploadSection = (typeof UPLOAD_SECTIONS)[number];
 
 export const mediaKindSchema = z.enum(["IMAGE", "VIDEO", "DOCUMENT"]);
@@ -26,6 +26,7 @@ export const SECTION_POLICIES = {
   docs: { folder: "vakratund/docs", kinds: ["DOCUMENT"] },
   services: { folder: "vakratund/services", kinds: ["IMAGE"] },
   pages: { folder: "vakratund/pages", kinds: ["IMAGE"] },
+  home: { folder: "vakratund/home", kinds: ["IMAGE"] },
 } as const satisfies Record<UploadSection, SectionPolicy>;
 
 export function normalizeUploadSection(value: string): UploadSection | null {

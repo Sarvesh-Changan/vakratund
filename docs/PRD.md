@@ -44,7 +44,7 @@ integrations, native apps. Keep data model extensible for them.
 ### 5.1 Public website
 | ID | Requirement | Acceptance criteria |
 |---|---|---|
-| PUB-1 | Home page | Hero with primary CTA "Get Free Quote" and secondary "Call Now"; stats (since 2003, projects, sqft built); services; featured projects; process; credentials; testimonials; FAQ teaser; final CTA. All content is DB-driven. |
+| PUB-1 | Home page | Hero with primary CTA "Get Free Quote" and secondary "Call Now"; continuous moving photo slider (replacing legacy stats band); credibility chips marquee; services; featured projects; testimonials; FAQ teaser; final CTA. All content is DB-driven. |
 | PUB-2 | About | Company story, mission, proprietor and team (4 members from PDF), credentials (MSME, workmen's compensation insurance), experience stats. |
 | PUB-3 | Services | Index + one detail page per service (11 seeded). Each has description, scope bullets, process, related projects, gallery, FAQs, CTA. |
 | PUB-4 | Projects | Index with filters (service, status, year); detail page with gallery, scope, area, floors, location, status, optional client name (toggle), before/after pairs. |
@@ -89,7 +89,7 @@ integrations, native apps. Keep data model extensible for them.
 | ADM-5 | Services | CRUD, order, FAQs, icon/image. |
 | ADM-6 | Testimonials, FAQs, Team | CRUD, order, publish. |
 | ADM-8 | Gallery & Media | Signed Cloudinary image/video uploads with category/year assignment, duplicate detection, publish/featured/cover controls, year management, library and usage-safe deletion. |
-| ADM-9 | Pages/content | Edit Home hero, stats, About text, CTA copy via structured sections (no HTML injection). |
+| ADM-9 | Pages/content & Home Slider | Manage Home moving photo slider at /admin/home-slider (upload, reorder, active toggle, delete with Cloudinary cleanup, showcase settings); edit Home hero, About text, CTA copy via structured sections (no HTML injection). |
 | ADM-11 | Settings | Business info, phones, email, address, hours, social links, WhatsApp number/message, email recipients. |
 | ADM-12 | Users & roles | SUPER_ADMIN manages users; roles SUPER_ADMIN, ADMIN, EDITOR, SALES; deactivate users; password reset. |
 | ADM-13 | Activity log | Who did what, when; filterable; immutable. |

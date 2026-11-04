@@ -426,7 +426,8 @@ export const ModelName = {
   LocationZone: 'LocationZone',
   PricingRule: 'PricingRule',
   Quote: 'Quote',
-  EmailLog: 'EmailLog'
+  EmailLog: 'EmailLog',
+  HomeSlide: 'HomeSlide'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -442,7 +443,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "account" | "verification" | "activityLog" | "rateLimitBucket" | "mediaAsset" | "service" | "project" | "projectMedia" | "galleryCategory" | "galleryYear" | "galleryItem" | "testimonial" | "faq" | "teamMember" | "pageSection" | "pageSeo" | "siteSetting" | "lead" | "leadNote" | "leadStatusHistory" | "contactEvent" | "estimatorService" | "estimatorField" | "fieldOption" | "locationZone" | "pricingRule" | "quote" | "emailLog"
+    modelProps: "user" | "session" | "account" | "verification" | "activityLog" | "rateLimitBucket" | "mediaAsset" | "service" | "project" | "projectMedia" | "galleryCategory" | "galleryYear" | "galleryItem" | "testimonial" | "faq" | "teamMember" | "pageSection" | "pageSeo" | "siteSetting" | "lead" | "leadNote" | "leadStatusHistory" | "contactEvent" | "estimatorService" | "estimatorField" | "fieldOption" | "locationZone" | "pricingRule" | "quote" | "emailLog" | "homeSlide"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2666,6 +2667,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    HomeSlide: {
+      payload: Prisma.$HomeSlidePayload<ExtArgs>
+      fields: Prisma.HomeSlideFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.HomeSlideFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HomeSlidePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.HomeSlideFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HomeSlidePayload>
+        }
+        findFirst: {
+          args: Prisma.HomeSlideFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HomeSlidePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.HomeSlideFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HomeSlidePayload>
+        }
+        findMany: {
+          args: Prisma.HomeSlideFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HomeSlidePayload>[]
+        }
+        create: {
+          args: Prisma.HomeSlideCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HomeSlidePayload>
+        }
+        createMany: {
+          args: Prisma.HomeSlideCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.HomeSlideCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HomeSlidePayload>[]
+        }
+        delete: {
+          args: Prisma.HomeSlideDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HomeSlidePayload>
+        }
+        update: {
+          args: Prisma.HomeSlideUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HomeSlidePayload>
+        }
+        deleteMany: {
+          args: Prisma.HomeSlideDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.HomeSlideUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.HomeSlideUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HomeSlidePayload>[]
+        }
+        upsert: {
+          args: Prisma.HomeSlideUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HomeSlidePayload>
+        }
+        aggregate: {
+          args: Prisma.HomeSlideAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateHomeSlide>
+        }
+        groupBy: {
+          args: Prisma.HomeSlideGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HomeSlideGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.HomeSlideCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HomeSlideCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -3238,6 +3313,26 @@ export const EmailLogScalarFieldEnum = {
 export type EmailLogScalarFieldEnum = (typeof EmailLogScalarFieldEnum)[keyof typeof EmailLogScalarFieldEnum]
 
 
+export const HomeSlideScalarFieldEnum = {
+  id: 'id',
+  mediaId: 'mediaId',
+  alt: 'alt',
+  title: 'title',
+  caption: 'caption',
+  linkUrl: 'linkUrl',
+  isActive: 'isActive',
+  sortOrder: 'sortOrder',
+  isPlaceholder: 'isPlaceholder',
+  sourceName: 'sourceName',
+  sourceUrl: 'sourceUrl',
+  license: 'license',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type HomeSlideScalarFieldEnum = (typeof HomeSlideScalarFieldEnum)[keyof typeof HomeSlideScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -3745,6 +3840,7 @@ export type GlobalOmitConfig = {
   pricingRule?: Prisma.PricingRuleOmit
   quote?: Prisma.QuoteOmit
   emailLog?: Prisma.EmailLogOmit
+  homeSlide?: Prisma.HomeSlideOmit
 }
 
 /* Types for Logging */
