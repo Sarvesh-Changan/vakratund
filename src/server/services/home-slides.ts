@@ -245,6 +245,47 @@ export async function deleteHomeSlide(
   return { deleted: true, cloudinaryDeleted };
 }
 
+export async function deleteAllHomeSlides(
+  deleteCloudinaryAssets: boolean,
+  userId: string,
+): Promise<{ deletedCount: number; cloudinaryDeletedCount: number }> {
+  const slides = await prisma.homeSlide.findMany({ select: { id: true, mediaId: true, alt: true } });
+  const count = slides.length;
+  if (count === 0) {
+    return { deletedCount: 0, cloudinaryDeletedCount: 0 };
+  }
+
+  const mediaIds = Array.from(new Set(slides.map((s) => s.mediaId)));
+
+  await prisma.homeSlide.deleteMany();
+
+  let cloudinaryDeletedCount = 0;
+  if (deleteCloudinaryAssets) {
+    for (const mediaId of mediaIds) {
+      try {
+        const usages = await getMediaUsages(mediaId);
+        if (usages.length === 0) {
+          await deleteMediaAsset(mediaId, userId);
+          cloudinaryDeletedCount++;
+        }
+      } catch (error) {
+        console.warn("Best-effort Cloudinary deletion skipped or failed during bulk delete", { mediaId, error });
+      }
+    }
+  }
+
+  await logActivity({
+    userId,
+    action: "home_slide.delete_all",
+    entityType: "HomeSlide",
+    entityId: "all",
+    summary: `All home slides deleted (${count} slides)`,
+    diff: { count, cloudinaryDeletedCount },
+  });
+
+  return { deletedCount: count, cloudinaryDeletedCount };
+}
+
 export async function toggleHomeSlideActive(id: string, isActive: boolean, userId: string): Promise<AdminHomeSlideView> {
   const existing = await prisma.homeSlide.findUnique({ where: { id } });
   if (!existing) throw new HomeSlideNotFoundError();

@@ -15,6 +15,7 @@ import {
   createHomeSlide,
   updateHomeSlide,
   deleteHomeSlide,
+  deleteAllHomeSlides,
   toggleHomeSlideActive,
   reorderHomeSlide,
   setHomeSlideOrder,
@@ -83,6 +84,17 @@ export async function deleteHomeSlideAction(input: unknown): Promise<HomeSlideAc
   if (!parsed.success) return validationError(parsed.error);
   try {
     const result = await deleteHomeSlide(parsed.data.id, parsed.data.deleteCloudinaryAsset, session.user.id);
+    revalidateSlides();
+    return { ok: true, data: result };
+  } catch (error) {
+    return failure(error);
+  }
+}
+
+export async function deleteAllHomeSlidesAction(input?: { deleteCloudinaryAssets?: boolean }): Promise<HomeSlideActionResult<Awaited<ReturnType<typeof deleteAllHomeSlides>>>> {
+  const session = await requirePermission("content:write");
+  try {
+    const result = await deleteAllHomeSlides(Boolean(input?.deleteCloudinaryAssets), session.user.id);
     revalidateSlides();
     return { ok: true, data: result };
   } catch (error) {

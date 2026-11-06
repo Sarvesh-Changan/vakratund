@@ -7,6 +7,7 @@ const revalidateTag = vi.hoisted(() => vi.fn());
 const createSlideService = vi.hoisted(() => vi.fn());
 const updateSlideService = vi.hoisted(() => vi.fn());
 const deleteSlideService = vi.hoisted(() => vi.fn());
+const deleteAllSlideService = vi.hoisted(() => vi.fn());
 const toggleSlideService = vi.hoisted(() => vi.fn());
 const reorderSlideService = vi.hoisted(() => vi.fn());
 const setOrderService = vi.hoisted(() => vi.fn());
@@ -18,6 +19,7 @@ vi.mock("@/server/services/home-slides", () => ({
   createHomeSlide: createSlideService,
   updateHomeSlide: updateSlideService,
   deleteHomeSlide: deleteSlideService,
+  deleteAllHomeSlides: deleteAllSlideService,
   toggleHomeSlideActive: toggleSlideService,
   reorderHomeSlide: reorderSlideService,
   setHomeSlideOrder: setOrderService,
@@ -30,6 +32,7 @@ vi.mock("@/server/services/home-slides", () => ({
 import {
   createHomeSlideAction,
   deleteHomeSlideAction,
+  deleteAllHomeSlidesAction,
   reorderHomeSlideAction,
   setHomeSlideOrderAction,
   toggleHomeSlideActiveAction,
@@ -174,6 +177,15 @@ describe("home-slider server actions authorization & validation", () => {
 
       expect(res.ok).toBe(true);
       expect(updateSettingsService).toHaveBeenCalled();
+    });
+
+    it("executes deleteAllHomeSlidesAction", async () => {
+      deleteAllSlideService.mockResolvedValue({ deletedCount: 5, cloudinaryDeletedCount: 3 });
+      const res = await deleteAllHomeSlidesAction({ deleteCloudinaryAssets: true });
+
+      expect(res.ok).toBe(true);
+      expect(deleteAllSlideService).toHaveBeenCalledWith(true, "editor-1");
+      expect(revalidatePath).toHaveBeenCalledWith("/admin/home-slider");
     });
   });
 });

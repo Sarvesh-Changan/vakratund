@@ -15,6 +15,7 @@ import type { AdminHomeSlideView, HomeShowcaseSettings } from "@/server/services
 import {
   createHomeSlideAction,
   deleteHomeSlideAction,
+  deleteAllHomeSlidesAction,
   reorderHomeSlideAction,
   setHomeSlideOrderAction,
   toggleHomeSlideActiveAction,
@@ -59,6 +60,10 @@ export function HomeSliderManager({
 
   const [deleteTarget, setDeleteTarget] = useState<AdminHomeSlideView | null>(null);
   const [deleteCloudinary, setDeleteCloudinary] = useState(false);
+
+  const [deleteAllModalOpen, setDeleteAllModalOpen] = useState(false);
+  const [deleteAllCloudinary, setDeleteAllCloudinary] = useState(false);
+  const [feedbackMessage, setFeedbackMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [isPending, startTransition] = useTransition();
@@ -221,6 +226,30 @@ export function HomeSliderManager({
     });
   }
 
+  // Delete all handler
+  function handleDeleteAll() {
+    setFeedbackMessage(null);
+    startTransition(async () => {
+      const res = await deleteAllHomeSlidesAction({
+        deleteCloudinaryAssets: deleteAllCloudinary,
+      });
+      if (res.ok) {
+        setSlides([]);
+        setDeleteAllModalOpen(false);
+        setFeedbackMessage({
+          type: "success",
+          text: `Successfully deleted all ${res.data.deletedCount} slide${res.data.deletedCount === 1 ? "" : "s"}.`,
+        });
+      } else {
+        setFeedbackMessage({
+          type: "error",
+          text: res.error.message,
+        });
+      }
+      setDeleteAllCloudinary(false);
+    });
+  }
+
   return (
     <div className="space-y-8">
       {/* Top Header */}
@@ -233,15 +262,52 @@ export function HomeSliderManager({
             Manage the continuous photo showcase on the homepage ({slides.length} total, {activeCount} active).
           </p>
         </div>
-        <Button
-          type="button"
-          onClick={() => setAddModalOpen(true)}
-          className="inline-flex items-center gap-2"
-        >
-          <Plus size={18} aria-hidden="true" />
-          Add images
-        </Button>
+        <div className="flex items-center gap-2.5">
+          {slides.length > 0 && (
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={() => {
+                setDeleteAllCloudinary(false);
+                setDeleteAllModalOpen(true);
+              }}
+              disabled={isPending}
+              className="border border-danger/40 text-danger hover:border-danger hover:bg-danger/10"
+            >
+              <Trash2 size={16} className="mr-1.5" aria-hidden="true" />
+              Delete all
+            </Button>
+          )}
+          <Button
+            type="button"
+            onClick={() => setAddModalOpen(true)}
+            className="inline-flex items-center gap-2"
+          >
+            <Plus size={18} aria-hidden="true" />
+            Add images
+          </Button>
+        </div>
       </div>
+
+      {feedbackMessage && (
+        <div
+          className={`flex items-start gap-3 rounded-card border p-4 text-sm shadow-soft ${
+            feedbackMessage.type === "success"
+              ? "border-emerald-300 bg-emerald-50 text-emerald-900"
+              : "border-red-300 bg-red-50 text-red-900"
+          }`}
+        >
+          <Info className="mt-0.5 shrink-0" size={18} aria-hidden="true" />
+          <div className="flex-1 font-medium">{feedbackMessage.text}</div>
+          <button
+            type="button"
+            onClick={() => setFeedbackMessage(null)}
+            className="text-xs font-semibold hover:underline"
+          >
+            Dismiss
+          </button>
+        </div>
+      )}
 
       {/* Guidance Banners */}
       <div className="space-y-3">
@@ -351,7 +417,23 @@ export function HomeSliderManager({
 
       {/* Slide Table / Cards List */}
       <div className="space-y-4">
-        <h2 className="font-heading text-lg font-semibold text-ink">Slides ({slides.length})</h2>
+        <div className="flex items-center justify-between">
+          <h2 className="font-heading text-lg font-semibold text-ink">Slides ({slides.length})</h2>
+          {slides.length > 0 && (
+            <button
+              type="button"
+              onClick={() => {
+                setDeleteAllCloudinary(false);
+                setDeleteAllModalOpen(true);
+              }}
+              disabled={isPending}
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-danger hover:underline disabled:opacity-50"
+            >
+              <Trash2 size={13} aria-hidden="true" />
+              Delete all slides
+            </button>
+          )}
+        </div>
 
         {slides.length === 0 ? (
           <div className="rounded-panel border border-dashed border-line p-10 text-center">
@@ -854,6 +936,51 @@ export function HomeSliderManager({
                 onClick={handleDeleteConfirm}
               >
                 Delete slide
+              </Button>
+            </div>
+          </div>
+        </DialogPanel>
+      </Dialog>
+
+      {/* Delete All Confirmation Dialog */}
+      <Dialog
+        open={deleteAllModalOpen}
+        onClose={() => !isPending && setDeleteAllModalOpen(false)}
+        title="Delete all slides?"
+        description={`Are you sure you want to delete all ${slides.length} slides from the home page image slider? This action cannot be undone.`}
+        center
+      >
+        <DialogPanel>
+          <div className="space-y-4">
+            <label className="flex items-start gap-2.5 rounded-control border border-line bg-bg p-3 text-xs text-ink cursor-pointer hover:border-line-strong">
+              <input
+                type="checkbox"
+                checked={deleteAllCloudinary}
+                onChange={(e) => setDeleteAllCloudinary(e.target.checked)}
+                className="mt-0.5 rounded border-line text-brand focus:ring-brand"
+              />
+              <span>
+                Also delete associated Cloudinary media assets that are not used anywhere else (best-effort cleanup).
+              </span>
+            </label>
+
+            <div className="flex justify-center gap-3 pt-2">
+              <Button
+                type="button"
+                variant="secondary"
+                disabled={isPending}
+                onClick={() => setDeleteAllModalOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                type="button"
+                variant="primary"
+                className="bg-red-600 text-white hover:bg-red-700 hover:text-white"
+                loading={isPending}
+                onClick={handleDeleteAll}
+              >
+                {isPending ? "Deleting all..." : `Yes, delete all (${slides.length})`}
               </Button>
             </div>
           </div>
