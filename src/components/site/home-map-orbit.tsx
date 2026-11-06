@@ -31,17 +31,10 @@ const LOCATIONS: LocationMarker[] = [
   {
     id: "pune",
     name: "Pune",
-    top: "48%",
-    left: "28%",
+    top: "67%",
+    left: "32%",
     details: "Expanding project management & structural consultancy",
-  },
-  {
-    id: "maharashtra",
-    name: "Maharashtra",
-    top: "52%",
-    left: "62%",
-    details: "State-wide rehabilitation & civil engineering excellence",
-  },
+  }
 ];
 
 export function HomeMapOrbit() {

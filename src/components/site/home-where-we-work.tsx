@@ -20,7 +20,7 @@ export function HomeWhereWeWork({ settings }: { settings?: ResolvedSiteSettings 
             WHERE WE WORK
           </p>
           <h2 className="mt-3 font-heading text-3xl font-bold tracking-tight text-ink sm:text-4xl lg:text-5xl leading-tight">
-            Thane and Mumbai,
+            All Over
             <br />
             Maharashtra
           </h2>
