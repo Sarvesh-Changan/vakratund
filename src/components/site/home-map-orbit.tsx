@@ -10,7 +10,6 @@ interface LocationMarker {
   name: string;
   top: string;
   left: string;
-  details: string;
 }
 
 const LOCATIONS: LocationMarker[] = [
@@ -19,22 +18,19 @@ const LOCATIONS: LocationMarker[] = [
     name: "Thane",
     top: "27%",
     left: "14%",
-    details: "Civil engineering, PMC & turnkey redevelopment projects",
   },
   {
     id: "mumbai",
     name: "Mumbai",
     top: "40%",
     left: "7%",
-    details: "Structural repair, rehabilitation & commercial works",
   },
   {
     id: "pune",
     name: "Pune",
     top: "67%",
     left: "32%",
-    details: "Expanding project management & structural consultancy",
-  }
+  },
 ];
 
 export function HomeMapOrbit() {
@@ -55,7 +51,7 @@ export function HomeMapOrbit() {
         />
       </div>
 
-      {/* 2. Floating white location pills with purple pins */}
+      {/* 2. Floating white location pills with purple pins and hover pop-up */}
       {LOCATIONS.map((loc) => {
         const isHovered = hovered === loc.id;
         return (
@@ -67,26 +63,15 @@ export function HomeMapOrbit() {
             <div
               onMouseEnter={() => setHovered(loc.id)}
               onMouseLeave={() => setHovered(null)}
-              className={`flex items-center gap-1.5 rounded-full border bg-white/95 px-3 py-1 text-xs font-semibold text-ink shadow-md backdrop-blur-sm transition-all sm:px-3.5 sm:py-1.5 sm:text-sm ${
+              className={`flex items-center gap-1.5 rounded-full border bg-white/95 px-3 py-1 text-xs font-semibold text-ink shadow-md backdrop-blur-sm transition-all duration-200 sm:px-3.5 sm:py-1.5 sm:text-sm cursor-default ${
                 isHovered
-                  ? "scale-105 border-purple-400 ring-2 ring-purple-400/20 shadow-raised"
+                  ? "-translate-y-1 scale-110 border-purple-400 ring-2 ring-purple-400/25 shadow-raised"
                   : "border-line/70 hover:border-purple-300"
               }`}
             >
               <MapPin size={14} className="text-purple-600 shrink-0" aria-hidden="true" />
               <span>{loc.name}</span>
             </div>
-
-            {/* Accessible tooltip card on hover */}
-            {isHovered && (
-              <div className="pointer-events-none absolute left-1/2 top-full z-30 mt-2 w-52 -translate-x-1/2 rounded-xl border border-line bg-white p-3 text-left shadow-raised">
-                <p className="flex items-center gap-1.5 text-xs font-bold text-ink">
-                  <MapPin size={13} className="text-purple-600" aria-hidden="true" />
-                  {loc.name}
-                </p>
-                <p className="mt-1 text-xs leading-5 text-ink-muted">{loc.details}</p>
-              </div>
-            )}
           </div>
         );
       })}
