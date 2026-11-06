@@ -1,12 +1,12 @@
-import { ArrowRight, BadgeCheck, Building2, CheckCircle2, ShieldCheck, UsersRound } from "lucide-react";
+import { ArrowRight, BadgeCheck, Building2, CheckCircle2, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 
 import { CloudImage } from "@/components/cloud-image";
 import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
-import { CountUp, HoverCard, MaskImage, Reveal, RevealGroup } from "@/components/motion";
+import { HoverCard, MaskImage, Reveal, RevealGroup } from "@/components/motion";
 import { Card, Container, EmptyState, SectionHeading } from "@/components/ui";
 import { MarkdownRenderer } from "@/lib/markdown/renderer";
-import type { AboutPageData, AboutJourney } from "@/server/queries/about";
+import type { AboutPageData } from "@/server/queries/about";
 import { AboutStoryVisual } from "./about-story-visual";
 
 const breadcrumbs = [
@@ -215,31 +215,275 @@ export function LegacyAboutPage({ data }: { data: AboutPageData }) {
   );
 }
 
-const aboutValues = [
-  { title: "Genuine engineering solutions", description: "Civil engineering services and solutions for corporate offices and co-operative housing societies." },
-  { title: "Repair-led expertise", description: "Repairs and rehabilitation of RCC structures, including structural strengthening." },
-  { title: "Working in tandem", description: "Working in tandem with consultants and clients while executing jobs of varying magnitude." },
-] as const;
+function AboutCredentialCards({
+  credentials,
+  customCredentials,
+  isVisible = true,
+}: {
+  credentials: AboutPageData["settings"]["credentials"];
+  customCredentials?: AboutPageData["credentialsData"];
+  isVisible?: boolean;
+}) {
+  if (!isVisible) return null;
 
-function AboutCredentialCards({ credentials }: { credentials: AboutPageData["settings"]["credentials"] }) {
-  const approved = credentials.filter((credential) => `${credential.label} ${credential.value}`.toLowerCase().includes("msme") || `${credential.label} ${credential.value}`.toLowerCase().includes("insur"));
+  // Use dynamic credentials with uploaded/configured logos
+  const activeItems = customCredentials?.items.filter(
+    (item) => item.isVisible && Boolean(item.image?.url)
+  );
+
+  if (activeItems && activeItems.length > 0) {
+    return (
+      <section className="section-light">
+        <Container className="section-space-generous">
+          <SectionHeading
+            eyebrow={customCredentials?.eyebrow || "Credentials"}
+            title={customCredentials?.title || "Registered and responsibly covered"}
+            description={
+              customCredentials?.description ||
+              "Official statutory registrations and comprehensive insurance coverage."
+            }
+          />
+          <RevealGroup className="mt-10 grid gap-6 sm:grid-cols-2">
+            {activeItems.map((item) => (
+              <Reveal key={item.id}>
+                <Card className="h-full border-line bg-tint p-6 sm:p-8 flex flex-col justify-between">
+                  <div>
+                    {item.image?.url ? (
+                      <div className="relative mb-6 flex h-16 w-auto items-center">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={item.image.url}
+                          alt={item.image.alt || item.label}
+                          className="max-h-16 max-w-[240px] object-contain"
+                          loading="lazy"
+                        />
+                      </div>
+                    ) : null}
+                    <h3 className="font-heading text-xl font-semibold text-ink">{item.label}</h3>
+                    {item.value ? (
+                      <p className="mt-3 text-sm leading-7 text-ink-muted">{item.value}</p>
+                    ) : null}
+                  </div>
+                </Card>
+              </Reveal>
+            ))}
+          </RevealGroup>
+        </Container>
+      </section>
+    );
+  }
+
+  // Fallback if custom credentials are not provided or have no uploaded logos
+  const approved = credentials.filter(
+    (credential) =>
+      `${credential.label} ${credential.value}`.toLowerCase().includes("msme") ||
+      `${credential.label} ${credential.value}`.toLowerCase().includes("insur")
+  );
   if (approved.length === 0) return null;
-  return <section className="section-light"><Container className="section-space-generous"><SectionHeading eyebrow="Credentials" title="Registered and responsibly covered" description="Credentials shown here come from the public site settings." /><RevealGroup className="mt-10 grid gap-5 md:grid-cols-2">{approved.map((credential) => { const isMsme = `${credential.label} ${credential.value}`.toLowerCase().includes("msme"); const Icon = isMsme ? Building2 : ShieldCheck; return <Reveal key={`${credential.label}-${credential.value}`}><Card className="h-full border-line bg-tint"><div className="flex size-12 items-center justify-center rounded-full bg-accent/15 text-accent-ink"><Icon size={22} aria-hidden="true" /></div><h3 className="mt-5 font-heading text-xl font-semibold">{credential.label}</h3><p className="mt-3 text-sm leading-7 text-ink-muted">{credential.value}</p></Card></Reveal>; })}</RevealGroup></Container></section>;
+  return (
+    <section className="section-light">
+      <Container className="section-space-generous">
+        <SectionHeading
+          eyebrow="Credentials"
+          title="Registered and responsibly covered"
+          description="Credentials shown here come from the public site settings."
+        />
+        <RevealGroup className="mt-10 grid gap-5 md:grid-cols-2">
+          {approved.map((credential) => {
+            const isMsme = `${credential.label} ${credential.value}`.toLowerCase().includes("msme");
+            const Icon = isMsme ? Building2 : ShieldCheck;
+            return (
+              <Reveal key={`${credential.label}-${credential.value}`}>
+                <Card className="h-full border-line bg-tint">
+                  <div className="flex size-12 items-center justify-center rounded-full bg-accent/15 text-accent-ink">
+                    <Icon size={22} aria-hidden="true" />
+                  </div>
+                  <h3 className="mt-5 font-heading text-xl font-semibold">{credential.label}</h3>
+                  <p className="mt-3 text-sm leading-7 text-ink-muted">{credential.value}</p>
+                </Card>
+              </Reveal>
+            );
+          })}
+        </RevealGroup>
+      </Container>
+    </section>
+  );
 }
 
-
 export function AboutPage({ data }: { data: AboutPageData }) {
-  const { settings, story, mission, journey, serviceCount, team } = data;
-  return <>
-    <BreadcrumbJsonLd items={breadcrumbs} />
-    <section className="section-light"><Container className="section-space-generous"><div className="grid gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(20rem,.9fr)] lg:items-start lg:gap-16"><Reveal><div>{story ? <><p className="eyebrow">Our story</p><h2 className="mt-3 font-heading text-h2 font-semibold">{story.title}</h2><MarkdownRenderer content={story.body} className="prose prose-slate mt-6 max-w-none leading-8 text-ink-muted prose-headings:font-heading prose-headings:text-ink prose-a:text-accent-ink" /></> : <EmptyState title="Our story is being prepared" description="Published company information will appear here once it is available." />}</div></Reveal><Reveal delay={80}><AboutStoryVisual key={story?.image?.url ?? "illustration"} image={story?.image} alt={story?.imageAlt || story?.image?.alt} caption={story?.imageCaption} foundedYear={settings.foundedYear} /></Reveal></div></Container></section>
+  const {
+    settings,
+    story,
+    mission,
+    expertise,
+    expertiseVisible,
+    credentialsData,
+    credentialsVisible,
+    team,
+  } = data;
 
-    {mission ? <section className="section-tint"><Container className="section-space-generous"><SectionHeading eyebrow="Our aim and values" title={mission.title} description={mission.body} /><RevealGroup className="mt-10 grid gap-5 md:grid-cols-3">{aboutValues.map((value) => <Reveal key={value.title}><HoverCard className="h-full rounded-card"><Card className="h-full border-line bg-bg"><div className="flex size-11 items-center justify-center rounded-full bg-accent/15 text-accent-ink"><CheckCircle2 size={20} aria-hidden="true" /></div><h3 className="mt-5 font-heading text-xl font-semibold">{value.title}</h3><p className="mt-3 text-sm leading-7 text-ink-muted">{value.description}</p></Card></HoverCard></Reveal>)}</RevealGroup></Container></section> : null}
+  return (
+    <>
+      <BreadcrumbJsonLd items={breadcrumbs} />
+      <section className="section-light">
+        <Container className="section-space-generous">
+          <div className="grid gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(20rem,.9fr)] lg:items-start lg:gap-16">
+            <Reveal>
+              <div>
+                {story ? (
+                  <>
+                    <p className="eyebrow">Our story</p>
+                    <h2 className="mt-3 font-heading text-h2 font-semibold">{story.title}</h2>
+                    <MarkdownRenderer
+                      content={story.body}
+                      className="prose prose-slate mt-6 max-w-none leading-8 text-ink-muted prose-headings:font-heading prose-headings:text-ink prose-a:text-accent-ink"
+                    />
+                  </>
+                ) : (
+                  <EmptyState
+                    title="Our story is being prepared"
+                    description="Published company information will appear here once it is available."
+                  />
+                )}
+              </div>
+            </Reveal>
+            <Reveal delay={80}>
+              <AboutStoryVisual
+                key={story?.image?.url ?? "illustration"}
+                image={story?.image}
+                alt={story?.imageAlt || story?.image?.alt}
+                caption={story?.imageCaption}
+                foundedYear={settings.foundedYear}
+              />
+            </Reveal>
+          </div>
+        </Container>
+      </section>
 
-    <AboutCredentialCards credentials={settings.credentials} />
+      {/* Dynamic Expertise Section */}
+      {expertiseVisible && expertise ? (
+        <section className="section-tint">
+          <Container className="section-space-generous">
+            <SectionHeading
+              eyebrow={expertise.eyebrow || "Our aim and values"}
+              title={expertise.title || "Genuine engineering solutions and repair expertise"}
+              description={
+                expertise.description ||
+                mission?.body ||
+                "Dedicated civil engineering and structural rehabilitation services for corporate offices and housing societies."
+              }
+            />
+            <RevealGroup className="mt-10 grid gap-5 md:grid-cols-3">
+              {expertise.blocks.map((block) => (
+                <Reveal key={block.title}>
+                  <HoverCard className="h-full rounded-card">
+                    <Card className="h-full border-line bg-bg">
+                      <div className="flex size-11 items-center justify-center rounded-full bg-accent/15 text-accent-ink">
+                        <CheckCircle2 size={20} aria-hidden="true" />
+                      </div>
+                      <h3 className="mt-5 font-heading text-xl font-semibold">{block.title}</h3>
+                      <p className="mt-3 text-sm leading-7 text-ink-muted">{block.description}</p>
+                    </Card>
+                  </HoverCard>
+                </Reveal>
+              ))}
+            </RevealGroup>
+          </Container>
+        </section>
+      ) : mission ? (
+        <section className="section-tint">
+          <Container className="section-space-generous">
+            <SectionHeading eyebrow="Our aim and values" title={mission.title} description={mission.body} />
+          </Container>
+        </section>
+      ) : null}
 
-    <section className="section-tint"><Container className="section-space-generous"><SectionHeading eyebrow="The people behind the work" title="Project leadership and support" />{team.length === 0 ? <div className="mt-8"><EmptyState title="Team profiles are being prepared" description="Published team information will appear here once it is available." /></div> : <RevealGroup className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">{team.map((member) => <Reveal key={member.id}><HoverCard className="group h-full rounded-card"><Card className="h-full border-line bg-bg p-4"><div className="relative aspect-[4/5] overflow-hidden rounded-card bg-cta-gradient">{member.photo ? <CloudImage src={member.photo.url} alt={member.photo.alt} fill sizes="(min-width: 1024px) 22vw, (min-width: 640px) 45vw, 100vw" data-hover-image className="object-cover" /> : <div className="flex h-full items-center justify-center font-heading text-5xl font-bold text-dark/80" aria-hidden="true">{member.name.split(/\s+/).map((part) => part[0]).join("").slice(0, 2)}</div>}</div><h3 className="mt-4 font-heading text-lg font-semibold">{member.name}</h3><p className="mt-1 text-sm font-medium text-accent-ink">{member.designation}</p>{member.qualification ? <p className="mt-1 text-sm text-ink-muted">{member.qualification}</p> : null}{member.experienceYrs !== null ? <p className="mt-3 text-sm text-ink-muted">{member.experienceYrs} years of experience</p> : null}{member.bio ? <div className="mt-3 min-h-20 translate-y-1 overflow-hidden text-sm leading-6 text-ink-muted opacity-0 transition-[opacity,transform] duration-300 group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:translate-y-0 group-focus-within:opacity-100"><MarkdownRenderer content={member.bio} className="prose prose-sm max-w-none" /></div> : null}</Card></HoverCard></Reveal>)}</RevealGroup>}</Container></section>
+      {/* Dynamic Credential Section */}
+      <AboutCredentialCards
+        credentials={settings.credentials}
+        customCredentials={credentialsData}
+        isVisible={credentialsVisible}
+      />
 
-    <section className="section-gradient relative"><Container className="relative z-10 section-space"><Reveal className="mx-auto flex max-w-3xl flex-col items-center text-center"><p className="eyebrow">Start a conversation</p><h2 className="mt-3 font-heading text-h2 font-semibold text-dark">Discuss your construction, repair or rehabilitation requirement.</h2><Link href="/estimate" className="mt-7 inline-flex min-h-12 items-center justify-center gap-2 rounded-control bg-accent px-6 font-bold text-accent-ink shadow-soft transition-transform hover:-translate-y-0.5">Get Free Quote <ArrowRight size={18} aria-hidden="true" /></Link></Reveal></Container></section>
-  </>;
+      <section className="section-tint">
+        <Container className="section-space-generous">
+          <SectionHeading eyebrow="The people behind the work" title="Project leadership and support" />
+          {team.length === 0 ? (
+            <div className="mt-8">
+              <EmptyState
+                title="Team profiles are being prepared"
+                description="Published team information will appear here once it is available."
+              />
+            </div>
+          ) : (
+            <RevealGroup className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              {team.map((member) => (
+                <Reveal key={member.id}>
+                  <HoverCard className="group h-full rounded-card">
+                    <Card className="h-full border-line bg-bg p-4">
+                      <div className="relative aspect-[4/5] overflow-hidden rounded-card bg-cta-gradient">
+                        {member.photo ? (
+                          <CloudImage
+                            src={member.photo.url}
+                            alt={member.photo.alt}
+                            fill
+                            sizes="(min-width: 1024px) 22vw, (min-width: 640px) 45vw, 100vw"
+                            data-hover-image
+                            className="object-cover"
+                          />
+                        ) : (
+                          <div
+                            className="flex h-full items-center justify-center font-heading text-5xl font-bold text-dark/80"
+                            aria-hidden="true"
+                          >
+                            {member.name
+                              .split(/\s+/)
+                              .map((part) => part[0])
+                              .join("")
+                              .slice(0, 2)}
+                          </div>
+                        )}
+                      </div>
+                      <h3 className="mt-4 font-heading text-lg font-semibold">{member.name}</h3>
+                      <p className="mt-1 text-sm font-medium text-accent-ink">{member.designation}</p>
+                      {member.qualification ? (
+                        <p className="mt-1 text-sm text-ink-muted">{member.qualification}</p>
+                      ) : null}
+                      {member.experienceYrs !== null ? (
+                        <p className="mt-3 text-sm text-ink-muted">
+                          {member.experienceYrs} years of experience
+                        </p>
+                      ) : null}
+                      {member.bio ? (
+                        <div className="mt-3 min-h-20 translate-y-1 overflow-hidden text-sm leading-6 text-ink-muted opacity-0 transition-[opacity,transform] duration-300 group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:translate-y-0 group-focus-within:opacity-100">
+                          <MarkdownRenderer content={member.bio} className="prose prose-sm max-w-none" />
+                        </div>
+                      ) : null}
+                    </Card>
+                  </HoverCard>
+                </Reveal>
+              ))}
+            </RevealGroup>
+          )}
+        </Container>
+      </section>
+
+      <section className="section-gradient relative">
+        <Container className="relative z-10 section-space">
+          <Reveal className="mx-auto flex max-w-3xl flex-col items-center text-center">
+            <p className="eyebrow">Start a conversation</p>
+            <h2 className="mt-3 font-heading text-h2 font-semibold text-dark">
+              Discuss your construction, repair or rehabilitation requirement.
+            </h2>
+            <Link
+              href="/estimate"
+              className="mt-7 inline-flex min-h-12 items-center justify-center gap-2 rounded-control bg-accent px-6 font-bold text-accent-ink shadow-soft transition-transform hover:-translate-y-0.5"
+            >
+              Get Free Quote <ArrowRight size={18} aria-hidden="true" />
+            </Link>
+          </Reveal>
+        </Container>
+      </section>
+    </>
+  );
 }

@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { MapPin } from "lucide-react";
 import { useMotionPreference } from "@/components/motion";
 
-interface Location {
+interface LocationMarker {
   id: string;
   name: string;
   top: string;
@@ -12,135 +13,169 @@ interface Location {
   details: string;
 }
 
-const LOCATIONS: Location[] = [
-  { id: "thane", name: "Thane", top: "28%", left: "18%", details: "PMC & turnkey redevelopment projects" },
-  { id: "mumbai", name: "Mumbai", top: "38%", left: "12%", details: "Commercial construction & structural audit" },
-  { id: "kalyan", name: "Kalyan", top: "25%", left: "28%", details: "Residential societies & waterproofing works" },
-  { id: "maharashtra", name: "Maharashtra", top: "50%", left: "62%", details: "State-wide rehabilitation & civil engineering" },
+const LOCATIONS: LocationMarker[] = [
+  {
+    id: "thane",
+    name: "Thane",
+    top: "27%",
+    left: "14%",
+    details: "Civil engineering, PMC & turnkey redevelopment projects",
+  },
+  {
+    id: "mumbai",
+    name: "Mumbai",
+    top: "40%",
+    left: "7%",
+    details: "Structural repair, rehabilitation & commercial works",
+  },
+  {
+    id: "pune",
+    name: "Pune",
+    top: "48%",
+    left: "28%",
+    details: "Expanding project management & structural consultancy",
+  },
+  {
+    id: "maharashtra",
+    name: "Maharashtra",
+    top: "52%",
+    left: "62%",
+    details: "State-wide rehabilitation & civil engineering excellence",
+  },
 ];
-
-/**
- * Clean vector outline of Maharashtra matching the actual geographic state shape.
- */
-function MaharashtraMapVector() {
-  return (
-    <svg
-      className="absolute inset-0 size-full text-ink opacity-[0.22]"
-      viewBox="0 0 600 500"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.4"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      {/* Geographically realistic trace of Maharashtra state boundary */}
-      <path d="M 82,145 L 88,172 L 80,205 L 75,248 L 78,285 L 85,320 L 98,375 L 115,415 L 128,405 L 140,368 L 148,332 L 158,302 L 175,295 L 198,310 L 225,328 L 248,348 L 272,335 L 298,315 L 315,328 L 338,318 L 358,295 L 382,282 L 415,285 L 438,268 L 472,275 L 512,258 L 535,225 L 548,185 L 532,152 L 505,145 L 482,158 L 452,148 L 432,122 L 405,115 L 382,128 L 355,122 L 328,105 L 295,98 L 265,112 L 238,102 L 212,118 L 185,112 L 158,128 L 128,122 L 105,138 Z" />
-      {/* Internal region divider accents (Konkan coast line & Desh plateau line) */}
-      <path d="M 88,172 L 112,185 L 128,218 L 138,262 L 148,332" strokeDasharray="3 3" opacity="0.6" />
-      <path d="M 238,102 L 245,152 L 235,208 L 225,328" strokeDasharray="3 3" opacity="0.6" />
-      <path d="M 355,122 L 362,178 L 358,295" strokeDasharray="3 3" opacity="0.6" />
-    </svg>
-  );
-}
 
 export function HomeMapOrbit() {
   const { reducedMotion } = useMotionPreference();
   const [hovered, setHovered] = useState<string | null>(null);
-  const [active, setActive] = useState<string | null>(null);
-
-  const isActive = (id: string) => active === id || hovered === id;
 
   return (
-    <div className="relative mx-auto aspect-[4/3] w-full max-w-[38rem]">
-      {/* Background vector elements */}
-      <div className="absolute inset-0">
-        {/* Maharashtra State Map Outline */}
-        <MaharashtraMapVector />
-
-        {/* Animated orbital rings */}
-        {!reducedMotion && (
-          <svg
-            className="absolute inset-0 size-full text-line/40"
-            viewBox="0 0 500 500"
-            fill="none"
-            aria-hidden="true"
-          >
-            <ellipse
-              cx="250"
-              cy="250"
-              rx="190"
-              ry="104"
-              stroke="currentColor"
-              strokeWidth="1"
-              className="home-orbit-ring-1"
-            />
-            <ellipse
-              cx="250"
-              cy="250"
-              rx="190"
-              ry="104"
-              stroke="currentColor"
-              strokeWidth="1"
-              transform="rotate(62 250 250)"
-              className="home-orbit-ring-2"
-            />
-          </svg>
-        )}
+    <div className="relative mx-auto aspect-[4/3] w-full max-w-[38rem] select-none">
+      {/* 1. Actual Maharashtra Map Background (Preserves exact geographical boundary and proportions) */}
+      <div className="absolute inset-0 flex items-center justify-center p-2 sm:p-4">
+        <Image
+          src="/maha-map.jpg"
+          alt="Maharashtra geographical service map"
+          fill
+          sizes="(min-width: 1024px) 45vw, 100vw"
+          className="pointer-events-none object-contain opacity-85"
+          priority
+        />
       </div>
 
-      {/* Center rotating company badge */}
-      <div className="absolute inset-0 flex items-center justify-center">
-        <div className="relative">
-          {!reducedMotion && (
-            <div className="absolute inset-0 rounded-full border border-dark/15 home-orbit-pulse" />
-          )}
-          <div className="relative flex size-32 items-center justify-center rounded-full bg-dark text-white shadow-raised">
-            <span className="px-4 text-center text-[10px] font-bold uppercase tracking-[0.18em] leading-tight">
-              Vakratund<br />Construction
+      {/* 2. Floating white location pills with purple pins */}
+      {LOCATIONS.map((loc) => {
+        const isHovered = hovered === loc.id;
+        return (
+          <div
+            key={loc.id}
+            className="absolute z-20 -translate-x-1/2 -translate-y-1/2 transition-transform duration-200"
+            style={{ top: loc.top, left: loc.left }}
+          >
+            <div
+              onMouseEnter={() => setHovered(loc.id)}
+              onMouseLeave={() => setHovered(null)}
+              className={`flex items-center gap-1.5 rounded-full border bg-white/95 px-3 py-1 text-xs font-semibold text-ink shadow-md backdrop-blur-sm transition-all sm:px-3.5 sm:py-1.5 sm:text-sm ${
+                isHovered
+                  ? "scale-105 border-purple-400 ring-2 ring-purple-400/20 shadow-raised"
+                  : "border-line/70 hover:border-purple-300"
+              }`}
+            >
+              <MapPin size={14} className="text-purple-600 shrink-0" aria-hidden="true" />
+              <span>{loc.name}</span>
+            </div>
+
+            {/* Accessible tooltip card on hover */}
+            {isHovered && (
+              <div className="pointer-events-none absolute left-1/2 top-full z-30 mt-2 w-52 -translate-x-1/2 rounded-xl border border-line bg-white p-3 text-left shadow-raised">
+                <p className="flex items-center gap-1.5 text-xs font-bold text-ink">
+                  <MapPin size={13} className="text-purple-600" aria-hidden="true" />
+                  {loc.name}
+                </p>
+                <p className="mt-1 text-xs leading-5 text-ink-muted">{loc.details}</p>
+              </div>
+            )}
+          </div>
+        );
+      })}
+
+      {/* 3. Dark Navy Rotating 3D Sphere in front of map */}
+      <div
+        className="absolute left-[36%] top-[42%] z-10 -translate-x-1/2 -translate-y-1/2"
+        aria-label="Vakratund Construction 3D rotating globe"
+      >
+        <div className="sphere-3d relative flex size-36 sm:size-44 md:size-48 items-center justify-center rounded-full overflow-hidden">
+          {/* Subtle Rotating Longitude/Latitude Wireframe */}
+          <div className="absolute inset-0 overflow-hidden rounded-full pointer-events-none">
+            {/* Latitude Parallels (Static 3D perspective curves) */}
+            <svg
+              viewBox="0 0 200 200"
+              className="absolute inset-0 size-full stroke-white/20"
+              fill="none"
+              strokeWidth="1"
+              aria-hidden="true"
+            >
+              <ellipse cx="100" cy="55" rx="76" ry="16" />
+              <ellipse cx="100" cy="100" rx="98" ry="24" stroke="rgba(255,255,255,0.25)" />
+              <ellipse cx="100" cy="145" rx="76" ry="16" />
+            </svg>
+
+            {/* Longitude Meridians (Smooth Continuous 360-degree rotation) */}
+            <div
+              className={`absolute inset-0 flex w-[200%] ${
+                reducedMotion ? "" : "sphere-spin-track"
+              }`}
+              style={{ willChange: "transform" }}
+              aria-hidden="true"
+            >
+              {/* Primary Meridian Set */}
+              <svg
+                viewBox="0 0 200 200"
+                className="size-full shrink-0 stroke-white/20"
+                fill="none"
+                strokeWidth="1"
+              >
+                <ellipse cx="100" cy="100" rx="88" ry="98" />
+                <ellipse cx="100" cy="100" rx="60" ry="98" />
+                <ellipse cx="100" cy="100" rx="30" ry="98" />
+                <line x1="100" y1="2" x2="100" y2="198" stroke="rgba(255,255,255,0.28)" />
+                <ellipse cx="100" cy="100" rx="10" ry="98" />
+              </svg>
+              {/* Duplicate Meridian Set for seamless loop */}
+              <svg
+                viewBox="0 0 200 200"
+                className="size-full shrink-0 stroke-white/20"
+                fill="none"
+                strokeWidth="1"
+              >
+                <ellipse cx="100" cy="100" rx="88" ry="98" />
+                <ellipse cx="100" cy="100" rx="60" ry="98" />
+                <ellipse cx="100" cy="100" rx="30" ry="98" />
+                <line x1="100" y1="2" x2="100" y2="198" stroke="rgba(255,255,255,0.28)" />
+                <ellipse cx="100" cy="100" rx="10" ry="98" />
+              </svg>
+            </div>
+
+            {/* Specular 3D Lighting Highlight */}
+            <div
+              className="absolute inset-0 rounded-full"
+              style={{
+                background:
+                  "radial-gradient(circle at 30% 24%, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0.08) 35%, transparent 65%)",
+              }}
+            />
+          </div>
+
+          {/* VAKRATUND CONSTRUCTION Central Branding */}
+          <div className="relative z-10 flex flex-col items-center justify-center px-2 text-center pointer-events-none">
+            <span className="font-bold text-[10px] sm:text-[12px] md:text-[13px] tracking-[0.2em] text-white leading-tight uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]">
+              VAKRATUND
+            </span>
+            <span className="font-bold text-[8px] sm:text-[10px] md:text-[11px] tracking-[0.22em] text-white/90 leading-tight uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)] mt-0.5">
+              CONSTRUCTION
             </span>
           </div>
         </div>
       </div>
-
-      {/* Interactive location badges */}
-      {LOCATIONS.map((loc) => (
-        <div key={loc.id} className="absolute" style={{ top: loc.top, left: loc.left }}>
-          <button
-            type="button"
-            onMouseEnter={() => setHovered(loc.id)}
-            onMouseLeave={() => setHovered(null)}
-            onClick={() => setActive(active === loc.id ? null : loc.id)}
-            className={`group relative rounded-full border bg-bg px-4 py-2 text-sm font-semibold text-ink shadow-soft transition-all ${
-              isActive(loc.id)
-                ? "border-dark/40 scale-105 bg-white"
-                : "border-line hover:border-dark/20 hover:scale-[1.03]"
-            }`}
-            aria-expanded={isActive(loc.id)}
-            aria-controls={`home-map-pop-${loc.id}`}
-          >
-            <span className="flex items-center gap-1.5">
-              <MapPin size={14} className="text-accent" aria-hidden="true" />
-              {loc.name}
-            </span>
-          </button>
-
-          {isActive(loc.id) && (
-            <div
-              id={`home-map-pop-${loc.id}`}
-              className="pointer-events-none absolute left-1/2 top-full z-20 mt-3 w-56 -translate-x-1/2"
-            >
-              <div className="rounded-xl border border-line bg-bg p-4 shadow-raised">
-                <h4 className="flex items-center gap-2 font-semibold text-ink">
-                  <MapPin size={16} className="text-accent" aria-hidden="true" />
-                  {loc.name}
-                </h4>
-                <p className="mt-1.5 text-sm leading-6 text-ink-muted">{loc.details}</p>
-              </div>
-            </div>
-          )}
-        </div>
-      ))}
     </div>
   );
 }

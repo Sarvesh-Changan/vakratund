@@ -708,6 +708,65 @@ const pageSections = [
       body: "To provide genuine civil engineering services and solutions to corporate offices and co-operative housing societies facing problems such as terrace leakages, plaster damage and structural failure of RCC members.",
     },
   },
+  {
+    id: "seed-section-about-expertise",
+    pageKey: "about",
+    sectionKey: "expertise",
+    content: {
+      eyebrow: "Our aim and values",
+      title: "Genuine engineering solutions and repair expertise",
+      description:
+        "Dedicated civil engineering and structural rehabilitation services for corporate offices and housing societies.",
+      blocks: [
+        {
+          title: "Genuine engineering solutions",
+          description:
+            "Civil engineering services and solutions for corporate offices and co-operative housing societies.",
+        },
+        {
+          title: "Repair-led expertise",
+          description:
+            "Repairs and rehabilitation of RCC structures, including structural strengthening.",
+        },
+        {
+          title: "Working in tandem",
+          description:
+            "Working in tandem with consultants and clients while executing jobs of varying magnitude.",
+        },
+      ],
+    },
+  },
+  {
+    id: "seed-section-about-credentials",
+    pageKey: "about",
+    sectionKey: "credentials",
+    content: {
+      eyebrow: "Credentials",
+      title: "Registered and responsibly covered",
+      description: "Official statutory registrations and comprehensive insurance coverage.",
+      items: [
+        {
+          id: "msme",
+          label: "MSME registration",
+          value: "Registered with MSME, Government of India",
+          mediaId: null,
+          mediaUrl: "/udyam.png",
+          alt: "Udyam MSME Registration",
+          isVisible: true,
+        },
+        {
+          id: "workmen_insurance",
+          label: "Workmen's compensation insurance",
+          value:
+            "Covered by workmen's compensation insurance policy under the Maharashtra Government Act of Labour Insurance",
+          mediaId: null,
+          mediaUrl: null,
+          alt: "Workmen's Compensation Insurance",
+          isVisible: true,
+        },
+      ],
+    },
+  },
 ] satisfies Array<{
   id: string;
   pageKey: string;

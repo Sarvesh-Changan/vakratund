@@ -22,6 +22,8 @@ const sections = [
   { pageKey: "home", sectionKey: "cta" },
   { pageKey: "about", sectionKey: "story" },
   { pageKey: "about", sectionKey: "mission" },
+  { pageKey: "about", sectionKey: "expertise" },
+  { pageKey: "about", sectionKey: "credentials" },
   { pageKey: "about", sectionKey: "journey" },
 ] as const;
 
@@ -38,6 +40,50 @@ const defaults: Record<string, Record<string, unknown>> = {
   "home:cta": { title: "", description: "", primaryCta: "Get Free Quote", primaryHref: "/estimate", secondaryCta: "", secondaryHref: "", callCta: "Call Now", whatsappCta: "Chat on WhatsApp" },
   "about:story": { title: "Our story", body: "", imageMediaId: null, imageAlt: "", imageCaption: "" },
   "about:mission": { title: "Our mission", body: "" },
+  "about:expertise": {
+    eyebrow: "Our aim and values",
+    title: "Engineering Solutions & Expertise",
+    description: "",
+    blocks: [
+      {
+        title: "Genuine engineering solutions",
+        description: "Civil engineering services and solutions for corporate offices and co-operative housing societies.",
+      },
+      {
+        title: "Repair-led expertise",
+        description: "Repairs and rehabilitation of RCC structures, including structural strengthening.",
+      },
+      {
+        title: "Working in tandem",
+        description: "Working in tandem with consultants and clients while executing jobs of varying magnitude.",
+      },
+    ],
+  },
+  "about:credentials": {
+    eyebrow: "Credentials",
+    title: "Registered and responsibly covered",
+    description: "Official statutory registrations and insurance coverage.",
+    items: [
+      {
+        id: "msme",
+        label: "MSME registration",
+        value: "Registered with MSME, Government of India",
+        mediaId: null,
+        mediaUrl: "/udyam.png",
+        alt: "Udyam MSME Registration",
+        isVisible: true,
+      },
+      {
+        id: "workmen_insurance",
+        label: "Workmen's compensation insurance",
+        value: "Covered by workmen's compensation insurance policy under the Maharashtra Government Act of Labour Insurance",
+        mediaId: null,
+        mediaUrl: null,
+        alt: "Workmen's Compensation Insurance",
+        isVisible: true,
+      },
+    ],
+  },
 };
 
 function TextField({ label, value, onChange, area = false, hint }: { label: string; value: string; onChange: (value: string) => void; area?: boolean; hint?: string }) {
@@ -103,6 +149,186 @@ export function PagesContentEditor({ initial, assets = [], phoneHref = "/contact
         {row.sectionKey === "faq" ? <div className="grid gap-3 sm:grid-cols-2"><TextField label="Eyebrow" value={String(content.eyebrow ?? "")} onChange={(value) => update(index, { eyebrow: value })} /><TextField label="Section title" value={String(content.title ?? "")} onChange={(value) => update(index, { title: value })} /><TextField label="View all link label" value={String(content.viewAllLabel ?? "")} onChange={(value) => update(index, { viewAllLabel: value })} /></div> : null}
         {row.sectionKey === "estimator" ? <div className="grid gap-3 sm:grid-cols-2"><TextField label="Eyebrow" value={String(content.eyebrow ?? "")} onChange={(value) => update(index, { eyebrow: value })} /><TextField label="Title" value={String(content.title ?? "")} onChange={(value) => update(index, { title: value })} /><TextField label="Description" value={String(content.description ?? "")} onChange={(value) => update(index, { description: value })} area /><TextField label="CTA label" value={String(content.ctaLabel ?? "")} onChange={(value) => update(index, { ctaLabel: value })} /></div> : null}
         {row.pageKey === "about" && ["story", "mission"].includes(row.sectionKey) ? <div className="grid gap-3"><TextField label="Title" value={String(content.title ?? "")} onChange={(value) => update(index, { title: value })} /><TextField label="Body" value={String(content.body ?? "")} onChange={(value) => update(index, { body: value })} area /></div> : null}
+        {row.pageKey === "about" && row.sectionKey === "expertise" ? (
+          <div className="space-y-4">
+            <div className="grid gap-3 sm:grid-cols-2">
+              <TextField
+                label="Eyebrow text"
+                value={String(content.eyebrow ?? "")}
+                onChange={(val) => update(index, { eyebrow: val })}
+              />
+              <TextField
+                label="Section title"
+                value={String(content.title ?? "")}
+                onChange={(val) => update(index, { title: val })}
+              />
+            </div>
+            <TextField
+              label="Section description"
+              value={String(content.description ?? "")}
+              onChange={(val) => update(index, { description: val })}
+              area
+            />
+            <h3 className="pt-2 font-semibold text-ink text-sm">Expertise Blocks</h3>
+            <div className="grid gap-4 md:grid-cols-3">
+              {((content.blocks as Array<{ title: string; description: string }>) || []).map((block, bIdx) => (
+                <div key={bIdx} className="space-y-3 rounded-card border border-line bg-tint/50 p-4">
+                  <span className="text-xs font-bold uppercase tracking-wider text-accent-ink">
+                    Block {bIdx + 1}
+                  </span>
+                  <TextField
+                    label="Title"
+                    value={block.title}
+                    onChange={(val) => {
+                      const newBlocks = [...((content.blocks as Array<{ title: string; description: string }>) || [])];
+                      if (newBlocks[bIdx]) {
+                        newBlocks[bIdx] = { ...newBlocks[bIdx], title: val };
+                        update(index, { blocks: newBlocks });
+                      }
+                    }}
+                  />
+                  <TextField
+                    label="Description"
+                    value={block.description}
+                    onChange={(val) => {
+                      const newBlocks = [...((content.blocks as Array<{ title: string; description: string }>) || [])];
+                      if (newBlocks[bIdx]) {
+                        newBlocks[bIdx] = { ...newBlocks[bIdx], description: val };
+                        update(index, { blocks: newBlocks });
+                      }
+                    }}
+                    area
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : null}
+        {row.pageKey === "about" && row.sectionKey === "credentials" ? (
+          <div className="space-y-5">
+            <div className="grid gap-3 sm:grid-cols-2">
+              <TextField
+                label="Eyebrow text"
+                value={String(content.eyebrow ?? "")}
+                onChange={(val) => update(index, { eyebrow: val })}
+              />
+              <TextField
+                label="Section title"
+                value={String(content.title ?? "")}
+                onChange={(val) => update(index, { title: val })}
+              />
+            </div>
+            <TextField
+              label="Section description"
+              value={String(content.description ?? "")}
+              onChange={(val) => update(index, { description: val })}
+              area
+            />
+            <h3 className="pt-2 font-semibold text-ink text-sm">Credential Logos & Badges</h3>
+            <div className="grid gap-5 md:grid-cols-2">
+              {((content.items as Array<{ id: string; label: string; value?: string; mediaId?: string | null; mediaUrl?: string | null; alt?: string; isVisible: boolean }>) || []).map((item, itemIdx) => {
+                const mediaAsset = item.mediaId ? assets.find((a) => a.id === item.mediaId) : null;
+                const displayUrl = mediaAsset?.url || item.mediaUrl;
+                return (
+                  <div key={item.id} className="space-y-4 rounded-card border border-line bg-tint/50 p-5">
+                    <div className="flex items-center justify-between border-b border-line pb-2">
+                      <span className="font-semibold text-ink">
+                        {item.id === "msme" ? "MSME Registration" : "Workmen's Compensation Insurance"}
+                      </span>
+                      <label className="flex items-center gap-2 text-xs font-medium">
+                        <input
+                          type="checkbox"
+                          checked={item.isVisible}
+                          onChange={(e) => {
+                            const newItems = [...((content.items as Array<{ id: string; label: string; value?: string; mediaId?: string | null; mediaUrl?: string | null; alt?: string; isVisible: boolean }>) || [])];
+                            if (newItems[itemIdx]) {
+                              newItems[itemIdx] = { ...newItems[itemIdx], isVisible: e.target.checked };
+                              update(index, { items: newItems });
+                            }
+                          }}
+                        />
+                        Visible
+                      </label>
+                    </div>
+                    <TextField
+                      label="Display label"
+                      value={item.label}
+                      onChange={(val) => {
+                        const newItems = [...((content.items as Array<{ id: string; label: string; value?: string; mediaId?: string | null; mediaUrl?: string | null; alt?: string; isVisible: boolean }>) || [])];
+                        if (newItems[itemIdx]) {
+                          newItems[itemIdx] = { ...newItems[itemIdx], label: val };
+                          update(index, { items: newItems });
+                        }
+                      }}
+                    />
+                    <TextField
+                      label="Description / Statutory text"
+                      value={item.value || ""}
+                      onChange={(val) => {
+                        const newItems = [...((content.items as Array<{ id: string; label: string; value?: string; mediaId?: string | null; mediaUrl?: string | null; alt?: string; isVisible: boolean }>) || [])];
+                        if (newItems[itemIdx]) {
+                          newItems[itemIdx] = { ...newItems[itemIdx], value: val };
+                          update(index, { items: newItems });
+                        }
+                      }}
+                      area
+                    />
+                    <div>
+                      <label className="block text-xs font-semibold text-ink mb-1.5">Official Logo</label>
+                      {displayUrl ? (
+                        <div className="mb-3 flex items-center gap-4">
+                          <div className="flex h-16 w-36 items-center justify-center rounded-control border border-line bg-white p-2">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                              src={displayUrl}
+                              alt={item.alt || item.label}
+                              className="max-h-full max-w-full object-contain"
+                            />
+                          </div>
+                          <button
+                            type="button"
+                            className="text-xs text-danger hover:underline"
+                            onClick={() => {
+                              const newItems = [...((content.items as Array<{ id: string; label: string; value?: string; mediaId?: string | null; mediaUrl?: string | null; alt?: string; isVisible: boolean }>) || [])];
+                              if (newItems[itemIdx]) {
+                                newItems[itemIdx] = { ...newItems[itemIdx], mediaId: null, mediaUrl: null };
+                                update(index, { items: newItems });
+                              }
+                            }}
+                          >
+                            Remove logo
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="mb-3 rounded-control border border-dashed border-line p-3 text-center text-xs text-ink-muted">
+                          No approved logo uploaded yet. This credential will stay hidden on the public site until an approved logo is uploaded.
+                        </div>
+                      )}
+                      <SectionUploader
+                        section="pages"
+                        previewAspect="square"
+                        title={displayUrl ? `Replace ${item.label} logo` : `Upload ${item.label} logo`}
+                        defaultAlt={() => `${item.label} logo`}
+                        onUploaded={(asset) => {
+                          const newItems = [...((content.items as Array<{ id: string; label: string; value?: string; mediaId?: string | null; mediaUrl?: string | null; alt?: string; isVisible: boolean }>) || [])];
+                          if (newItems[itemIdx]) {
+                            newItems[itemIdx] = {
+                              ...newItems[itemIdx],
+                              mediaId: asset.id,
+                              mediaUrl: asset.url,
+                              alt: asset.alt,
+                            };
+                            update(index, { items: newItems });
+                          }
+                        }}
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        ) : null}
         {row.pageKey === "about" && row.sectionKey === "story" ? <div className="space-y-3"><h3 className="font-semibold">Our story image</h3><p className="text-sm text-ink-muted">Recommended: landscape image, displayed in a 4:3 frame. Images up to 10 MB. Leave empty to show the built-in illustration.</p>{typeof content.imageMediaId === "string" && assets.find((asset) => asset.id === content.imageMediaId) ? <div className="max-w-xl"><div className="relative aspect-[4/3] overflow-hidden rounded-card border border-line"><CloudImage src={assets.find((asset) => asset.id === content.imageMediaId)?.url ?? ""} alt={String(content.imageAlt ?? "")} fill sizes="(min-width: 1024px) 40vw, 100vw" className="object-cover" /></div><button type="button" className="mt-2 text-sm text-danger" onClick={() => update(index, { imageMediaId: null, imageAlt: "" })}>Remove image</button></div> : <div className="aspect-[4/3] max-w-xl overflow-hidden rounded-card border border-line bg-tint"><AboutIllustration className="size-full" decorative /></div>}{content.imageMediaId ? <TextField label="Image alt text (required)" value={String(content.imageAlt ?? "")} onChange={(value) => update(index, { imageAlt: value })} /> : null}<TextField label="Image caption (optional)" value={String(content.imageCaption ?? "")} onChange={(value) => update(index, { imageCaption: value })} /><SectionUploader section="pages" previewAspect="4/3" title={content.imageMediaId ? "Replace story image" : "Upload story image"} defaultAlt={() => String(content.title || "Our story")} onUploaded={(asset) => update(index, { imageMediaId: asset.id, imageAlt: asset.alt })} /></div> : null}
         {row.pageKey === "about" && row.sectionKey === "journey" ? <div className="grid gap-3"><TextField label="Eyebrow" value={String(content.eyebrow ?? "")} onChange={(value) => update(index, { eyebrow: value })} /><TextField label="Title" value={String(content.title ?? "")} onChange={(value) => update(index, { title: value })} /><TextField label="Milestones (year:title:description per line)" value={milestones.map((milestone) => `${milestone.year}:${milestone.title}:${milestone.description ?? ""}`).join("\n")} onChange={(value) => update(index, { milestones: value.split("\n").filter(Boolean).map((line) => { const parts = line.split(":"); return { year: Number((parts.shift() ?? "").trim()), title: (parts.shift() ?? "").trim(), description: parts.join(":").trim() }; }) })} area hint="Leave blank when there are no approved milestones. Do not add unverified dates or claims." /></div> : null}
         {row.sectionKey === "cta" ? <div className="grid gap-3 sm:grid-cols-2"><TextField label="Title" value={String(content.title ?? "")} onChange={(value) => update(index, { title: value })} /><TextField label="Description" value={String(content.description ?? "")} onChange={(value) => update(index, { description: value })} area /><TextField label="Get quote CTA" value={String(content.primaryCta ?? "")} onChange={(value) => update(index, { primaryCta: value })} /><TextField label="Quote URL" value={String(content.primaryHref ?? "/estimate")} onChange={(value) => update(index, { primaryHref: value })} /><TextField label="Call CTA" value={String(content.callCta ?? "Call Now")} onChange={(value) => update(index, { callCta: value })} /><TextField label="WhatsApp CTA" value={String(content.whatsappCta ?? "Chat on WhatsApp")} onChange={(value) => update(index, { whatsappCta: value })} /></div> : null}

@@ -28,4 +28,34 @@ describe("homepage PageSection content", () => {
     expect(pageSectionInputSchema.safeParse({ pageKey: "home", sectionKey: "estimator", isVisible: true, content: { eyebrow: "Project planning", title: "Explore an indicative estimate", description: "Final quotation follows site inspection.", ctaLabel: "Estimate a project" } }).success).toBe(true);
     expect(pageSectionInputSchema.safeParse({ pageKey: "home", sectionKey: "specialty", isVisible: true, content: { eyebrow: "Structural repairs", title: "Structural audit and repair for societies", description: "", ctaLabel: "Request Site Inspection", ctaHref: "/contact?type=inspection" } }).success).toBe(true);
   });
+
+  it("validates editable about expertise section with three content blocks", () => {
+    const validExpertise = {
+      eyebrow: "Our aim and values",
+      title: "Genuine engineering solutions and repair expertise",
+      description: "Dedicated civil engineering solutions.",
+      blocks: [
+        { title: "Genuine engineering solutions", description: "Civil engineering services and solutions." },
+        { title: "Repair-led expertise", description: "Repairs and rehabilitation of RCC structures." },
+        { title: "Working in tandem", description: "Working in tandem with consultants and clients." },
+      ],
+    };
+    expect(pageSectionSchemas.about.expertise.safeParse(validExpertise).success).toBe(true);
+    expect(pageSectionInputSchema.safeParse({ pageKey: "about", sectionKey: "expertise", isVisible: true, content: validExpertise }).success).toBe(true);
+    expect(pageSectionSchemas.about.expertise.safeParse({ blocks: [] }).success).toBe(false);
+  });
+
+  it("validates editable about credentials section with MSME and insurance items", () => {
+    const validCredentials = {
+      eyebrow: "Credentials",
+      title: "Registered and responsibly covered",
+      description: "Credentials and statutory registrations.",
+      items: [
+        { id: "msme", label: "MSME registration", value: "Registered with MSME", mediaId: null, mediaUrl: "/udyam.png", alt: "Udyam logo", isVisible: true },
+        { id: "workmen_insurance", label: "Workmen's compensation insurance", value: "Covered by policy", mediaId: null, mediaUrl: null, alt: "Insurance", isVisible: true },
+      ],
+    };
+    expect(pageSectionSchemas.about.credentials.safeParse(validCredentials).success).toBe(true);
+    expect(pageSectionInputSchema.safeParse({ pageKey: "about", sectionKey: "credentials", isVisible: true, content: validCredentials }).success).toBe(true);
+  });
 });

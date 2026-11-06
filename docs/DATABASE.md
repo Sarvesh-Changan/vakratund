@@ -340,7 +340,7 @@ model TeamMember {
 model PageSection {
   id        String   @id @default(cuid())
   pageKey   String                      // "home", "about"
-  sectionKey String                     // "hero", "stats", "cta"
+  sectionKey String                     // home: hero, showcase, services, projects, why, process, specialty, faq, estimator, cta; about: story, mission, journey, expertise, credentials
   content   Json                        // validated by per-section Zod schema
   sortOrder Int      @default(0)
   isVisible Boolean  @default(true)

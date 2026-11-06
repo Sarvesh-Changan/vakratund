@@ -19,10 +19,38 @@ const aboutStorySchema = z.object({ title: text(160), body: text(20_000), imageM
   if (value.imageMediaId && !value.imageAlt?.trim()) context.addIssue({ code: z.ZodIssueCode.custom, path: ["imageAlt"], message: "Alt text is required when a story image is set." });
 });
 const aboutJourneySchema = z.object({ eyebrow: optionalText(80), title: text(120), milestones: z.array(z.object({ year: z.number().int().min(1900).max(2200), title: text(120), description: optionalText(240) }).strict()).max(12) }).strict();
+const aboutExpertiseSchema = z.object({
+  eyebrow: optionalText(80),
+  title: optionalText(160),
+  description: optionalText(500),
+  blocks: z.array(
+    z.object({
+      title: text(160),
+      description: text(1000),
+    }).strict()
+  ).min(1).max(6),
+}).strict();
+
+const aboutCredentialItemSchema = z.object({
+  id: z.string().min(1).max(40),
+  label: text(120),
+  value: optionalText(300),
+  mediaId: z.string().cuid().nullable().optional(),
+  mediaUrl: z.string().nullable().optional(),
+  alt: optionalText(200).optional(),
+  isVisible: z.boolean().default(true),
+}).strict();
+
+const aboutCredentialsSchema = z.object({
+  eyebrow: optionalText(80),
+  title: optionalText(160),
+  description: optionalText(500),
+  items: z.array(aboutCredentialItemSchema).min(1).max(10),
+}).strict();
 
 export const pageSectionSchemas = {
   home: { hero: heroSchema, showcase: homeShowcaseSchema, services: homeServicesSchema, projects: homeProjectsSchema, why: homeWhySchema, process: processSchema, specialty: homeSpecialtySchema, faq: homeFaqSchema, estimator: homeEstimatorSchema, cta: ctaSchema },
-  about: { story: aboutStorySchema, mission: textSectionSchema, journey: aboutJourneySchema },
+  about: { story: aboutStorySchema, mission: textSectionSchema, journey: aboutJourneySchema, expertise: aboutExpertiseSchema, credentials: aboutCredentialsSchema },
 } as const;
 
 export const pageSectionInputSchema = z.discriminatedUnion("sectionKey", [
@@ -39,6 +67,8 @@ export const pageSectionInputSchema = z.discriminatedUnion("sectionKey", [
   z.object({ pageKey: z.literal("about"), sectionKey: z.literal("story"), content: aboutStorySchema, isVisible: z.boolean() }).strict(),
   z.object({ pageKey: z.literal("about"), sectionKey: z.literal("mission"), content: textSectionSchema, isVisible: z.boolean() }).strict(),
   z.object({ pageKey: z.literal("about"), sectionKey: z.literal("journey"), content: aboutJourneySchema, isVisible: z.boolean() }).strict(),
+  z.object({ pageKey: z.literal("about"), sectionKey: z.literal("expertise"), content: aboutExpertiseSchema, isVisible: z.boolean() }).strict(),
+  z.object({ pageKey: z.literal("about"), sectionKey: z.literal("credentials"), content: aboutCredentialsSchema, isVisible: z.boolean() }).strict(),
 ]);
 export const pageSectionIdSchema = z.object({ pageKey: z.enum(["home", "about"]), sectionKey: z.string().min(1).max(40) }).strict();
 export type PageSectionInput = z.infer<typeof pageSectionInputSchema>;

@@ -136,14 +136,23 @@ The public header remains a floating pill. At desktop widths, Services is a comp
 1. **Header** (transparent over hero → solid on scroll): logo, nav, phone, "Get Free Quote" button.
 2. **Hero** (full-bleed building photo with charcoal gradient): H1 "Building trust since 2003" (editable), subtext on PMC / repair / redevelopment, CTAs *Get Free Quote* + *Call Now*, trust chips (MSME Registered · Insured workforce · 20+ years).
 3. **Photo showcase slider**: Continuous horizontal strip powered by `<Marquee>` (steady speed tokens: slow 30 px/s, normal 50 px/s, fast 80 px/s; 4:3 cards with large rounded corners, 180px mobile, 240px tablet, 280px desktop, dual-direction counter-scrolling rows on desktop with 10+ slides; pauses on hover/focus and features WCAG pause toggle; renders static responsive grid for 4-6 slides, hidden below 4 slides; static horizontal scroll under `prefers-reduced-motion: reduce`). Replaced the legacy stats band.
-4. **Services grid** (11 cards, icon + short copy, "View all").
-5. **Featured projects** (3–6 cards with status badge).
-6. **Why choose us / process** (Survey → Plan → Execute → Handover), timeline.
-7. **Specialty highlight**: Structural audit & repair for societies (key differentiator) with CTA "Request site inspection".
-8. **Credentials & team teaser**.
-9. **Testimonials** carousel (keyboard + swipe, no autoplay or pausable).
-10. **Mini estimator teaser** → `/estimate`.
-11. **FAQ teaser** + **Final CTA band** + **Footer** (contacts, links, socials, address).
+4. **Where we work**: Geographic Maharashtra service footprint with actual Maharashtra map boundary (`/maha-map.jpg`), accurately positioned floating white pills with purple pins for Mumbai, Thane, and Pune, and a central rotating 3D navy sphere with longitude/latitude lines and VAKRATUND CONSTRUCTION branding. Pauses on `prefers-reduced-motion: reduce`. Right side features 'WHERE WE WORK' eyebrow, 'Thane and Mumbai, Maharashtra' heading, 'Quality is our first priority' tagline, and 'Contact us' CTA.
+5. **Services grid** (11 cards, icon + short copy, "View all").
+6. **Featured projects** (3–6 cards with status badge).
+7. **Why choose us / process** (Survey → Plan → Execute → Handover), timeline.
+8. **Specialty highlight**: Structural audit & repair for societies (key differentiator) with CTA "Request site inspection".
+9. **Credentials & team teaser**.
+10. **Testimonials** carousel (keyboard + swipe, no autoplay or pausable).
+11. **Mini estimator teaser** → `/estimate`.
+12. **FAQ teaser** + **Final CTA band** + **Footer** (contacts, links, socials, address).
+
+### About
+1. **Story**: Company story and history with responsive landscape story image and inline SVG blueprint fallback.
+2. **Mission & Values**: Aim statement and core philosophy.
+3. **Expertise**: Three database-driven engineering blocks (Genuine engineering solutions, Repair-led expertise, Working in tandem) editable under `/admin/pages`.
+4. **Credentials**: Official statutory badges with transparent Udyam MSME logo and logo-gated Workmen's Compensation Insurance.
+5. **Team leadership**: Profiles and experience of key engineering personnel.
+6. **CTA**: Direct inquiry and quote action.
 
 ### Services detail
 Hero (title + short desc + CTA) → What we do (bullets) → Process → Related projects → Gallery → FAQs → CTA. Sticky side CTA on desktop.

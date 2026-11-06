@@ -224,6 +224,35 @@
   }
 }
 
+@keyframes sphere-scroll-x {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.sphere-3d {
+  background: radial-gradient(circle at 35% 30%, #2a2f48 0%, #151827 50%, #0a0c16 100%);
+  box-shadow:
+    inset 2px 2px 8px rgba(255, 255, 255, 0.22),
+    inset -4px -4px 14px rgba(0, 0, 0, 0.7),
+    0 18px 36px -8px rgba(10, 12, 22, 0.55),
+    0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
+.sphere-spin-track {
+  animation: sphere-scroll-x 16s linear infinite;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sphere-spin-track {
+    animation: none !important;
+  }
+}
+
 @keyframes home-orbit-pulse {
   0%,
   100% {

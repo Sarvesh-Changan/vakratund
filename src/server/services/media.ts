@@ -94,6 +94,13 @@ async function usageMap(mediaIds: readonly string[]): Promise<Map<string, MediaU
     const content = row.content as Record<string, unknown>;
     const mediaId = row.pageKey === "about" && row.sectionKey === "story" ? content.imageMediaId : content.backgroundImageId;
     if (typeof mediaId === "string" && mediaIds.includes(mediaId)) addUsage(result, mediaId, { type: "Page", label: `${row.pageKey} ${row.sectionKey}`, href: "/admin/pages" });
+    if (row.pageKey === "about" && row.sectionKey === "credentials" && Array.isArray(content.items)) {
+      for (const item of content.items as Array<{ mediaId?: string; label?: string }>) {
+        if (typeof item.mediaId === "string" && mediaIds.includes(item.mediaId)) {
+          addUsage(result, item.mediaId, { type: "Credential logo", label: item.label || "About credential", href: "/admin/pages" });
+        }
+      }
+    }
   }
   return result;
 }
