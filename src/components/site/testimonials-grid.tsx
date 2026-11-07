@@ -16,9 +16,13 @@ function cardThumbnail(t: PublishedTestimonial): { url: string; alt: string; isV
   // First: check new media array
   const first = t.media[0];
   if (first) {
-    if (first.media.kind === "IMAGE") return { url: first.media.url, alt: first.media.alt, isVideo: false };
-    // Video: use thumbnail if available, else show play placeholder
-    if (first.thumbnail) return { url: first.thumbnail.url, alt: first.thumbnail.alt, isVideo: true };
+    // If a custom thumbnail was uploaded for this item (image or video), prioritize it
+    if (first.thumbnail) {
+      return { url: first.thumbnail.url, alt: first.thumbnail.alt, isVideo: first.media.kind === "VIDEO" };
+    }
+    if (first.media.kind === "IMAGE") {
+      return { url: first.media.url, alt: first.media.alt, isVideo: false };
+    }
     return null; // Video without thumbnail → play icon
   }
   // Fallback: legacy single photo

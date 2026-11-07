@@ -216,7 +216,7 @@ export function TestimonialForm({ initial, projects }: { initial: TestimonialVie
       </FormSection>
 
       {/* ── Media (images + videos) ───────────────────────────────────── */}
-      <FormSection title="Media" description="Upload one or more images or videos. For video items you may optionally upload a custom thumbnail image. Drag the ⠿ handle to reorder.">
+      <FormSection title="Media" description="Upload one or more images or videos. You can upload a custom thumbnail for each image or video. Reorder using the arrow buttons.">
 
         {/* Existing / added media list */}
         {mediaEntries.length > 0 && (
@@ -232,15 +232,22 @@ export function TestimonialForm({ initial, projects }: { initial: TestimonialVie
                   {/* Preview */}
                   <div className="relative shrink-0">
                     {entry.kind === "VIDEO" ? (
-                      <div className="flex size-20 items-center justify-center rounded-control bg-surface-alt">
+                      <div className="flex size-20 items-center justify-center rounded-lg bg-surface-alt">
                         {entry.thumbnailUrl ? (
-                          <Image src={entry.thumbnailUrl} alt="Thumbnail" width={80} height={80} className="size-20 rounded-control object-cover" />
+                          <Image src={entry.thumbnailUrl} alt="Thumbnail" width={80} height={80} className="size-20 rounded-lg object-cover" />
                         ) : (
                           <Video size={28} className="text-ink-muted" aria-hidden="true" />
                         )}
                       </div>
                     ) : (
-                      <Image src={entry.url} alt={entry.alt} width={80} height={80} className="size-20 rounded-control object-cover" unoptimized />
+                      <div className="relative size-20">
+                        <Image src={entry.thumbnailUrl || entry.url} alt={entry.alt} width={80} height={80} className="size-20 rounded-lg object-cover" unoptimized />
+                        {entry.thumbnailUrl && (
+                          <span className="absolute bottom-0 right-0 rounded bg-brand-deep px-1 text-[9px] font-bold text-white shadow-sm">
+                            Thumb
+                          </span>
+                        )}
+                      </div>
                     )}
                     <span className="absolute -right-1 -top-1 rounded-full bg-surface-alt px-1.5 py-0.5 text-[10px] font-semibold uppercase text-ink-muted ring-1 ring-line">
                       {entry.kind === "VIDEO" ? "VID" : "IMG"}
@@ -250,19 +257,36 @@ export function TestimonialForm({ initial, projects }: { initial: TestimonialVie
                   {/* Info + actions */}
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-sm font-semibold">{entry.alt || entry.url.split("/").pop()}</p>
-                    <p className="mt-0.5 text-xs text-ink-muted">Item {index + 1} of {mediaEntries.length}</p>
+                    <p className="mt-0.5 text-xs text-ink-muted">Item {index + 1} of {mediaEntries.length}{entry.thumbnailUrl ? " · Custom thumbnail set" : ""}</p>
                     <div className="mt-2 flex flex-wrap gap-2">
                       <Button type="button" size="sm" variant="secondary" onClick={() => moveMedia(entry.mediaId, "up")} disabled={index === 0} aria-label="Move up">↑</Button>
                       <Button type="button" size="sm" variant="secondary" onClick={() => moveMedia(entry.mediaId, "down")} disabled={index === mediaEntries.length - 1} aria-label="Move down">↓</Button>
-                      {entry.kind === "VIDEO" && (
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="secondary"
+                        onClick={() => setAwaitingThumbnail(awaitingThumbnail === entry.mediaId ? null : entry.mediaId)}
+                      >
+                        <ImageIcon size={14} className="mr-1" aria-hidden="true" />
+                        {entry.thumbnailId ? "Change thumbnail" : "Add thumbnail"}
+                      </Button>
+                      {entry.thumbnailId && (
                         <Button
                           type="button"
                           size="sm"
-                          variant="secondary"
-                          onClick={() => setAwaitingThumbnail(awaitingThumbnail === entry.mediaId ? null : entry.mediaId)}
+                          variant="ghost"
+                          onClick={() => {
+                            setMediaEntries((prev) =>
+                              prev.map((e) => e.mediaId === entry.mediaId ? { ...e, thumbnailId: null, thumbnailUrl: null } : e),
+                            );
+                            setForm((prev) => {
+                              const nextThumbs = { ...prev.thumbnailIds };
+                              delete nextThumbs[entry.mediaId];
+                              return { ...prev, thumbnailIds: nextThumbs };
+                            });
+                          }}
                         >
-                          <ImageIcon size={14} className="mr-1" aria-hidden="true" />
-                          {entry.thumbnailId ? "Replace thumbnail" : "Add thumbnail"}
+                          Remove thumbnail
                         </Button>
                       )}
                       <Button type="button" size="sm" variant="ghost" onClick={() => removeMedia(entry.mediaId)}>
@@ -271,16 +295,18 @@ export function TestimonialForm({ initial, projects }: { initial: TestimonialVie
                       </Button>
                     </div>
 
-                    {/* Inline thumbnail uploader for this video */}
-                    {entry.kind === "VIDEO" && awaitingThumbnail === entry.mediaId && (
-                      <div className="mt-3 rounded-control border border-dashed p-3">
-                        <p className="mb-2 text-xs font-semibold text-ink-muted">Upload thumbnail image for this video</p>
+                    {/* Inline thumbnail uploader for each item */}
+                    {awaitingThumbnail === entry.mediaId && (
+                      <div className="mt-3 rounded-lg border border-dashed bg-surface-alt/50 p-3">
+                        <p className="mb-2 text-xs font-semibold text-ink-muted">
+                          Upload custom thumbnail image for this {entry.kind === "VIDEO" ? "video" : "image"}
+                        </p>
                         <SectionUploader
                           section="testimonials"
                           accept=".jpg,.jpeg,.png,.webp,.avif"
-                          defaultAlt={entry.alt ? `Thumbnail for ${entry.alt}` : "Video thumbnail"}
+                          defaultAlt={entry.alt ? `Thumbnail for ${entry.alt}` : "Custom thumbnail"}
                           onUploaded={(asset) => handleThumbnailUploaded(entry.mediaId, asset)}
-                          title="Thumbnail image"
+                          title="Custom thumbnail image"
                           previewAspect="4/3"
                         />
                       </div>
@@ -307,7 +333,7 @@ export function TestimonialForm({ initial, projects }: { initial: TestimonialVie
 
         <p className="mt-2 text-xs text-ink-muted">
           <Plus size={12} className="mr-1 inline" aria-hidden="true" />
-          Images and videos are stored in the <strong>testimonials</strong> Cloudinary folder. Videos without a thumbnail will show a play icon placeholder.
+          Images and videos are stored in the <strong>testimonials</strong> Cloudinary folder. You can upload custom thumbnails for any image or video.
         </p>
       </FormSection>
 

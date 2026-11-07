@@ -20,8 +20,8 @@ export function TestimonialsCarousel({ testimonials }: { testimonials: Published
   // Best thumbnail for the current item
   const thumb = (() => {
     const first = current.media[0];
-    if (first?.media.kind === "IMAGE") return { url: first.media.url, alt: first.media.alt };
     if (first?.thumbnail) return { url: first.thumbnail.url, alt: first.thumbnail.alt };
+    if (first?.media.kind === "IMAGE") return { url: first.media.url, alt: first.media.alt };
     if (current.photo) return { url: current.photo.url, alt: current.photo.alt };
     return null;
   })();

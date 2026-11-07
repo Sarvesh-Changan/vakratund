@@ -17,13 +17,13 @@ function MediaSlide({ item }: { item: PublishedTestimonialMedia }) {
   if (isVideo) {
     const posterUrl = item.thumbnail?.url ?? undefined;
     return (
-      <div className="flex w-full items-center justify-center">
+      <div className="flex w-full items-center justify-center overflow-hidden bg-black">
         <video
           src={item.media.url}
           controls
           playsInline
           poster={posterUrl}
-          className="max-h-[70vh] w-full rounded-control object-contain"
+          className="max-h-[72vh] w-full rounded-none object-contain"
           aria-label={item.media.alt || "Testimonial video"}
         >
           Your browser does not support the video tag.
@@ -32,13 +32,13 @@ function MediaSlide({ item }: { item: PublishedTestimonialMedia }) {
     );
   }
   return (
-    <div className="flex w-full items-center justify-center">
+    <div className="flex w-full items-center justify-center overflow-hidden bg-black/90">
       <Image
         src={item.media.url}
         alt={item.media.alt || "Testimonial media"}
         width={item.media.width ?? 1200}
         height={item.media.height ?? 800}
-        className="max-h-[70vh] w-full rounded-control object-contain"
+        className="max-h-[72vh] w-full rounded-none object-contain"
         unoptimized
         priority
       />
@@ -116,12 +116,13 @@ export function TestimonialLightbox({ testimonial, initialMediaIndex = 0, onClos
       role="dialog"
       aria-modal="true"
       aria-label={`Testimonial from ${name}`}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-3 sm:p-5 backdrop-blur-sm"
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
     >
+      {/* Rectangular modal card with clean subtle rounded corners */}
       <div
         ref={dialogRef}
-        className={`relative flex max-h-[90vh] w-full overflow-hidden rounded-panel bg-surface shadow-2xl ${
+        className={`relative flex max-h-[92vh] w-full overflow-hidden rounded-lg sm:rounded-xl border border-line/30 bg-surface shadow-2xl ${
           hasMedia ? "max-w-5xl flex-col lg:flex-row" : "max-w-xl flex-col"
         }`}
       >
@@ -131,16 +132,16 @@ export function TestimonialLightbox({ testimonial, initialMediaIndex = 0, onClos
           type="button"
           onClick={onClose}
           aria-label="Close testimonial"
-          className="absolute right-3 top-3 z-10 inline-flex size-9 items-center justify-center rounded-full bg-black/30 text-white hover:bg-black/50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+          className="absolute right-3 top-3 z-20 inline-flex size-9 items-center justify-center rounded-md bg-black/50 text-white hover:bg-black/70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
         >
           <X size={18} aria-hidden="true" />
         </button>
 
-        {/* ── Left: media ───────────────────────────────────────────── */}
+        {/* ── Left: media (rectangular cinema panel) ─────────────────── */}
         {hasMedia && (
-          <div className="relative flex flex-1 flex-col items-center justify-center bg-charcoal p-4 lg:max-w-[55%]">
+          <div className="relative flex flex-1 flex-col items-center justify-center bg-black p-2 sm:p-4 lg:max-w-[58%]">
             {currentMedia && (
-              <div className="w-full">
+              <div className="flex w-full items-center justify-center">
                 <MediaSlide item={currentMedia} />
               </div>
             )}
@@ -152,28 +153,28 @@ export function TestimonialLightbox({ testimonial, initialMediaIndex = 0, onClos
                   type="button"
                   onClick={previous}
                   aria-label="Previous media"
-                  className="absolute left-2 top-1/2 -translate-y-1/2 inline-flex size-10 items-center justify-center rounded-full bg-black/40 text-white hover:bg-black/60"
+                  className="absolute left-2 top-1/2 -translate-y-1/2 inline-flex size-10 items-center justify-center rounded-md bg-black/60 text-white hover:bg-black/80"
                 >
-                  <ChevronLeft size={20} aria-hidden="true" />
+                  <ChevronLeft size={22} aria-hidden="true" />
                 </button>
                 <button
                   type="button"
                   onClick={next}
                   aria-label="Next media"
-                  className="absolute right-2 top-1/2 -translate-y-1/2 inline-flex size-10 items-center justify-center rounded-full bg-black/40 text-white hover:bg-black/60"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 inline-flex size-10 items-center justify-center rounded-md bg-black/60 text-white hover:bg-black/80"
                 >
-                  <ChevronRight size={20} aria-hidden="true" />
+                  <ChevronRight size={22} aria-hidden="true" />
                 </button>
 
                 {/* Dot indicators */}
-                <div className="mt-3 flex gap-1.5" aria-label={`${mediaIndex + 1} of ${mediaList.length}`} role="status">
+                <div className="mt-2 flex gap-1.5" aria-label={`${mediaIndex + 1} of ${mediaList.length}`} role="status">
                   {mediaList.map((_, i) => (
                     <button
                       key={i}
                       type="button"
                       onClick={() => setMediaIndex(i)}
                       aria-label={`Media item ${i + 1}`}
-                      className={`size-2 rounded-full transition-colors ${i === mediaIndex ? "bg-white" : "bg-white/40 hover:bg-white/60"}`}
+                      className={`h-1.5 rounded-sm transition-all ${i === mediaIndex ? "w-6 bg-white" : "w-2 bg-white/40 hover:bg-white/60"}`}
                     />
                   ))}
                 </div>
@@ -183,7 +184,7 @@ export function TestimonialLightbox({ testimonial, initialMediaIndex = 0, onClos
         )}
 
         {/* ── Right: testimonial text ───────────────────────────────── */}
-        <div className={`flex flex-1 flex-col justify-center overflow-y-auto p-7 sm:p-9 ${hasMedia ? "lg:max-w-[45%]" : "w-full"}`}>
+        <div className={`flex flex-1 flex-col justify-center overflow-y-auto p-6 sm:p-8 lg:p-10 ${hasMedia ? "lg:max-w-[42%]" : "w-full"}`}>
           <Quote className="text-brand-deep" size={28} aria-hidden="true" />
           <blockquote className="mt-4 text-lg leading-8 text-ink">“{quote}”</blockquote>
           <div className="mt-6 border-t border-line pt-5">
