@@ -9,6 +9,7 @@ import type { PublishedTestimonial } from "@/server/queries/testimonials";
 
 type Props = {
   testimonials: PublishedTestimonial[];
+  className?: string;
 };
 
 /** Returns the best image to use as a card thumbnail */
@@ -30,14 +31,20 @@ function cardThumbnail(t: PublishedTestimonial): { url: string; alt: string; isV
   return null;
 }
 
-export function TestimonialsGrid({ testimonials }: Props) {
+export function TestimonialsGrid({ testimonials, className }: Props) {
   const [lightbox, setLightbox] = useState<{ testimonial: PublishedTestimonial; mediaIndex: number } | null>(null);
 
   if (testimonials.length === 0) return null;
 
+  const gridClass =
+    className ??
+    (testimonials.length <= 3
+      ? "mt-10 grid gap-6 grid-cols-1 md:grid-cols-3"
+      : "mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3");
+
   return (
     <>
-      <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+      <div className={gridClass}>
         {testimonials.map((testimonial) => {
           const { rating, media } = testimonial;
           const thumb = cardThumbnail(testimonial);
@@ -66,7 +73,7 @@ export function TestimonialsGrid({ testimonials }: Props) {
             >
               {/* Thumbnail */}
               {thumb ? (
-                <div className="relative -mx-5 -mt-5 mb-5 aspect-video overflow-hidden rounded-t-panel bg-surface-alt">
+                <div className="relative -mx-6 -mt-6 mb-6 aspect-video overflow-hidden rounded-t-card bg-surface-alt">
                   <Image
                     src={thumb.url}
                     alt={thumb.alt}
@@ -92,7 +99,7 @@ export function TestimonialsGrid({ testimonials }: Props) {
                 </div>
               ) : firstIsVideo ? (
                 // Video with no thumbnail
-                <div className="relative -mx-5 -mt-5 mb-5 flex aspect-video items-center justify-center rounded-t-panel bg-charcoal">
+                <div className="relative -mx-6 -mt-6 mb-6 flex aspect-video items-center justify-center rounded-t-card bg-charcoal">
                   <Play size={36} className="text-white/60" aria-hidden="true" />
                   {media.length > 1 && (
                     <span className="absolute right-2 top-2 rounded-full bg-black/50 px-2 py-0.5 text-[11px] font-semibold text-white">

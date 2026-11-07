@@ -43,7 +43,7 @@ export function TestimonialsCarousel({ testimonials }: { testimonials: Published
           {thumb && (
             <button
               type="button"
-              className="mb-6 overflow-hidden rounded-control focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+              className="mb-6 overflow-hidden rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
               aria-label={hasMedia ? `View media for ${current.name}` : undefined}
               onClick={() => { if (hasMedia) setLightbox(current); }}
             >
