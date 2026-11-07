@@ -16,27 +16,35 @@ export function SiteFooterReference({
   return (
     <footer className="section-light border-t">
       <div className="mx-auto grid max-w-wide gap-12 px-4 py-16 sm:px-6 md:grid-cols-2 lg:grid-cols-4 lg:px-8 lg:py-24">
-        <section aria-labelledby="footer-about-heading" className="text-center">
+        <section aria-labelledby="footer-about-heading" className="text-left">
           <h2
             id="footer-about-heading"
             className="font-heading text-sm font-bold uppercase tracking-[0.14em] text-accent-ink"
           >
             {settings.businessName}
           </h2>
-          <p className="mt-5 text-sm leading-7 text-ink-muted">
-            {settings.tagline}
-          </p>
-          <ul className="mt-6 space-y-2 text-xs text-ink-muted">
-            {settings.credentials.map((credential) => (
-              <li key={`${credential.label}-${credential.value}`}>
-                <span className="font-semibold text-ink">
-                  {credential.label}:
-                </span>{" "}
-                {credential.value}
-              </li>
-            ))}
-            <li>Established {settings.foundedYear}</li>
-          </ul>
+          <div className="mt-5 space-y-4 text-xs text-ink-muted">
+            <div>
+              <p className="font-bold text-ink text-xs uppercase tracking-wider">
+                Registered Address
+              </p>
+              <p className="mt-1.5 leading-relaxed">
+                B/303, Ganraj Hts., B Bldg. CHSL.,<br />
+                Opp. Aadrsh Nagar, Kolbad, Thane (W),<br />
+                Maharashtra, India - 400601
+              </p>
+            </div>
+            <div>
+              <p className="font-bold text-ink text-xs uppercase tracking-wider">
+                Office Address
+              </p>
+              <p className="mt-1.5 leading-relaxed">
+                402, Shree Shankar Villa CHSL,<br />
+                Opposite Mahajan Wadi Hall, Kharkar Ali,<br />
+                Thane (W) - 400601
+              </p>
+            </div>
+          </div>
         </section>
         <nav aria-labelledby="footer-browse-heading">
           <h2

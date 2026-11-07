@@ -11,6 +11,7 @@ import { ContactLink, TrackedWhatsAppLink } from "./contact-link";
 import { phoneHref } from "./contact-utils";
 import { BrandLogo } from "@/components/brand-logo";
 import { DesktopServicesNavigation, MobileServicesAccordion } from "./site-services-navigation";
+import { QuoteHeaderButton } from "./quote-header-button";
 import styles from "./site-services-navigation.module.css";
 
 export type HeaderService = { slug: string; title: string; shortDesc: string; iconKey: string | null; cover: { url: string; alt: string } | null };
@@ -101,11 +102,11 @@ export function SiteHeader({ settings, services, overlayAtTop = false }: { setti
         <div className="hidden items-center gap-2 xl:flex">
           {phone ? <ContactLink href={phoneHref(phone)} eventType="CALL" context="header-phone" className="inline-flex min-h-10 items-center gap-2 rounded-control border border-line px-3 text-sm font-semibold text-ink-muted hover:border-accent hover:text-ink"><Phone size={15} aria-hidden="true" /><span>Call</span></ContactLink> : null}
           <TrackedWhatsAppLink settings={settings} whatsappContext={{ pageTitle: "Header" }} context="header-whatsapp" target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp" className="inline-flex size-10 items-center justify-center rounded-full bg-whatsapp text-white shadow-soft hover:-translate-y-0.5"><WhatsAppIcon size={18} /></TrackedWhatsAppLink>
-          <Link href="/estimate" className="inline-flex min-h-10 items-center justify-center whitespace-nowrap rounded-control bg-accent px-4 text-sm font-bold text-accent-ink transition-transform hover:-translate-y-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">Get Free Quote</Link>
+          <QuoteHeaderButton />
         </div>
 
         {phone ? <ContactLink href={phoneHref(phone)} eventType="CALL" context="header-phone-compact" className="ml-auto hidden min-h-10 items-center gap-2 rounded-control border border-line px-3 text-sm font-semibold text-ink-muted hover:border-accent hover:text-ink lg:inline-flex xl:hidden"><Phone size={15} aria-hidden="true" /><span>Call</span></ContactLink> : null}
-        <Link href="/estimate" className="hidden min-h-10 items-center justify-center whitespace-nowrap rounded-control bg-accent px-3 text-sm font-bold text-accent-ink transition-transform hover:-translate-y-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent md:inline-flex xl:hidden">Get Free Quote</Link>
+        <QuoteHeaderButton className="hidden md:inline-flex xl:hidden px-3" />
         <button ref={menuButtonRef} type="button" className={cn("relative z-50 inline-flex size-10 shrink-0 items-center justify-center rounded-full border border-line text-ink hover:bg-tint focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent lg:hidden", styles.mobileToggle)} aria-label={menuOpen ? "Close menu" : "Open menu"} aria-expanded={menuOpen} aria-controls="mobile-navigation" onClick={() => setMenuOpen((open) => !open)}>
           {menuOpen ? <X size={23} aria-hidden="true" /> : <Menu size={23} aria-hidden="true" />}
         </button>

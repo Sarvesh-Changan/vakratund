@@ -1,4 +1,4 @@
-import { Clock3, Mail, MapPin, Phone } from "lucide-react";
+import { ArrowUpRight, Clock3, Mail, MapPin, Navigation, Phone } from "lucide-react";
 import Link from "next/link";
 
 import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
@@ -77,13 +77,41 @@ export function ContactPage({
                       </div>
                     </li>
                   ) : null}
-                  <li className="flex items-center gap-4">
+                  <li className="flex items-start gap-4">
                     <span className="flex size-12 shrink-0 items-center justify-center rounded-full border border-line bg-surface shadow-soft">
                       <MapPin className="text-brand-deep" size={21} aria-hidden="true" />
                     </span>
-                    <div>
-                      <p className="text-sm text-ink-muted">Find us</p>
-                      <p className="font-semibold">{settings.address}</p>
+                    <div className="space-y-4 text-sm">
+                      <div>
+                        <p className="text-xs font-bold uppercase tracking-wider text-ink-muted">Registered Address</p>
+                        <p className="mt-1 font-semibold leading-relaxed text-ink">
+                          B/303, Ganraj Hts., B Bldg. CHSL., Opp. Aadrsh Nagar, Kolbad, Thane (W), Maharashtra, India - 400601
+                        </p>
+                        <a
+                          href="https://www.google.com/maps/dir/?api=1&destination=B%2F303%2C+Ganraj+Heights+CHSL%2C+Opposite+Adarsh+Nagar%2C+Kolbad%2C+Thane+West%2C+Maharashtra+400601"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="mt-1.5 inline-flex items-center gap-1.5 text-xs font-semibold text-accent-ink hover:underline"
+                        >
+                          <Navigation size={13} aria-hidden="true" />
+                          Get directions ↗
+                        </a>
+                      </div>
+                      <div className="border-t border-line/60 pt-3">
+                        <p className="text-xs font-bold uppercase tracking-wider text-ink-muted">Office Address</p>
+                        <p className="mt-1 font-semibold leading-relaxed text-ink">
+                          402, Shree Shankar Villa CHSL, Opposite Mahajan Wadi Hall, Kharkar Ali, Thane (W) - 400601
+                        </p>
+                        <a
+                          href="https://www.google.com/maps/dir/?api=1&destination=402%2C+Shree+Shankar+Villa+CHSL%2C+Opposite+Mahajan+Wadi+Hall%2C+Kharkar+Ali%2C+Thane+West%2C+Maharashtra+400601"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="mt-1.5 inline-flex items-center gap-1.5 text-xs font-semibold text-accent-ink hover:underline"
+                        >
+                          <Navigation size={13} aria-hidden="true" />
+                          Get directions ↗
+                        </a>
+                      </div>
                     </div>
                   </li>
                 </ul>
@@ -110,27 +138,7 @@ export function ContactPage({
             </Reveal>
           </div>
 
-          <section className="mt-14" aria-label="Map and location">
-            <SectionHeading eyebrow="Find us" title="Visit or plan a site discussion" />
-            <div className="mt-6 overflow-hidden rounded-panel border bg-surface shadow-soft">
-              {settings.mapEmbedUrl ? (
-                <iframe
-                  title={`${settings.businessName} location map`}
-                  src={settings.mapEmbedUrl}
-                  loading="lazy"
-                  referrerPolicy="strict-origin-when-cross-origin"
-                  className="h-[22rem] w-full border-0"
-                />
-              ) : (
-                <div className="flex min-h-56 flex-col items-center justify-center gap-3 px-6 text-center">
-                  <MapPin className="text-brand-deep" size={28} aria-hidden="true" />
-                  <p className="font-semibold">Map details are being prepared.</p>
-                  <p className="max-w-md text-sm text-ink-muted">Please use the contact details above to arrange a conversation in Thane or Mumbai.</p>
-                  <Link href="/contact" className="text-sm font-semibold text-brand-deep underline-offset-4 hover:underline">Contact the team</Link>
-                </div>
-              )}
-            </div>
-          </section>
+          
           <div className="mt-8 rounded-card border border-line bg-tint p-5"><p className="eyebrow">What happens next</p><p className="mt-2 text-sm leading-6 text-ink-muted">{settings.responseTimeText}</p></div>
         </Container>
       </section>
