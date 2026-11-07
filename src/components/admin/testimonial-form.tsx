@@ -41,10 +41,13 @@ const blank: TestimonialFormState = {
 
 function initialState(initial: TestimonialView | null): TestimonialFormState {
   if (!initial) return blank;
-  const mediaIds = initial.media.map((m) => m.mediaId);
+  let mediaIds = initial.media.map((m) => m.mediaId);
   const thumbnailIds: Record<string, string> = {};
   for (const m of initial.media) {
     if (m.thumbnailId) thumbnailIds[m.mediaId] = m.thumbnailId;
+  }
+  if (mediaIds.length === 0 && initial.photoId) {
+    mediaIds = [initial.photoId];
   }
   return {
     name: initial.name,
@@ -62,14 +65,29 @@ function initialState(initial: TestimonialView | null): TestimonialFormState {
 
 function initialMediaEntries(initial: TestimonialView | null): MediaEntry[] {
   if (!initial) return [];
-  return initial.media.map((m) => ({
-    mediaId: m.mediaId,
-    kind: m.media.kind,
-    url: m.media.url,
-    alt: m.media.alt,
-    thumbnailId: m.thumbnailId,
-    thumbnailUrl: m.thumbnail?.url ?? null,
-  }));
+  if (initial.media.length > 0) {
+    return initial.media.map((m) => ({
+      mediaId: m.mediaId,
+      kind: m.media.kind,
+      url: m.media.url,
+      alt: m.media.alt,
+      thumbnailId: m.thumbnailId,
+      thumbnailUrl: m.thumbnail?.url ?? null,
+    }));
+  }
+  if (initial.photo) {
+    return [
+      {
+        mediaId: initial.photo.id,
+        kind: initial.photo.kind,
+        url: initial.photo.url,
+        alt: initial.photo.alt,
+        thumbnailId: null,
+        thumbnailUrl: null,
+      },
+    ];
+  }
+  return [];
 }
 
 function errorFor(errors: Record<string, string[]>, field: string): string | undefined {

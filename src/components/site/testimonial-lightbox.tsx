@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight, Quote, Star, X } from "lucide-react";
 import { Badge } from "@/components/ui";
@@ -13,46 +13,82 @@ type Props = {
 };
 
 function MediaSlide({ item }: { item: PublishedTestimonialMedia }) {
-  const isVideo = item.media.kind === "VIDEO";
+  const isVideo = item.media.kind === "VIDEO" || Boolean(item.media.url.match(/\.(mp4|webm|mov)(\?.*)?$/i));
   if (isVideo) {
     const posterUrl = item.thumbnail?.url ?? undefined;
     return (
-      <video
-        src={item.media.url}
-        controls
-        poster={posterUrl}
-        className="max-h-[70vh] w-full rounded-control object-contain"
-        aria-label={item.media.alt}
-      />
+      <div className="flex w-full items-center justify-center">
+        <video
+          src={item.media.url}
+          controls
+          playsInline
+          poster={posterUrl}
+          className="max-h-[70vh] w-full rounded-control object-contain"
+          aria-label={item.media.alt || "Testimonial video"}
+        >
+          Your browser does not support the video tag.
+        </video>
+      </div>
     );
   }
   return (
-    <Image
-      src={item.media.url}
-      alt={item.media.alt}
-      width={item.media.width ?? 800}
-      height={item.media.height ?? 600}
-      className="max-h-[70vh] w-full rounded-control object-contain"
-      unoptimized
-      priority
-    />
+    <div className="flex w-full items-center justify-center">
+      <Image
+        src={item.media.url}
+        alt={item.media.alt || "Testimonial media"}
+        width={item.media.width ?? 1200}
+        height={item.media.height ?? 800}
+        className="max-h-[70vh] w-full rounded-control object-contain"
+        unoptimized
+        priority
+      />
+    </div>
   );
 }
 
 export function TestimonialLightbox({ testimonial, initialMediaIndex = 0, onClose }: Props) {
-  const [mediaIndex, setMediaIndex] = useState(initialMediaIndex);
+  // Normalize media items: prioritize testimonial.media, fall back to legacy testimonial.photo
+  const mediaList: PublishedTestimonialMedia[] = useMemo(() => {
+    if (testimonial.media && testimonial.media.length > 0) {
+      return testimonial.media;
+    }
+    if (testimonial.photo) {
+      return [
+        {
+          id: `legacy-${testimonial.photo.id}`,
+          mediaId: testimonial.photo.id,
+          sortOrder: 0,
+          thumbnailId: null,
+          media: {
+            id: testimonial.photo.id,
+            kind: "IMAGE",
+            url: testimonial.photo.url,
+            alt: testimonial.photo.alt,
+            width: testimonial.photo.width,
+            height: testimonial.photo.height,
+          },
+          thumbnail: null,
+        },
+      ];
+    }
+    return [];
+  }, [testimonial.media, testimonial.photo]);
+
+  const hasMedia = mediaList.length > 0;
+  const [mediaIndex, setMediaIndex] = useState(() => Math.min(initialMediaIndex, Math.max(0, mediaList.length - 1)));
+  const currentMedia = mediaList[mediaIndex];
   const dialogRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
-  const hasMedia = testimonial.media.length > 0;
-  const currentMedia = testimonial.media[mediaIndex];
 
   const previous = useCallback(() => {
-    setMediaIndex((i) => (i - 1 + testimonial.media.length) % testimonial.media.length);
-  }, [testimonial.media.length]);
+    if (mediaList.length <= 1) return;
+    setMediaIndex((i) => (i - 1 + mediaList.length) % mediaList.length);
+  }, [mediaList.length]);
 
   const next = useCallback(() => {
-    setMediaIndex((i) => (i + 1) % testimonial.media.length);
-  }, [testimonial.media.length]);
+    if (mediaList.length <= 1) return;
+    setMediaIndex((i) => (i + 1) % mediaList.length);
+  }, [mediaList.length]);
 
   // Keyboard navigation + focus trap
   useEffect(() => {
@@ -61,8 +97,8 @@ export function TestimonialLightbox({ testimonial, initialMediaIndex = 0, onClos
 
     function onKey(e: KeyboardEvent) {
       if (e.key === "Escape") { onClose(); return; }
-      if (e.key === "ArrowLeft" && hasMedia && testimonial.media.length > 1) previous();
-      if (e.key === "ArrowRight" && hasMedia && testimonial.media.length > 1) next();
+      if (e.key === "ArrowLeft" && hasMedia && mediaList.length > 1) previous();
+      if (e.key === "ArrowRight" && hasMedia && mediaList.length > 1) next();
     }
     document.addEventListener("keydown", onKey);
     document.body.style.overflow = "hidden";
@@ -71,7 +107,7 @@ export function TestimonialLightbox({ testimonial, initialMediaIndex = 0, onClos
       document.body.style.overflow = "";
       prevFocus?.focus();
     };
-  }, [hasMedia, next, onClose, previous, testimonial.media.length]);
+  }, [hasMedia, next, onClose, previous, mediaList.length]);
 
   const { name, roleOrOrg, quote, rating, project } = testimonial;
 
@@ -85,7 +121,9 @@ export function TestimonialLightbox({ testimonial, initialMediaIndex = 0, onClos
     >
       <div
         ref={dialogRef}
-        className="relative flex max-h-[90vh] w-full max-w-5xl flex-col overflow-hidden rounded-panel bg-surface shadow-2xl lg:flex-row"
+        className={`relative flex max-h-[90vh] w-full overflow-hidden rounded-panel bg-surface shadow-2xl ${
+          hasMedia ? "max-w-5xl flex-col lg:flex-row" : "max-w-xl flex-col"
+        }`}
       >
         {/* Close button */}
         <button
@@ -93,13 +131,13 @@ export function TestimonialLightbox({ testimonial, initialMediaIndex = 0, onClos
           type="button"
           onClick={onClose}
           aria-label="Close testimonial"
-          className="absolute right-3 top-3 z-10 inline-flex size-9 items-center justify-center rounded-full bg-black/20 text-white hover:bg-black/40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+          className="absolute right-3 top-3 z-10 inline-flex size-9 items-center justify-center rounded-full bg-black/30 text-white hover:bg-black/50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
         >
           <X size={18} aria-hidden="true" />
         </button>
 
         {/* ── Left: media ───────────────────────────────────────────── */}
-        {hasMedia ? (
+        {hasMedia && (
           <div className="relative flex flex-1 flex-col items-center justify-center bg-charcoal p-4 lg:max-w-[55%]">
             {currentMedia && (
               <div className="w-full">
@@ -108,7 +146,7 @@ export function TestimonialLightbox({ testimonial, initialMediaIndex = 0, onClos
             )}
 
             {/* Navigation between media items */}
-            {testimonial.media.length > 1 && (
+            {mediaList.length > 1 && (
               <>
                 <button
                   type="button"
@@ -128,8 +166,8 @@ export function TestimonialLightbox({ testimonial, initialMediaIndex = 0, onClos
                 </button>
 
                 {/* Dot indicators */}
-                <div className="mt-3 flex gap-1.5" aria-label={`${mediaIndex + 1} of ${testimonial.media.length}`} role="status">
-                  {testimonial.media.map((_, i) => (
+                <div className="mt-3 flex gap-1.5" aria-label={`${mediaIndex + 1} of ${mediaList.length}`} role="status">
+                  {mediaList.map((_, i) => (
                     <button
                       key={i}
                       type="button"
@@ -142,15 +180,10 @@ export function TestimonialLightbox({ testimonial, initialMediaIndex = 0, onClos
               </>
             )}
           </div>
-        ) : (
-          // No media: left panel shows a decorative quote mark background
-          <div className="hidden items-center justify-center bg-charcoal lg:flex lg:max-w-[45%] lg:flex-1">
-            <Quote size={80} className="text-white/10" aria-hidden="true" />
-          </div>
         )}
 
         {/* ── Right: testimonial text ───────────────────────────────── */}
-        <div className="flex flex-1 flex-col justify-center overflow-y-auto p-7 lg:max-w-[45%]">
+        <div className={`flex flex-1 flex-col justify-center overflow-y-auto p-7 sm:p-9 ${hasMedia ? "lg:max-w-[45%]" : "w-full"}`}>
           <Quote className="text-brand-deep" size={28} aria-hidden="true" />
           <blockquote className="mt-4 text-lg leading-8 text-ink">“{quote}”</blockquote>
           <div className="mt-6 border-t border-line pt-5">

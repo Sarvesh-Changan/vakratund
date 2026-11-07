@@ -24,6 +24,7 @@ function failure(error: unknown): TestimonialActionResult<never> {
 function revalidateTestimonials(): void {
   revalidateTag("testimonials", "max");
   revalidatePath("/admin/testimonials");
+  revalidatePath("/testimonials");
   revalidatePath("/");
   revalidatePath("/about");
 }

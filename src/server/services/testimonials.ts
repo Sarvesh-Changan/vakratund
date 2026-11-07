@@ -123,6 +123,15 @@ async function validateThumbnailIds(thumbnailIds: Record<string, string>): Promi
   }
 }
 
+async function getEffectivePhotoId(photoId: string | null, mediaIds: string[]): Promise<string | null> {
+  if (photoId) return photoId;
+  for (const id of mediaIds) {
+    const asset = await prisma.mediaAsset.findUnique({ where: { id }, select: { kind: true } });
+    if (asset?.kind === "IMAGE") return id;
+  }
+  return null;
+}
+
 function inputData(input: CreateTestimonialInput | UpdateTestimonialInput): Prisma.TestimonialUncheckedCreateInput {
   return {
     name: input.name,
@@ -137,18 +146,19 @@ function inputData(input: CreateTestimonialInput | UpdateTestimonialInput): Pris
 }
 
 /** Sync the TestimonialMedia join rows for a testimonial */
-async function syncMedia(testimonialId: string, mediaIds: string[], thumbnailIds: Record<string, string>): Promise<void> {
+async function syncMedia(testimonialId: string, mediaIds: string[], thumbnailIds: Record<string, string>, fallbackPhotoId?: string | null): Promise<void> {
+  const effectiveMediaIds = mediaIds.length > 0 ? mediaIds : fallbackPhotoId ? [fallbackPhotoId] : [];
   // Delete removed
   await prisma.testimonialMedia.deleteMany({
-    where: { testimonialId, ...( mediaIds.length > 0 ? { mediaId: { notIn: mediaIds } } : {}) },
+    where: { testimonialId, ...(effectiveMediaIds.length > 0 ? { mediaId: { notIn: effectiveMediaIds } } : {}) },
   });
-  if (mediaIds.length === 0) {
+  if (effectiveMediaIds.length === 0) {
     await prisma.testimonialMedia.deleteMany({ where: { testimonialId } });
     return;
   }
   // Upsert each in order
-  for (let i = 0; i < mediaIds.length; i++) {
-    const mediaId = mediaIds[i]!;
+  for (let i = 0; i < effectiveMediaIds.length; i++) {
+    const mediaId = effectiveMediaIds[i]!;
     const thumbnailId = thumbnailIds[mediaId] ?? null;
     await prisma.testimonialMedia.upsert({
       where: { testimonialId_mediaId: { testimonialId, mediaId } },
@@ -185,8 +195,9 @@ export async function createTestimonial(input: CreateTestimonialInput, userId: s
   await validatePhoto(input.photoId);
   await validateMediaIds(input.mediaIds);
   await validateThumbnailIds(input.thumbnailIds);
-  const row = await prisma.testimonial.create({ data: inputData(input), select: testimonialSelect });
-  await syncMedia(row.id, input.mediaIds, input.thumbnailIds);
+  const effectivePhotoId = await getEffectivePhotoId(input.photoId, input.mediaIds);
+  const row = await prisma.testimonial.create({ data: { ...inputData(input), photoId: effectivePhotoId }, select: testimonialSelect });
+  await syncMedia(row.id, input.mediaIds, input.thumbnailIds, effectivePhotoId);
   const updated = await prisma.testimonial.findUniqueOrThrow({ where: { id: row.id }, select: testimonialSelect });
   await logActivity({ userId, action: "testimonial.create", entityType: "Testimonial", entityId: row.id, summary: `Created testimonial from ${row.name}`, diff: { status: row.status, rating: row.rating, projectId: row.projectId, mediaCount: input.mediaIds.length } });
   return toView(updated);
@@ -199,8 +210,9 @@ export async function updateTestimonial(input: UpdateTestimonialInput, userId: s
   await validatePhoto(input.photoId);
   await validateMediaIds(input.mediaIds);
   await validateThumbnailIds(input.thumbnailIds);
-  const row = await prisma.testimonial.update({ where: { id: input.id }, data: inputData(input), select: testimonialSelect });
-  await syncMedia(row.id, input.mediaIds, input.thumbnailIds);
+  const effectivePhotoId = await getEffectivePhotoId(input.photoId, input.mediaIds);
+  const row = await prisma.testimonial.update({ where: { id: input.id }, data: { ...inputData(input), photoId: effectivePhotoId }, select: testimonialSelect });
+  await syncMedia(row.id, input.mediaIds, input.thumbnailIds, effectivePhotoId);
   const updated = await prisma.testimonial.findUniqueOrThrow({ where: { id: row.id }, select: testimonialSelect });
   await logActivity({ userId, action: "testimonial.update", entityType: "Testimonial", entityId: row.id, summary: `Updated testimonial from ${row.name}`, diff: { status: row.status, rating: row.rating, projectId: row.projectId, mediaCount: input.mediaIds.length } });
   return toView(updated);

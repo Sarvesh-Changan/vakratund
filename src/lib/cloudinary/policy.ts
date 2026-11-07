@@ -20,7 +20,7 @@ type SectionPolicy = {
 
 export const SECTION_POLICIES = {
   projects: { folder: "vakratund/projects", kinds: ["IMAGE", "VIDEO"] },
-  testimonials: { folder: "vakratund/testimonials", kinds: ["IMAGE"] },
+  testimonials: { folder: "vakratund/testimonials", kinds: ["IMAGE", "VIDEO"] },
   team: { folder: "vakratund/team", kinds: ["IMAGE"] },
   gallery: { folder: "vakratund/gallery", kinds: ["IMAGE", "VIDEO"] },
   docs: { folder: "vakratund/docs", kinds: ["DOCUMENT"] },
