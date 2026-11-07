@@ -411,6 +411,7 @@ export const ModelName = {
   GalleryYear: 'GalleryYear',
   GalleryItem: 'GalleryItem',
   Testimonial: 'Testimonial',
+  TestimonialMedia: 'TestimonialMedia',
   Faq: 'Faq',
   TeamMember: 'TeamMember',
   PageSection: 'PageSection',
@@ -443,7 +444,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "account" | "verification" | "activityLog" | "rateLimitBucket" | "mediaAsset" | "service" | "project" | "projectMedia" | "galleryCategory" | "galleryYear" | "galleryItem" | "testimonial" | "faq" | "teamMember" | "pageSection" | "pageSeo" | "siteSetting" | "lead" | "leadNote" | "leadStatusHistory" | "contactEvent" | "estimatorService" | "estimatorField" | "fieldOption" | "locationZone" | "pricingRule" | "quote" | "emailLog" | "homeSlide"
+    modelProps: "user" | "session" | "account" | "verification" | "activityLog" | "rateLimitBucket" | "mediaAsset" | "service" | "project" | "projectMedia" | "galleryCategory" | "galleryYear" | "galleryItem" | "testimonial" | "testimonialMedia" | "faq" | "teamMember" | "pageSection" | "pageSeo" | "siteSetting" | "lead" | "leadNote" | "leadStatusHistory" | "contactEvent" | "estimatorService" | "estimatorField" | "fieldOption" | "locationZone" | "pricingRule" | "quote" | "emailLog" | "homeSlide"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1480,6 +1481,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.TestimonialCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.TestimonialCountAggregateOutputType> | number
+        }
+      }
+    }
+    TestimonialMedia: {
+      payload: Prisma.$TestimonialMediaPayload<ExtArgs>
+      fields: Prisma.TestimonialMediaFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TestimonialMediaFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TestimonialMediaPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TestimonialMediaFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TestimonialMediaPayload>
+        }
+        findFirst: {
+          args: Prisma.TestimonialMediaFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TestimonialMediaPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TestimonialMediaFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TestimonialMediaPayload>
+        }
+        findMany: {
+          args: Prisma.TestimonialMediaFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TestimonialMediaPayload>[]
+        }
+        create: {
+          args: Prisma.TestimonialMediaCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TestimonialMediaPayload>
+        }
+        createMany: {
+          args: Prisma.TestimonialMediaCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.TestimonialMediaCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TestimonialMediaPayload>[]
+        }
+        delete: {
+          args: Prisma.TestimonialMediaDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TestimonialMediaPayload>
+        }
+        update: {
+          args: Prisma.TestimonialMediaUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TestimonialMediaPayload>
+        }
+        deleteMany: {
+          args: Prisma.TestimonialMediaDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TestimonialMediaUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.TestimonialMediaUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TestimonialMediaPayload>[]
+        }
+        upsert: {
+          args: Prisma.TestimonialMediaUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TestimonialMediaPayload>
+        }
+        aggregate: {
+          args: Prisma.TestimonialMediaAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTestimonialMedia>
+        }
+        groupBy: {
+          args: Prisma.TestimonialMediaGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TestimonialMediaGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TestimonialMediaCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TestimonialMediaCountAggregateOutputType> | number
         }
       }
     }
@@ -3026,6 +3101,18 @@ export const TestimonialScalarFieldEnum = {
 export type TestimonialScalarFieldEnum = (typeof TestimonialScalarFieldEnum)[keyof typeof TestimonialScalarFieldEnum]
 
 
+export const TestimonialMediaScalarFieldEnum = {
+  id: 'id',
+  testimonialId: 'testimonialId',
+  mediaId: 'mediaId',
+  thumbnailId: 'thumbnailId',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt'
+} as const
+
+export type TestimonialMediaScalarFieldEnum = (typeof TestimonialMediaScalarFieldEnum)[keyof typeof TestimonialMediaScalarFieldEnum]
+
+
 export const FaqScalarFieldEnum = {
   id: 'id',
   question: 'question',
@@ -3824,6 +3911,7 @@ export type GlobalOmitConfig = {
   galleryYear?: Prisma.GalleryYearOmit
   galleryItem?: Prisma.GalleryItemOmit
   testimonial?: Prisma.TestimonialOmit
+  testimonialMedia?: Prisma.TestimonialMediaOmit
   faq?: Prisma.FaqOmit
   teamMember?: Prisma.TeamMemberOmit
   pageSection?: Prisma.PageSectionOmit

@@ -1,9 +1,8 @@
-import { ArrowUpRight, Clock3, Mail, MapPin, Navigation, Phone } from "lucide-react";
-import Link from "next/link";
+import { Clock3, Mail, MapPin, Navigation, Phone } from "lucide-react";
 
 import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
 import { Reveal } from "@/components/motion";
-import { Card, Container, SectionHeading } from "@/components/ui";
+import { Card, Container } from "@/components/ui";
 import { WhatsAppIcon } from "@/components/ui/whatsapp-icon";
 import { formatBusinessHours } from "@/lib/site/business-hours";
 import type { ResolvedSiteSettings } from "@/config/site";

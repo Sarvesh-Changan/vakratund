@@ -14,6 +14,11 @@ vi.mock("@/server/services/testimonials", () => ({
   updateTestimonial: vi.fn(),
   TestimonialNotFoundError: class TestimonialNotFoundError extends Error {},
   TestimonialProjectNotFoundError: class TestimonialProjectNotFoundError extends Error {},
+  TestimonialPhotoNotFoundError: class TestimonialPhotoNotFoundError extends Error {},
+  TestimonialPhotoMustBeImageError: class TestimonialPhotoMustBeImageError extends Error {},
+  TestimonialMediaNotFoundError: class TestimonialMediaNotFoundError extends Error {},
+  TestimonialThumbnailNotFoundError: class TestimonialThumbnailNotFoundError extends Error {},
+  TestimonialThumbnailMustBeImageError: class TestimonialThumbnailMustBeImageError extends Error {},
 }));
 
 import { createTestimonial } from "@/app/(admin)/admin/(protected)/testimonials/actions";

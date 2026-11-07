@@ -207,9 +207,11 @@ model MediaAsset {
   uploadedBy   String?
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
-  projectMedia ProjectMedia[]
-  testimonialPhotos Testimonial[] @relation("TestimonialPhoto")
-  homeSlides   HomeSlide[]
+  projectMedia           ProjectMedia[]
+  testimonialPhotos      Testimonial[]       @relation("TestimonialPhoto")
+  testimonialMedia       TestimonialMedia[]  @relation("TestimonialMediaAsset")
+  testimonialThumbnails  TestimonialMedia[]  @relation("TestimonialMediaThumbnail")
+  homeSlides             HomeSlide[]
 
   @@index([folder, createdAt])
   @@index([etag])
@@ -346,23 +348,41 @@ model GalleryItem {
 }
 
 model Testimonial {
-  id         String        @id @default(cuid())
+  id         String              @id @default(cuid())
   name       String
   roleOrOrg  String?
   quote      String
   rating     Int?
   projectId  String?
   photoId    String?
-  status     PublishStatus @default(DRAFT)
-  sortOrder  Int           @default(0)
-  createdAt  DateTime      @default(now())
-  updatedAt  DateTime      @updatedAt
-  project    Project?      @relation(fields: [projectId], references: [id], onDelete: SetNull)
-  photo      MediaAsset?   @relation("TestimonialPhoto", fields: [photoId], references: [id], onDelete: SetNull)
+  status     PublishStatus       @default(DRAFT)
+  sortOrder  Int                 @default(0)
+  createdAt  DateTime            @default(now())
+  updatedAt  DateTime            @updatedAt
+  project    Project?            @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  photo      MediaAsset?         @relation("TestimonialPhoto", fields: [photoId], references: [id], onDelete: SetNull)
+  media      TestimonialMedia[]
 
   @@index([status, sortOrder])
   @@index([projectId])
   @@index([photoId])
+}
+
+model TestimonialMedia {
+  id             String     @id @default(cuid())
+  testimonialId  String
+  mediaId        String
+  thumbnailId    String?
+  sortOrder      Int        @default(0)
+  createdAt      DateTime   @default(now())
+  testimonial    Testimonial @relation(fields: [testimonialId], references: [id], onDelete: Cascade)
+  media          MediaAsset  @relation("TestimonialMediaAsset", fields: [mediaId], references: [id], onDelete: Restrict)
+  thumbnail      MediaAsset? @relation("TestimonialMediaThumbnail", fields: [thumbnailId], references: [id], onDelete: SetNull)
+
+  @@unique([testimonialId, mediaId])
+  @@index([testimonialId, sortOrder])
+  @@index([mediaId])
+  @@index([thumbnailId])
 }
 
 model Faq {

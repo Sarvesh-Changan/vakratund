@@ -112,6 +112,11 @@ export type GalleryItem = Prisma.GalleryItemModel
  */
 export type Testimonial = Prisma.TestimonialModel
 /**
+ * Model TestimonialMedia
+ * 
+ */
+export type TestimonialMedia = Prisma.TestimonialMediaModel
+/**
  * Model Faq
  * 
  */

@@ -65,6 +65,7 @@ export const ModelName = {
   GalleryYear: 'GalleryYear',
   GalleryItem: 'GalleryItem',
   Testimonial: 'Testimonial',
+  TestimonialMedia: 'TestimonialMedia',
   Faq: 'Faq',
   TeamMember: 'TeamMember',
   PageSection: 'PageSection',
@@ -344,6 +345,18 @@ export const TestimonialScalarFieldEnum = {
 } as const
 
 export type TestimonialScalarFieldEnum = (typeof TestimonialScalarFieldEnum)[keyof typeof TestimonialScalarFieldEnum]
+
+
+export const TestimonialMediaScalarFieldEnum = {
+  id: 'id',
+  testimonialId: 'testimonialId',
+  mediaId: 'mediaId',
+  thumbnailId: 'thumbnailId',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt'
+} as const
+
+export type TestimonialMediaScalarFieldEnum = (typeof TestimonialMediaScalarFieldEnum)[keyof typeof TestimonialMediaScalarFieldEnum]
 
 
 export const FaqScalarFieldEnum = {

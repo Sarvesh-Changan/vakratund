@@ -69,6 +69,11 @@ export function SiteFooterReference({
                 Gallery
               </Link>
             </li>
+            <li>
+              <Link href="/testimonials" className="hover:text-ink">
+                Testimonials 
+              </Link>
+            </li>
           </ul>
         </nav>
         <nav aria-labelledby="footer-services-heading">

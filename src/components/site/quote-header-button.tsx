@@ -16,7 +16,7 @@ export function QuoteHeaderButton({
   children = "Get Free Quote",
 }: QuoteHeaderButtonProps) {
   const [isBlinking, setIsBlinking] = useState(false);
-  const lastActivityRef = useRef<number>(Date.now());
+  const lastActivityRef = useRef<number>(0);
 
   useEffect(() => {
     // Reset activity timestamp on mount

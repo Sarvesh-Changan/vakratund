@@ -14,6 +14,10 @@ const testimonialFields = {
   photoId: z.string().cuid().nullable(),
   status: z.enum([PublishStatus.DRAFT, PublishStatus.PUBLISHED, PublishStatus.ARCHIVED]),
   sortOrder: z.number().int().min(0).max(100_000),
+  // multi-media: ordered list of MediaAsset ids
+  mediaIds: z.array(z.string().cuid()).max(20).default([]),
+  // per-item thumbnail: map of mediaId -> thumbnailMediaId (for VIDEO items)
+  thumbnailIds: z.record(z.string().cuid(), z.string().cuid()).default({}),
 } satisfies z.ZodRawShape;
 
 export const createTestimonialSchema = z.object(testimonialFields).strict();
