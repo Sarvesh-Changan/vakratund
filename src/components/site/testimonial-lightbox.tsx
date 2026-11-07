@@ -1,10 +1,17 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback, useMemo } from "react";
+import { useEffect, useRef, useState, useCallback, useMemo, useSyncExternalStore } from "react";
+import { createPortal } from "react-dom";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight, Quote, Star, X } from "lucide-react";
 import { Badge } from "@/components/ui";
 import type { PublishedTestimonial, PublishedTestimonialMedia } from "@/server/queries/testimonials";
+
+const emptySubscribe = () => () => {};
+
+function useMounted() {
+  return useSyncExternalStore(emptySubscribe, () => true, () => false);
+}
 
 type Props = {
   testimonial: PublishedTestimonial;
@@ -77,6 +84,7 @@ export function TestimonialLightbox({ testimonial, initialMediaIndex = 0, onClos
   const hasMedia = mediaList.length > 0;
   const [mediaIndex, setMediaIndex] = useState(() => Math.min(initialMediaIndex, Math.max(0, mediaList.length - 1)));
   const currentMedia = mediaList[mediaIndex];
+  const mounted = useMounted();
   const dialogRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
 
@@ -92,6 +100,7 @@ export function TestimonialLightbox({ testimonial, initialMediaIndex = 0, onClos
 
   // Keyboard navigation + focus trap
   useEffect(() => {
+    if (!mounted) return;
     const prevFocus = document.activeElement as HTMLElement | null;
     closeRef.current?.focus();
 
@@ -107,22 +116,24 @@ export function TestimonialLightbox({ testimonial, initialMediaIndex = 0, onClos
       document.body.style.overflow = "";
       prevFocus?.focus();
     };
-  }, [hasMedia, next, onClose, previous, mediaList.length]);
+  }, [hasMedia, mounted, next, onClose, previous, mediaList.length]);
+
+  if (!mounted) return null;
 
   const { name, roleOrOrg, quote, rating, project } = testimonial;
 
-  return (
+  return createPortal(
     <div
       role="dialog"
       aria-modal="true"
       aria-label={`Testimonial from ${name}`}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-3 sm:p-5 backdrop-blur-sm"
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 p-3 sm:p-5 backdrop-blur-sm"
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
     >
-      {/* Rectangular modal card with clean subtle rounded corners */}
+      {/* Rectangular modal card with clean subtle rounded corners centered in viewport */}
       <div
         ref={dialogRef}
-        className={`relative flex max-h-[92vh] w-full overflow-hidden rounded-lg sm:rounded-xl border border-line/30 bg-surface shadow-2xl ${
+        className={`relative mx-auto my-auto flex max-h-[92vh] w-full overflow-hidden rounded-lg sm:rounded-xl border border-line/30 bg-surface shadow-2xl ${
           hasMedia ? "max-w-5xl flex-col lg:flex-row" : "max-w-xl flex-col"
         }`}
       >
@@ -202,6 +213,7 @@ export function TestimonialLightbox({ testimonial, initialMediaIndex = 0, onClos
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
