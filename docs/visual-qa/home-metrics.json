@@ -5,7 +5,7 @@
     "status": 200,
     "documentWidth": 360,
     "bodyWidth": 360,
-    "pageHeight": 12311,
+    "pageHeight": 6955,
     "h1Count": 1,
     "horizontalOverflow": false,
     "layoutShift": 0
@@ -16,7 +16,7 @@
     "status": 200,
     "documentWidth": 390,
     "bodyWidth": 390,
-    "pageHeight": 12268,
+    "pageHeight": 7132,
     "h1Count": 1,
     "horizontalOverflow": false,
     "layoutShift": 0
@@ -27,7 +27,7 @@
     "status": 200,
     "documentWidth": 768,
     "bodyWidth": 768,
-    "pageHeight": 8456,
+    "pageHeight": 5296,
     "h1Count": 1,
     "horizontalOverflow": false,
     "layoutShift": 0
@@ -38,7 +38,7 @@
     "status": 200,
     "documentWidth": 1024,
     "bodyWidth": 1024,
-    "pageHeight": 6717,
+    "pageHeight": 4427,
     "h1Count": 1,
     "horizontalOverflow": false,
     "layoutShift": 0
@@ -49,7 +49,7 @@
     "status": 200,
     "documentWidth": 1280,
     "bodyWidth": 1280,
-    "pageHeight": 7040,
+    "pageHeight": 4671,
     "h1Count": 1,
     "horizontalOverflow": false,
     "layoutShift": 0
@@ -60,7 +60,7 @@
     "status": 200,
     "documentWidth": 1536,
     "bodyWidth": 1536,
-    "pageHeight": 7134,
+    "pageHeight": 4690,
     "h1Count": 1,
     "horizontalOverflow": false,
     "layoutShift": 0

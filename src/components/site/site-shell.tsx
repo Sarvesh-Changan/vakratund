@@ -17,7 +17,7 @@ export async function SiteShell({ children, settings: providedSettings, services
   ]);
 
   return (
-    <div data-public-site className="site-public min-h-screen bg-bg pb-[calc(4rem+env(safe-area-inset-bottom))] text-ink md:pb-0">
+    <div data-public-site className="site-public min-h-screen overflow-x-clip bg-bg pb-[calc(4rem+env(safe-area-inset-bottom))] text-ink md:pb-0">
       <GeneralContractorJsonLd settings={settings} />
       <ScrollProgress />
       <AttributionCapture />

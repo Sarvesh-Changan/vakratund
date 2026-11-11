@@ -127,7 +127,7 @@ export function TestimonialLightbox({ testimonial, initialMediaIndex = 0, onClos
       role="dialog"
       aria-modal="true"
       aria-label={`Testimonial from ${name}`}
-      className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 p-3 sm:p-5 backdrop-blur-sm"
+      className="fixed inset-0 z-[var(--z-lightbox)] flex items-center justify-center overflow-y-auto bg-black/80 p-3 sm:p-5 backdrop-blur-sm"
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
     >
       {/* Rectangular modal card with clean subtle rounded corners centered in viewport */}
@@ -143,7 +143,7 @@ export function TestimonialLightbox({ testimonial, initialMediaIndex = 0, onClos
           type="button"
           onClick={onClose}
           aria-label="Close testimonial"
-          className="absolute right-3 top-3 z-20 inline-flex size-9 items-center justify-center rounded-md bg-black/50 text-white hover:bg-black/70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+          className="absolute right-3 top-3 z-20 inline-flex size-11 items-center justify-center rounded-md bg-black/50 text-white hover:bg-black/70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
         >
           <X size={18} aria-hidden="true" />
         </button>

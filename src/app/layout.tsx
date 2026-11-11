@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { Viewport } from "next";
 import localFont from "next/font/local";
 import { Allerta_Stencil } from "next/font/google";
 import { DEFAULT_OG_IMAGE_PATH, getSiteUrl } from "@/lib/seo/metadata";
@@ -31,6 +32,12 @@ export const metadata: Metadata = {
   description: "Civil engineering, PMC and turnkey project development since 2003.",
   openGraph: { type: "website", siteName: "Vakratund Construction", images: [{ url: DEFAULT_OG_IMAGE_PATH, alt: "Vakratund Construction" }] },
   twitter: { card: "summary_large_image", images: [DEFAULT_OG_IMAGE_PATH] },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

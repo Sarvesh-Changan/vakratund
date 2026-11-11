@@ -5,8 +5,8 @@
     "status": 200,
     "documentWidth": 360,
     "bodyWidth": 360,
-    "pageHeight": 5173,
-    "h1Count": 1,
+    "pageHeight": 2148,
+    "h1Count": 0,
     "horizontalOverflow": false,
     "layoutShift": 0
   },
@@ -16,8 +16,8 @@
     "status": 200,
     "documentWidth": 390,
     "bodyWidth": 390,
-    "pageHeight": 5155,
-    "h1Count": 1,
+    "pageHeight": 2171,
+    "h1Count": 0,
     "horizontalOverflow": false,
     "layoutShift": 0
   },
@@ -27,7 +27,7 @@
     "status": 200,
     "documentWidth": 768,
     "bodyWidth": 768,
-    "pageHeight": 4183,
+    "pageHeight": 1563,
     "h1Count": 1,
     "horizontalOverflow": false,
     "layoutShift": 0
@@ -38,7 +38,7 @@
     "status": 200,
     "documentWidth": 1024,
     "bodyWidth": 1024,
-    "pageHeight": 3486,
+    "pageHeight": 1426,
     "h1Count": 1,
     "horizontalOverflow": false,
     "layoutShift": 0
@@ -49,7 +49,7 @@
     "status": 200,
     "documentWidth": 1280,
     "bodyWidth": 1280,
-    "pageHeight": 3630,
+    "pageHeight": 1366,
     "h1Count": 1,
     "horizontalOverflow": false,
     "layoutShift": 0
@@ -60,7 +60,7 @@
     "status": 200,
     "documentWidth": 1536,
     "bodyWidth": 1536,
-    "pageHeight": 3672,
+    "pageHeight": 1366,
     "h1Count": 1,
     "horizontalOverflow": false,
     "layoutShift": 0

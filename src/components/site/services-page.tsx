@@ -1,5 +1,5 @@
 import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
-import { Container, SectionHeading } from "@/components/ui";
+import { Container } from "@/components/ui";
 import type { PublishedService } from "@/server/queries/services";
 import { ServicesFilterGrid } from "./services-filter-grid";
 
@@ -13,12 +13,7 @@ export function ServicesPage({ services }: { services: PublishedService[] }) {
       <BreadcrumbJsonLd items={breadcrumbs} />
       <section className="section-tint">
         <Container className="section-space-generous">
-          <SectionHeading
-            eyebrow="What we do"
-            title="Practical engineering for complex work"
-            description="Choose a service to review its scope, process, related work and frequently asked questions."
-          />
-          <div className="mt-10"><ServicesFilterGrid services={services} /></div>
+          <ServicesFilterGrid services={services} />
         </Container>
       </section>
 

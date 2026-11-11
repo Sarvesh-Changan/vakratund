@@ -48,7 +48,7 @@ export function AnalyticsConsent({ gaId }: { gaId?: string }): ReactNode {
           </Script>
         </>
       ) : (
-        <aside role="region" aria-label="Analytics consent" className="fixed inset-x-3 bottom-3 z-[70] mx-auto flex max-w-2xl flex-col gap-3 rounded-panel border border-line bg-surface p-4 shadow-raised sm:flex-row sm:items-center sm:justify-between">
+        <aside role="region" aria-label="Analytics consent" className="fixed inset-x-3 bottom-3 z-[var(--z-consent)] mx-auto flex max-w-2xl flex-col gap-3 rounded-panel border border-line bg-surface p-4 shadow-raised sm:flex-row sm:items-center sm:justify-between">
           <p className="text-sm leading-6 text-ink-muted">We use optional analytics to improve this website. You can accept or decline.</p>
           <div className="flex shrink-0 gap-2">
             <button type="button" className="min-h-11 rounded-control border border-line px-4 text-sm font-semibold" onClick={() => { writeConsent("declined"); setConsent(false); }}>Decline</button>

@@ -7,7 +7,7 @@ export function HomeHero({ hero }: { hero: HomeHeroContent; [key: string]: unkno
   const title = hero.title?.trim() ?? "";
 
   return (
-    <section className="relative isolate flex min-h-[min(50rem,100svh)] overflow-hidden bg-hero-bg text-hero-ink">
+    <section className="site-home-hero relative isolate flex min-h-[calc(100vh-5rem)] overflow-hidden bg-hero-bg text-hero-ink">
       {/* Background architectural line-art decoration — dark charcoal frames on peach */}
       <div
         className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
@@ -60,14 +60,14 @@ export function HomeHero({ hero }: { hero: HomeHeroContent; [key: string]: unkno
         <div className="hero-drift-right absolute bottom-[8%] right-[2%] hidden h-20 w-20 rounded-[1rem] border border-hero-ink/60 bg-hero-ink/5 sm:block lg:h-24 lg:w-24" />
       </div>
 
-      <Container className="flex w-full items-center justify-center py-36 text-center sm:py-44">
+      <Container className="flex w-full items-center justify-center py-12 text-center sm:py-44">
         <div className="max-w-5xl">
           {hero.eyebrow ? (
             <p className="eyebrow mb-5 text-hero-ink-muted">{hero.eyebrow}</p>
           ) : null}
 
           {title ? (
-            <h1 className="mx-auto max-w-4xl font-heading text-hero font-bold leading-[0.98] tracking-[-0.055em] text-hero-ink">
+            <h1 className="mx-auto max-w-4xl font-heading text-[clamp(2.75rem,10.8vw,8rem)] font-bold leading-[0.98] tracking-[-0.055em] text-hero-ink">
               {title}
             </h1>
           ) : null}
@@ -81,7 +81,7 @@ export function HomeHero({ hero }: { hero: HomeHeroContent; [key: string]: unkno
           <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
             <a
               href={hero.primaryHref}
-              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-control bg-hero-ink px-6 font-bold text-white shadow-soft transition-transform hover:-translate-y-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-hero-ink"
+              className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-control bg-hero-ink px-6 font-bold text-white shadow-soft transition-transform hover:-translate-y-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-hero-ink sm:w-auto"
             >
               {hero.primaryCta}
               <ArrowRight size={18} aria-hidden="true" />
@@ -91,7 +91,7 @@ export function HomeHero({ hero }: { hero: HomeHeroContent; [key: string]: unkno
               href={hero.secondaryHref}
               data-contact-type={phoneCta ? "CALL" : undefined}
               data-contact-context={phoneCta ? "home-hero-call" : undefined}
-              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-control border border-hero-ink/35 bg-transparent px-6 font-bold text-hero-ink transition-transform hover:-translate-y-0.5 hover:border-hero-ink hover:bg-hero-ink/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-hero-ink"
+              className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-control border border-hero-ink bg-transparent px-6 font-bold text-hero-ink transition-transform hover:-translate-y-0.5 hover:bg-hero-ink/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-hero-ink sm:w-auto"
             >
               <Phone size={18} aria-hidden="true" />
               {hero.secondaryCta}

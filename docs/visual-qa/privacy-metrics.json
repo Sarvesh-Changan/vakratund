@@ -2,10 +2,10 @@
   {
     "route": "/privacy",
     "viewport": 360,
-    "status": 200,
+    "status": 404,
     "documentWidth": 360,
     "bodyWidth": 360,
-    "pageHeight": 3070,
+    "pageHeight": 900,
     "h1Count": 1,
     "horizontalOverflow": false,
     "layoutShift": 0
@@ -13,10 +13,10 @@
   {
     "route": "/privacy",
     "viewport": 390,
-    "status": 200,
+    "status": 404,
     "documentWidth": 390,
     "bodyWidth": 390,
-    "pageHeight": 3006,
+    "pageHeight": 900,
     "h1Count": 1,
     "horizontalOverflow": false,
     "layoutShift": 0
@@ -24,10 +24,10 @@
   {
     "route": "/privacy",
     "viewport": 768,
-    "status": 200,
+    "status": 404,
     "documentWidth": 768,
     "bodyWidth": 768,
-    "pageHeight": 2066,
+    "pageHeight": 900,
     "h1Count": 1,
     "horizontalOverflow": false,
     "layoutShift": 0
@@ -35,10 +35,10 @@
   {
     "route": "/privacy",
     "viewport": 1024,
-    "status": 200,
+    "status": 404,
     "documentWidth": 1024,
     "bodyWidth": 1024,
-    "pageHeight": 1723,
+    "pageHeight": 900,
     "h1Count": 1,
     "horizontalOverflow": false,
     "layoutShift": 0
@@ -46,10 +46,10 @@
   {
     "route": "/privacy",
     "viewport": 1280,
-    "status": 200,
+    "status": 404,
     "documentWidth": 1280,
     "bodyWidth": 1280,
-    "pageHeight": 1680,
+    "pageHeight": 900,
     "h1Count": 1,
     "horizontalOverflow": false,
     "layoutShift": 0
@@ -57,10 +57,10 @@
   {
     "route": "/privacy",
     "viewport": 1536,
-    "status": 200,
+    "status": 404,
     "documentWidth": 1536,
     "bodyWidth": 1536,
-    "pageHeight": 1680,
+    "pageHeight": 900,
     "h1Count": 1,
     "horizontalOverflow": false,
     "layoutShift": 0

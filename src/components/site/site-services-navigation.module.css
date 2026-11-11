@@ -274,7 +274,7 @@
 }
 
 .mobileItems .serviceLink {
-  min-height: 46px;
+  min-height: 48px;
   color: white;
 }
 
@@ -299,7 +299,7 @@
 
 .mobileAllServices {
   display: inline-flex;
-  min-height: 42px;
+  min-height: 44px;
   align-items: center;
   gap: 6px;
   border-radius: 999px;
@@ -327,8 +327,8 @@
 
 .accordionTrigger {
   display: flex;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   align-items: center;
   justify-content: center;
   border-radius: 999px;

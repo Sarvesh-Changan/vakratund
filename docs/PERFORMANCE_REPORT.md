@@ -56,6 +56,16 @@ Run Lighthouse 12.8.2 against these exact five routes from a clean CI or product
 
 Date: 2026-10-09
 
+## Responsive navigation and layout follow-up (2026-11-11)
+
+The mobile header drawer and admin navigation drawer were rebuilt to use viewport-sized overlays, safe-area padding, internal scrolling, focus management, background inertness, and scroll restoration. Public mobile contact now uses one bottom bar below 768px; the floating WhatsApp control begins at 768px. Public page overflow is clipped at the site wrapper as a safety net, and the hero secondary CTA uses a full-contrast outline.
+
+`tests/e2e/responsive-matrix.spec.ts` checks public routes at 320, 360, 390, 430, 768, 1024, 1280 and 1536px, plus 844×390 landscape. It also checks the open drawer, internal link reachability, focus behavior, axe serious/critical violations, contact controls and captures mobile visual QA screenshots. Admin routes run when `E2E_ADMIN_EMAIL` and `E2E_ADMIN_PASSWORD` are available. This report does not claim new Lighthouse scores: Lighthouse was not rerun for this change. The latest measured Lighthouse values remain the historical results below until a fresh run is performed.
+
+The screenshot’s short drawer was caused by the prior header-contained, max-height/overflow menu panel; the fixed header’s transform created a containing/stacking context that kept the overlay from behaving like a viewport drawer. The unclipped browser diagnostic isolated a source overflow on `/projects`; its filter panel used a negative horizontal margin to escape the content gutter. That margin was removed while retaining the normal responsive gutter. The responsive matrix passed document/body width checks for the 12 public routes; the source-overflow diagnostic was interrupted during its isolated rerun after the fix, so run `npm run test:e2e` to confirm the complete post-fix matrix. No new Lighthouse scores were measured for this change.
+
+Visual QA screenshots are generated under `docs/visual-qa/mobile/` by the responsive Playwright suite. Admin screenshots require an authorized seeded admin account in the test environment.
+
 ## Scope
 
 The public routes audited were `/`, a service detail route, a project detail route, `/estimate`, and `/contact`. The service and project paths used for the audit were the seeded slugs `structural-repairs-rehabilitation` and `residential-commercial-building-kharkar-ali`. The current local database did not return published records for those two detail slugs, so Lighthouse evaluated their not-found responses; publish the records and repeat the route-specific audit before launch.

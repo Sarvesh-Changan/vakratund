@@ -108,6 +108,6 @@ describe("mobile services accordion", () => {
     fireEvent.click(toggle);
     expect(toggle.getAttribute("aria-expanded")).toBe("true");
     expect(screen.getAllByRole("link", { name: /Service Title/ })).toHaveLength(11);
-    expect(screen.getByRole("link", { name: "Get a free quote" }).getAttribute("href")).toBe("/estimate");
+    expect(screen.getByRole("link", { name: "View all services" }).getAttribute("href")).toBe("/services");
   });
 });

@@ -200,6 +200,17 @@ Plain, specific, professional. Use numbers and facts (years, sqft, storeys). Avo
 
 ## 11. Admin UI
 
+### Responsive rules
+
+- Breakpoints follow the existing Tailwind system: phone below 640px, tablet 640–1023px, desktop from 1024px, and wide layout from 1280px. Test 320, 360, 390, 430, 768, 1024, 1280 and 1536px, plus 844×390 landscape.
+- Use 16px page gutters on phones. Cards use one column below 640px and two columns through tablet sizes; use `min-width: 0`, responsive aspect ratios, and wrapping for long text.
+- Interactive targets are at least 44×44px, with visible keyboard focus and equivalent hover/focus feedback. Inputs remain at least 16px to avoid iOS zoom.
+- Full-height overlays use `100vh` fallback followed by `100dvh`; fixed elements account for `env(safe-area-inset-top)` and `env(safe-area-inset-bottom)`. Keep scroll inside drawers and sheets.
+- Shared z-index tokens are defined in `src/app/globals.css`: header 30, floating controls and mobile bar 40, consent banner 50, backdrop 60, drawer 61, lightbox 70, and toasts 80. Native dialogs use the browser top layer.
+- Below 768px show the fixed Call / WhatsApp / Get Quote bar and hide the floating WhatsApp control. Hide both on `/estimate`, while the keyboard is open, and while a dialog or drawer is open. Reserve matching page-bottom space and safe-area padding.
+- Clip decorative overflow at its page section or wrapper. The public root uses `overflow-x: clip` only as a final guard. Check `100vw`, negative offsets, absolutely positioned decoration, marquees, image sizing, tables, code blocks, and long URLs at every matrix width; scroll wide data within its own container.
+- Mobile navigation is a right-side drawer capped at 380px, with a fixed viewport height, internal link scrolling, focus trap, Escape/backdrop/route/desktop-resize closing, body scroll lock, inert background, and focus restoration.
+
 ### Estimator administration
 
 Use one service editor with six numbered sections and a sticky live preview on wide screens; stack the preview after the form at tablet widths. Use plain vocabulary from `src/config/estimator-vocabulary.ts` for stored question types and price changes. Advice uses written status as well as color. Keep up/down buttons wherever order can change, and explain each amount with a short example or unit. Preserve the placeholder-price warning and ADMIN/SUPER_ADMIN authorization.

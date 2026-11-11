@@ -39,7 +39,7 @@ export function ProjectsFilterGrid({ projects }: { projects: PublishedProject[] 
   }
 
   return <div>
-    <div className="-mx-4 mb-10 rounded-panel border border-line bg-bg p-3 shadow-soft sm:mx-0 sm:p-4" aria-label="Filter projects">
+    <div className="mb-10 rounded-panel border border-line bg-bg p-3 shadow-soft sm:p-4" aria-label="Filter projects">
       <div className="flex flex-wrap items-center gap-2">
         <span className="mr-1 text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">Filter</span>
         <label className="sr-only" htmlFor="project-service">Service</label>

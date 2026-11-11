@@ -33,7 +33,7 @@ function ServiceLinks({ services, mobile = false, onRoute, reducedMotion = false
       const active = pathname === `/services/${service.slug}`;
       return <li key={service.slug} style={!mobile && !reducedMotion ? ({ "--item-delay": `${Math.min(index * 20, 240)}ms` } as CSSProperties) : undefined}>
         <Link href={`/services/${service.slug}`} data-service-menu-item="true" onClick={onRoute} title={service.title.length > 28 ? service.title : undefined} aria-current={active ? "page" : undefined} className={cn(styles.serviceLink, active && styles.serviceLinkActive)}>
-          <span className={styles.iconTile} aria-hidden="true"><ServiceIcon iconKey={service.iconKey} size={17} /></span>
+        {!mobile ? <span className={styles.iconTile} aria-hidden="true"><ServiceIcon iconKey={service.iconKey} size={17} /></span> : null}
           <span className={styles.serviceTitle}>{service.title}</span>
           <ArrowRight className={styles.arrow} size={15} aria-hidden="true" />
         </Link>
@@ -201,14 +201,14 @@ export function MobileServicesAccordion({ services, onRoute }: Pick<ServicesNavi
     return () => window.clearTimeout(timer);
   }, [pathname]);
   return <section className="border-b border-white/10 py-2" aria-label="Services">
-    <div className="flex items-center justify-between">
-      <Link href="/services" className="site-mobile-menu-link py-3 font-heading text-2xl font-semibold text-white" onClick={onRoute}>Services</Link>
+    <div className="flex min-h-12 items-center justify-between">
+      <Link href="/services" className="site-mobile-menu-link flex min-h-12 items-center font-heading text-xl font-semibold text-white" onClick={onRoute}>Services</Link>
       <button type="button" className={styles.accordionTrigger} aria-label="Toggle Services" aria-expanded={open} aria-controls="mobile-services-accordion" onClick={() => setOpen((value) => !value)}><ChevronDown size={20} aria-hidden="true" /></button>
     </div>
     <div id="mobile-services-accordion" aria-hidden={!open} inert={!open} className={cn(styles.accordion, open && styles.accordionOpen)} data-reduced-motion={reducedMotion}>
       <div className={styles.accordionInner}>
         <ServiceLinks services={services} mobile onRoute={onRoute} />
-        <div className="flex flex-wrap items-center gap-2 pb-2"><Link href="/services" onClick={onRoute} className={styles.mobileAllServices}>View all services <ArrowRight size={15} aria-hidden="true" /></Link><Link href="/estimate" onClick={onRoute} className={styles.mobileQuote}>Get a free quote <ArrowRight size={15} aria-hidden="true" /></Link></div>
+        <div className="flex flex-wrap items-center gap-2 pb-2"><Link href="/services" onClick={onRoute} className={styles.mobileAllServices}>View all services <ArrowRight size={15} aria-hidden="true" /></Link></div>
       </div>
     </div>
   </section>;

@@ -143,7 +143,7 @@ export function Marquee({
           onClick={() => setIsPaused((prev) => !prev)}
           aria-label={isPaused ? `Play ${label}` : `Pause ${label}`}
           aria-pressed={isPaused}
-          className="absolute right-3 top-1/2 z-20 -translate-y-1/2 rounded-full border border-line bg-bg/95 p-1.5 text-ink-muted shadow-soft transition hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
+          className="absolute right-3 top-1/2 z-20 inline-flex size-11 -translate-y-1/2 items-center justify-center rounded-full border border-line bg-bg/95 text-ink-muted shadow-soft transition hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
         >
           {isPaused ? (
             <Play size={13} aria-hidden="true" />
@@ -161,6 +161,7 @@ export function Marquee({
           !motionActive &&
             "motion-marquee-static w-full flex-wrap justify-center overflow-x-auto"
         )}
+        tabIndex={motionActive ? undefined : 0}
         style={
           motionActive
             ? ({
