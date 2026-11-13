@@ -65,8 +65,8 @@ async function readGalleryLandingData(filter: PublicFilter = {}): Promise<Galler
   const categoryCounts: Record<string, number> = {};
   const yearCounts: Record<string, number> = {};
   for (const row of allForCounts) {
-    if (!filter.categorySlug || row.category.slug !== filter.categorySlug) categoryCounts[row.category.slug] = (categoryCounts[row.category.slug] ?? 0) + 1;
-    if (!filter.year || row.year.year !== filter.year) yearCounts[String(row.year.year)] = (yearCounts[String(row.year.year)] ?? 0) + 1;
+    if (!filter.year || row.year.year === filter.year) categoryCounts[row.category.slug] = (categoryCounts[row.category.slug] ?? 0) + 1;
+    if (!filter.categorySlug || row.category.slug === filter.categorySlug) yearCounts[String(row.year.year)] = (yearCounts[String(row.year.year)] ?? 0) + 1;
   }
   return { items, categories: categories.flatMap(({ items: covers, ...category }) => covers[0] ? [{ ...category, count: categoryCounts[category.slug] ?? 0, cover: covers[0] }] : []), years: years.map((row) => ({ id: row.id, year: row.year, count: row._count.items })), counts: { categories: categoryCounts, years: yearCounts } };
 }
