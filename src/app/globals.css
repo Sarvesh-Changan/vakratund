@@ -255,7 +255,7 @@ body:has([role="dialog"][aria-modal="true"]) [data-floating-contact] { display: 
 }
 
 .brand-wordmark {
-  font-family: var(--font-brand), var(--font-sora), system-ui, sans-serif;
+  font-family: "Times New Roman", Times, serif;
   letter-spacing: -0.025em;
   white-space: nowrap;
 }

@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 
 import { requirePermission } from "@/lib/auth/session";
 import { checkGallerySyncLimit } from "@/lib/rate-limit/gallery-sync";
@@ -31,9 +31,9 @@ function failure(error: unknown): GalleryActionResult<never> {
 }
 
 function revalidateGallery(slugs: readonly (string | null | undefined)[] = [], years: readonly (number | null | undefined)[] = []): void {
-  revalidateTag("gallery", "max");
-  for (const slug of new Set(slugs.filter((value): value is string => Boolean(value)))) revalidateTag(`gallery:category:${slug}`, "max");
-  for (const year of new Set(years.filter((value): value is number => typeof value === "number"))) revalidateTag(`gallery:year:${year}`, "max");
+  updateTag("gallery");
+  for (const slug of new Set(slugs.filter((value): value is string => Boolean(value)))) updateTag(`gallery:category:${slug}`);
+  for (const year of new Set(years.filter((value): value is number => typeof value === "number"))) updateTag(`gallery:year:${year}`);
   revalidatePath("/admin/gallery");
   revalidatePath("/gallery");
   revalidatePath("/");

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { BreadcrumbJsonLd, ImageGalleryJsonLd } from "@/components/seo/json-ld";
 import { GalleryLightbox, type GalleryCategoryCollection } from "@/components/site/gallery-lightbox";
 import { Container } from "@/components/ui";
+import { FilterPanel } from "@/components/site/filter-panel";
 import { buildMetadata } from "@/lib/seo/metadata";
 import { getGalleryLandingData } from "@/server/queries/gallery";
 import { getPublicSeo } from "@/server/queries/seo";
@@ -53,8 +54,9 @@ export default async function GalleryRoute({ searchParams }: GalleryPageProps) {
       <BreadcrumbJsonLd items={breadcrumbs} />
       {!hasFilter ? <ImageGalleryJsonLd gallery={{ name: "Vakratund Construction project gallery", description: "Selected construction, repair and rehabilitation work by Vakratund Construction.", url: "/gallery", images: landing.items.slice(0, 20).map((item) => item.url) }} /> : null}
       <section className="section-tint">
-        <Container className="section-space-generous">
-          <div className="rounded-card border bg-surface/95 p-4 shadow-soft backdrop-blur">
+        <Container className="pt-8 pb-16 md:pt-10 md:pb-24">
+          <FilterPanel className="mb-8">
+          <div className="rounded-panel border border-line bg-surface/95 p-4 shadow-soft backdrop-blur sm:p-5">
             <div className="grid gap-3 lg:grid-cols-[5rem_1fr]">
               <p className="text-sm font-semibold">Categories</p>
               <div className="flex gap-2 overflow-x-auto pb-1">
@@ -68,6 +70,7 @@ export default async function GalleryRoute({ searchParams }: GalleryPageProps) {
               </div>
             </div>
           </div>
+          </FilterPanel>
           {categoryCollections.length > 0 ? (
             <section className="mt-8" aria-labelledby="gallery-items-heading">
               {filter.categorySlug ? <>
