@@ -142,7 +142,7 @@ export function SiteHeader({ settings, services, overlayAtTop = false }: { setti
           <div className="site-drawer-top">
             <Link href="/" onClick={closeMenu} className="flex min-w-0 items-center gap-2" aria-label={`${settings.businessName} home`}>
               <BrandLogo width={38} height={38} className="size-9 shrink-0" />
-              <span className="brand-wordmark min-w-0 truncate text-base font-bold text-white">{settings.businessName.replace(/^M\/s\.\s*/, "")}</span>
+              <span className="brand-wordmark min-w-0 truncate text-xl font-bold text-white">{settings.businessName.replace(/^M\/s\.\s*/, "")}</span>
             </Link>
             <button type="button" className="site-drawer-close" onClick={closeMenu} aria-label="Close navigation drawer"><X size={23} aria-hidden="true" /></button>
           </div>
@@ -169,7 +169,7 @@ export function SiteHeader({ settings, services, overlayAtTop = false }: { setti
       <div className="relative mx-auto flex h-full min-w-0 items-center justify-between gap-2 px-2 sm:gap-3 sm:px-5 lg:px-6">
         <Link href="/" onClick={closeMenu} className="group flex min-h-11 min-w-0 flex-1 items-center gap-2 rounded-control" aria-label={`${settings.businessName} home`}>
           <BrandLogo width={42} height={42} priority className="size-10 shrink-0" />
-          <span className="brand-wordmark min-w-0 truncate text-[13px] font-bold leading-none tracking-tight sm:text-base">{settings.businessName.replace(/^M\/s\.\s*/, "")}</span>
+          <span className="brand-wordmark min-w-0 truncate text-[17px] font-bold leading-none tracking-tight sm:text-xl">{settings.businessName.replace(/^M\/s\.\s*/, "")}</span>
         </Link>
         <nav className={cn("hidden items-center gap-0.5 lg:flex", styles.desktopNav)} aria-label="Main">
           <Link href="/" className={navLinkClass} onPointerEnter={dismissServices}>Home</Link>

@@ -32,12 +32,12 @@ export function ContactPage({
       <BreadcrumbJsonLd items={breadcrumbs} />
       <section className="section-light relative overflow-hidden">
         <div className="home-blueprint-pattern absolute inset-0 opacity-[0.08]" aria-hidden="true" />
-        <Container className="relative section-space-compact">
+        <Container className="relative py-6 lg:py-8">
           <div className="grid gap-10 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1fr)] lg:items-start lg:gap-16">
             <Reveal>
-              <div className="max-w-md">
+              <div>
                 <p className="eyebrow">Contact</p>
-                <h1 className="mt-4 font-heading text-h1 font-semibold leading-[1.04] tracking-[-0.045em]">Let&apos;s discuss your space.</h1>
+                <h1 className="mt-4 font-heading text-3xl font-semibold leading-tight tracking-[-0.04em] sm:whitespace-nowrap sm:text-[2rem]">Let&apos;s discuss your space.</h1>
                 <div className="mt-7 h-1 w-20 rounded-full bg-brand-deep" aria-hidden="true" />
                 <ul className="mt-8 space-y-5" aria-label="Contact details">
                   {settings.phones.map((phone) => (
@@ -128,9 +128,9 @@ export function ContactPage({
               </div>
             </Reveal>
             <Reveal delay={80}>
-              <Card className="p-6 sm:p-8 lg:p-10">
-                <h2 className="font-heading text-h2 font-semibold">Send us a message</h2>
-                <div className="mt-7">
+              <Card className="p-4 sm:p-5 lg:p-5">
+                <h2 className="font-heading text-2xl font-semibold text-center tracking-tight sm:text-3xl">Send us a message</h2>
+                <div className="mt-3">
                   <ContactForm projectPrefill={projectPrefill} projectSlug={projectSlug} />
                 </div>
               </Card>

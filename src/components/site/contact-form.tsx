@@ -43,8 +43,8 @@ export function ContactForm({ projectPrefill = "", projectSlug = "" }: ContactFo
   if (submitted) return <div className="rounded-card border border-accent/40 bg-accent/10 p-6" role="status"><p className="eyebrow">Enquiry received</p><h3 className="mt-2 font-heading text-2xl font-semibold text-ink">Thank you for reaching out.</h3><p className="mt-3 leading-7 text-ink-muted">Your details have been saved. Our team will review your requirement and follow up with the next useful step.</p><Link href="/projects" className="mt-5 inline-flex min-h-11 items-center rounded-pill bg-dark px-5 font-semibold text-white">Explore projects <span className="ml-2" aria-hidden="true">{"\u2197"}</span></Link></div>;
 
   return (
-    <form className="space-y-4" onSubmit={handleSubmit(onSubmit)} noValidate>
-      <div className="grid gap-4 sm:grid-cols-2">
+    <form className="space-y-2.5" onSubmit={handleSubmit(onSubmit)} noValidate>
+      <div className="grid gap-2.5 sm:grid-cols-2">
         <FormField label="Name" htmlFor="contact-name" required error={errors.name?.message}>
           <Input id="contact-name" autoComplete="name" {...register("name")} aria-describedby={fieldDescribedBy("contact-name", undefined, errors.name?.message)} />
         </FormField>
@@ -59,7 +59,7 @@ export function ContactForm({ projectPrefill = "", projectSlug = "" }: ContactFo
         <Input id="contact-location" autoComplete="address-level2" {...register("location")} aria-describedby={fieldDescribedBy("contact-location", undefined, errors.location?.message)} />
       </FormField>
       <FormField label="How can we help?" htmlFor="contact-message" required error={errors.message?.message}>
-        <Textarea id="contact-message" rows={4} className="rounded-md" {...register("message")} aria-describedby={fieldDescribedBy("contact-message", undefined, errors.message?.message)} />
+        <Textarea id="contact-message" rows={2} className="min-h-20 rounded-md" {...register("message")} aria-describedby={fieldDescribedBy("contact-message", undefined, errors.message?.message)} />
       </FormField>
 
       <div className="absolute -left-[10000px] h-px w-px overflow-hidden" aria-hidden="true">
